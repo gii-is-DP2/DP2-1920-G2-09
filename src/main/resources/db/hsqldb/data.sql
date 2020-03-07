@@ -62,3 +62,6 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
+--- LOS NUEVOS A PARTIR DE AQUI ---
+INSERT INTO product VALUES (1,'Gel de perro',1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
+
