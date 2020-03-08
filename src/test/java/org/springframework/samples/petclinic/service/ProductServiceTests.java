@@ -36,4 +36,16 @@ public class ProductServiceTests {
 		Assertions.assertThat(products).isEmpty();
 	}
 
+	@Test
+	void shouldFindProductById() {
+		Product product = this.productService.findProductById(1);
+		Assertions.assertThat(product).isNotNull();
+	}
+
+	@Test
+	void shouldNotFindProductById() {
+		Product product = this.productService.findProductById(-1);
+		Assertions.assertThat(product).isNull();
+	}
+
 }

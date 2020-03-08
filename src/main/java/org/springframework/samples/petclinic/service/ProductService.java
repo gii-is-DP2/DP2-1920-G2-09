@@ -2,6 +2,8 @@
 package org.springframework.samples.petclinic.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Product;
 import org.springframework.samples.petclinic.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -28,5 +30,10 @@ public class ProductService {
 	public Iterable<Product> findFilteredProducts(final String name) {
 		Iterable<Product> products = this.productRepository.findProductsFiltered(name);
 		return products;
+	}
+	
+	@Transactional(readOnly = true)
+	public Product findProductById(int id) throws DataAccessException {
+		return productRepository.findById(id);
 	}
 }
