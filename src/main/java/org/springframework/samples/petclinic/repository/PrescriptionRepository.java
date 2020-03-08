@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
@@ -10,5 +11,7 @@ public interface PrescriptionRepository {
 	void save(Prescription prescription) throws DataAccessException;
 
 	List<Prescription> findByPetId(Integer petId);
+
+	Collection<Prescription> findPrescriptionByPetId(int petId);
 
 }

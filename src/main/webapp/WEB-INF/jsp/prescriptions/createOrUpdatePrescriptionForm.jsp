@@ -37,6 +37,7 @@
         <form:form modelAttribute="prescription" class="form-horizontal">
             <div class="form-group has-feedback">
                 <petclinic:inputField label="Date" name="date"/>
+                <petclinic:inputField label="Title" name="name"/>
                 <petclinic:inputField label="Description" name="description"/>
             </div>
 
@@ -53,15 +54,16 @@
         <table class="table table-striped">
             <tr>
                 <th>Date</th>
-                <th>Description</th>
+                <th>Title</th>
+                <th>Veterinarian</th>
             </tr>
-            <c:forEach var="prescription" items="${prescription.pet.visits}">
-                <c:if test="${!prescription['new']}">
+            <c:forEach var="previa" items="${previa}" end="2" >
+                
                     <tr>
-                        <td><petclinic:localDate date="${prescription.date}" pattern="yyyy/MM/dd"/></td>
-                        <td><c:out value="${prescription.description}"/></td>
+                        <td><petclinic:localDate date="${previa.date}" pattern="yyyy/MM/dd"/></td>
+                        <td><c:out value="${previa.name}"></c:out>
+                        <td><c:out value="${previa.description}"/></td>
                     </tr>
-                </c:if>
             </c:forEach>
         </table>
     </jsp:body>

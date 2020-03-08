@@ -15,11 +15,19 @@
  */
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
-import org.springframework.data.repository.Repository;
+import java.util.Collection;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.Prescription;
-import org.springframework.samples.petclinic.repository.PrescriptionRepository;
 
 
-public interface SpringDataPrescriptionRepository extends PrescriptionRepository, Repository<Prescription, Integer> {
+public interface SpringDataPrescriptionRepository extends  CrudRepository<Prescription, Integer> {
 
+	
+	@Query("SELECT p FROM Prescription p WHERE p.pet.id =:petId")
+	Collection<Prescription> findPrescriptionByPetId(@Param("petId")int petId);
+	
+	
 }

@@ -8,39 +8,37 @@
 <petclinic:layout pageName="prescriptions">
     <h2>Prescriptions</h2>
 
-    <table id="ownersTable" class="table table-striped">
+    <table id="prescriptionsTable" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 150px;">Name</th>
-            <th style="width: 200px;">Address</th>
-            <th>City</th>
-            <th style="width: 120px">Telephone</th>
-            <th>Pets</th>
+            <th style="width: 150px;">Date</th>
+            <th style="width: 120px">Title</th>
+            <th style="width: 120px">Veterinarian</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${selections}" var="owner">
+        <c:forEach items="${selections}" var="p">
             <tr>
+               
                 <td>
-                    <spring:url value="/owners/{ownerId}" var="ownerUrl">
-                        <spring:param name="ownerId" value="${owner.id}"/>
-                    </spring:url>
-                    <a href="${fn:escapeXml(ownerUrl)}"><c:out value="${owner.firstName} ${owner.lastName}"/></a>
+                    <c:out value="${p.date}"/>
                 </td>
                 <td>
-                    <c:out value="${owner.address}"/>
-                </td>
+                	<c:out	value="${p.name}"/>
+                	</td>
                 <td>
-                    <c:out value="${owner.city}"/>
+                   	Veterinario
                 </td>
+               
                 <td>
-                    <c:out value="${owner.telephone}"/>
-                </td>
-                <td>
-                    <c:forEach var="pet" items="${owner.pets}">
-                        <c:out value="${pet.name} "/>
-                    </c:forEach>
-                </td>
+                   	<spring:url value="/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}" var="viewUrl">
+							<spring:param name="prescriptionId" value="${p.id}" />
+							<spring:param name="ownerId" value="${p.pet.owner.id}" />
+							<spring:param name="petId" value="${p.pet.id}" />
+						</spring:url> <a href="${fn:escapeXml(viewUrl)}"
+						class="btn btn-default">View Details</a>
+					</td>
                 
       
 <!--

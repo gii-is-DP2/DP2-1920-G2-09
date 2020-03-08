@@ -15,20 +15,27 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collector;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Juergen Hoeller
@@ -51,14 +58,7 @@ public class PrescriptionController {
 		dataBinder.setDisallowedFields("id");
 	}
 
-	/**
-	 * Called before each and every @GetMapping or @PostMapping annotated method. 2 goals:
-	 * - Make sure we always have fresh data - Since we do not use the session scope, make
-	 * sure that Pet object always has an id (Even though id is not part of the form
-	 * fields)
-	 * @param petId
-	 * @return Pet
-	 */
+	
 	@ModelAttribute("prescription")
 	public Prescription loadPetWithPrescription(@PathVariable("petId") int petId) {
 		Pet pet = this.petService.findPetById(petId);
@@ -67,17 +67,20 @@ public class PrescriptionController {
 		return prescription;
 	}
 
-	// Spring MVC calls method loadPetWithVisit(...) before initNewVisitForm is called
+	
 	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions/new")
-	public String initNewPrescriptionForm(@PathVariable("petId") int petId, Map<String, Object> model) {
+	public String initNewPrescriptionForm(@PathVariable("petId") int petId,Map<String, Object> model) {
+		
+		
+		model.put("previa", this.petService.findPrescriptionsByPetId(petId));
+		
 		return "prescriptions/createOrUpdatePrescriptionForm";
 	}
 
-	// Spring MVC calls method loadPetWithVisit(...) before processNewVisitForm is called
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/new")
 	public String processNewPrescriptionForm(@Valid Prescription prescription, BindingResult result) {
 		if (result.hasErrors()) {
-			return "prescriptions/createOrUpdateVisitForm";
+			return "prescriptions/createOrUpdatePrescriptionForm";
 		}
 		else {
 			this.petService.savePrescription(prescription);
@@ -85,10 +88,40 @@ public class PrescriptionController {
 		}
 	}
 
-	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions")
-	public String showPrescriptions(@PathVariable int petId, Map<String, Object> model) {
-		model.put("prescriptions", this.petService.findPetById(petId).getPrescriptions());
-		return "prescriptionsList";
+//	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions")
+//	public String showPrescriptions(@PathVariable int petId, Map<String, Object> model) {
+//		model.put("prescriptions", this.petService.findPetById(petId).getPrescriptions());
+//		return "prescriptionsList";
+//	}
+	
+//	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
+//	public String processFindForm(@PathVariable("petId") int petId, BindingResult result, Map<String, Object> model) {
+//
+//		
+//		Collection<Prescription> results = this.petService.findPrescriptionsByPetId(petId);
+//		
+//			model.put("selections", results);
+//			return "prescriptions/prescriptionsList";
+//		}
+	
+	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
+	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
+		
+		model.addAttribute("selections", this.petService.findPrescriptionsByPetId(petId));
+		
+		return "prescriptions/prescriptionsList";
+	}
+	
+	
+	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
+	public String showPrescription(@PathVariable("prescriptionId") int prId,Map<String, Object> model) {
+		
+		Prescription pres =  this.petService.findPrescriptionById(prId).get();
+		
+		model.put("prescription",pres);
+		
+		return "prescriptions/prescriptionDetails";
+	}
 	}
 
-}
+
