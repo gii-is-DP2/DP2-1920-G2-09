@@ -7,7 +7,9 @@ import org.springframework.samples.petclinic.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/products")
@@ -36,6 +38,13 @@ public class ProductController {
 		Iterable<Product> products = this.productService.findFilteredProducts(product.getName());
 		model.addAttribute("products", products);
 		return "products/listProducts";
+	}
+
+	@GetMapping(value = "/{productId}")
+	public ModelAndView showProduct(@PathVariable("productId") final int productId) {
+		ModelAndView mav = new ModelAndView("products/productDetails");
+		mav.addObject(this.productService.findProductById(productId));
+		return mav;
 	}
 
 }
