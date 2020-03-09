@@ -13,16 +13,18 @@ import lombok.Data;
 @Data
 public class Product extends NamedEntity {
 
-    @NotEmpty
-    private String description;
-    @NotEmpty
-    @URL
-    private String urlImage;
-    @NotNull
-    private int stock;
-    @NotNull
-    private double unitPrice;
-    @NotNull
-    private Category category;
+	@NotEmpty
+	private String		description;
+	@NotEmpty
+	@URL
+	private String		urlImage;
+	@NotNull
+	private int			stock;
+	@NotNull
+	private double		unitPrice;
+	@NotNull
+	private Category	category;
+	@NotNull
+	private boolean		available;
 
 }

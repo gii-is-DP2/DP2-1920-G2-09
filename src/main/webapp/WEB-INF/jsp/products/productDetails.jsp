@@ -3,6 +3,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <petclinic:layout pageName="products">
 
@@ -31,8 +33,21 @@
             <th>Category</th>
             <td><c:out value="${product.category}"/></td>
         </tr>
+        <tr>
+            <th>Available?</th>
+            <td><c:choose><c:when test="${product.available == true }">
+            Yes
+            </c:when>
+            <c:otherwise>Not now</c:otherwise>
+            </c:choose></td>
+        </tr>
     </table>
-
+    <sec:authorize access="hasAnyAuthority('admin')">
+    <spring:url value="{productId}/edit" var="editUrl">
+        <spring:param name="productId" value="${product.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Product</a>
+	</sec:authorize>
     <br/>
     <br/>
     <br/>
