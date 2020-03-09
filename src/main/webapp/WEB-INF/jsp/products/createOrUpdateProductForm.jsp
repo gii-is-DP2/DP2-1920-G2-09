@@ -8,13 +8,18 @@
 
 <petclinic:layout pageName="products">
     
-    <form:form modelAttribute="product" class="form-horizontal" id="add-product-form" action="/products/new">
+    <form:form modelAttribute="product" class="form-horizontal" id="add-product-form">
         <div class="form-group has-feedback">
             <petclinic:inputField label="Name" name="name"/>
             <petclinic:inputField label="Description" name="description" />
             <petclinic:inputField label="Stock" name="stock"/>
             <petclinic:inputField label="Image URL" name="urlImage"/>
             <petclinic:inputField label="Unit Price" name="unitPrice"/>
+            <p style="margin-left:9%" ><b> Check if it is available</b> <c:choose><c:when test="${product.available == true }">
+            <input type="checkbox" label="Available" name="available" checked="checked"/>
+            </c:when>
+            <c:otherwise><input type="checkbox" label="Available" name="available"/></c:otherwise>
+            </c:choose></p>
             <div class="control-group">
             <petclinic:selectField name="category" label="Type " names="${categories}" size="4" />
             </div>
@@ -22,6 +27,9 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                        <button class="btn btn-default" type="submit">Add Product</button>                   
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                       <button class="btn btn-default" type="submit">Update Product</button>                   
             </div>
         </div>
     </form:form>
