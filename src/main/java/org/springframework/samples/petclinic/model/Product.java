@@ -5,21 +5,24 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.URL;
+
 import lombok.Data;
 
 @Entity
 @Data
 public class Product extends NamedEntity {
 
-	@NotEmpty
-	private String		description;
-	@NotEmpty
-	private String		urlImage;
-	@NotNull
-	private int			stock;
-	@NotNull
-	private double		unitPrice;
-	@NotNull
-	private Category	category;
+    @NotEmpty
+    private String description;
+    @NotEmpty
+    @URL
+    private String urlImage;
+    @NotNull
+    private int stock;
+    @NotNull
+    private double unitPrice;
+    @NotNull
+    private Category category;
 
 }

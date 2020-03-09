@@ -45,6 +45,14 @@
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Products</span>
 				</petclinic:menuItem>
+				
+				<sec:authorize access="hasAnyAuthority('admin')">
+				<petclinic:menuItem active="${name eq 'admin'}" url="/admin"
+					title="Admin">
+					<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+					<span>Admin</span>
+				</petclinic:menuItem>
+				</sec:authorize>
 
 				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
 					title="trigger a RuntimeException to see how it is handled">
