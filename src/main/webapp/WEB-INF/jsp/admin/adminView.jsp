@@ -1,0 +1,32 @@
+<%@ page session="false" trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+
+<petclinic:layout pageName="admin">
+
+<table id="adminTable" class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 150px;">Action</th>
+            <th style="width: 200px;">Link</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td> AÑADIR PRODUCTO </td>
+        		<td>
+                    <spring:url value="/products/new" var="ownerUrl">
+                    </spring:url>
+                    <a href="${fn:escapeXml(ownerUrl)}">Añadir Producto</a>
+                </td>
+                </tr>
+        </tbody>
+    </table>
+
+
+
+</petclinic:layout>
