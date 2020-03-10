@@ -48,6 +48,14 @@
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Product</a>
 	</sec:authorize>
+	<sec:authorize access="isAuthenticated()">
+		<c:if test="${product.available == false}">
+   			<spring:url value="{productId}/edit" var="buyUrl">
+        	<spring:param name="productId" value="${product.id}"/>
+    		</spring:url>
+    		<a href="${fn:escapeXml(buyUrl)}" class="btn btn-default">Buy Product</a>
+    	</c:if>
+	</sec:authorize>
     <br/>
     <br/>
     <br/>
