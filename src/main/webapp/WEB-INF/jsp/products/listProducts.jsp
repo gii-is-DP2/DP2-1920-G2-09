@@ -31,19 +31,25 @@
     </form:form>
 
 <c:forEach items="${products}" var="product">
-<div class="gallery">
-   <spring:url value="/products/{productId}" var="productUrl">
-   <spring:param name="productId" value="${product.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(productUrl)}">
-    <img src=" <c:out value="${product.urlImage}" />" width="20%" height="20%">
-  </a>
-  <div class = "texto-producto">
-    <c:out value="${product.name}"/><br>
-     Price: <c:out value="${product.unitPrice}"/> euros <br>
-    Stock: <c:out value="${product.stock}"/> available
-    </div>
-</div>
+	<div class="gallery">
+   		<spring:url value="/products/{productId}" var="productUrl">
+   			<spring:param name="productId" value="${product.id}"/>
+    	</spring:url>
+    	<a href="${fn:escapeXml(productUrl)}">
+    	<img src=" <c:out value="${product.urlImage}" />" width="20%" height="20%">
+  		</a>
+  		<div class = "texto-producto">
+    		<c:out value="${product.name}"/><br>
+     		Price: <c:out value="${product.unitPrice}"/> euros <br>
+    		Stock: <c:out value="${product.stock}"/> 
+    		<c:if test="${product.stock > 0}">
+    			Available
+    		</c:if>
+    		<c:if test="${product.stock == 0}">
+    			Unavailable
+    		</c:if>
+    	</div>
+	</div>
 </c:forEach>
 
 
