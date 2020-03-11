@@ -91,7 +91,7 @@ public class OwnerController {
 
     @InitBinder("owner")
     public void initPetBinder(final WebDataBinder dataBinder) {
-	dataBinder.setValidator(new OwnerValidator());
+	dataBinder.setValidator(new PaymentDetailsValidator());
     }
 
     @GetMapping(value = "/owners/new")
