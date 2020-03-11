@@ -23,31 +23,34 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.User;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration test of the Service and the Repository layer.
  * <p>
- * ClinicServiceSpringDataJpaTests subclasses benefit from the following services provided
- * by the Spring TestContext Framework:
+ * ClinicServiceSpringDataJpaTests subclasses benefit from the following
+ * services provided by the Spring TestContext Framework:
  * </p>
  * <ul>
- * <li><strong>Spring IoC container caching</strong> which spares us unnecessary set up
- * time between test execution.</li>
- * <li><strong>Dependency Injection</strong> of test fixture instances, meaning that we
- * don't need to perform application context lookups. See the use of
+ * <li><strong>Spring IoC container caching</strong> which spares us unnecessary
+ * set up time between test execution.</li>
+ * <li><strong>Dependency Injection</strong> of test fixture instances, meaning
+ * that we don't need to perform application context lookups. See the use of
  * {@link Autowired @Autowired} on the <code>{@link
- * OwnerServiceTests#clinicService clinicService}</code> instance variable, which uses
- * autowiring <em>by type</em>.
- * <li><strong>Transaction management</strong>, meaning each test method is executed in
- * its own transaction, which is automatically rolled back by default. Thus, even if tests
- * insert or otherwise change database state, there is no need for a teardown or cleanup
- * script.
- * <li>An {@link org.springframework.context.ApplicationContext ApplicationContext} is
- * also inherited and can be used for explicit bean lookup if necessary.</li>
+ * OwnerServiceTests#clinicService clinicService}</code> instance variable,
+ * which uses autowiring <em>by type</em>.
+ * <li><strong>Transaction management</strong>, meaning each test method is
+ * executed in its own transaction, which is automatically rolled back by
+ * default. Thus, even if tests insert or otherwise change database state, there
+ * is no need for a teardown or cleanup script.
+ * <li>An {@link org.springframework.context.ApplicationContext
+ * ApplicationContext} is also inherited and can be used for explicit bean
+ * lookup if necessary.</li>
  * </ul>
  *
  * @author Ken Krebs
@@ -61,72 +64,71 @@ import org.springframework.transaction.annotation.Transactional;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class OwnerServiceTests {
 
-	@Autowired
-	protected OwnerService ownerService;
+    @Autowired
+    protected OwnerService ownerService;
 
+    @Test
+    void shouldFindOwnersByLastName() {
+	Collection<Owner> owners = this.ownerService.findOwnerByLastName("Davis");
+	Assertions.assertThat(owners.size()).isEqualTo(2);
 
-	@Test
-	void shouldFindOwnersByLastName() {
-		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Davis");
-		Assertions.assertThat(owners.size()).isEqualTo(2);
+	owners = this.ownerService.findOwnerByLastName("Daviss");
+	Assertions.assertThat(owners.isEmpty()).isTrue();
+    }
 
-		owners = this.ownerService.findOwnerByLastName("Daviss");
-		Assertions.assertThat(owners.isEmpty()).isTrue();
-	}
+    @Test
+    void shouldFindSingleOwnerWithPet() {
+	Owner owner = this.ownerService.findOwnerById(1);
+	Assertions.assertThat(owner.getLastName()).startsWith("Franklin");
+	Assertions.assertThat(owner.getPets().size()).isEqualTo(1);
+	Assertions.assertThat(owner.getPets().get(0).getType()).isNotNull();
+	Assertions.assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
+    }
 
-	@Test
-	void shouldFindSingleOwnerWithPet() {
-		Owner owner = this.ownerService.findOwnerById(1);
-		Assertions.assertThat(owner.getLastName()).startsWith("Franklin");
-		Assertions.assertThat(owner.getPets().size()).isEqualTo(1);
-		Assertions.assertThat(owner.getPets().get(0).getType()).isNotNull();
-		Assertions.assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
-	}
+    @Test
+    @Transactional
+    public void shouldInsertOwner() throws DataAccessException, DuplicatedUsernameException {
+	Collection<Owner> owners = this.ownerService.findOwnerByLastName("Schultz");
+	int found = owners.size();
 
-	@Test
-	@Transactional
-	public void shouldInsertOwner() {
-		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Schultz");
-		int found = owners.size();
+	Owner owner = new Owner();
+	owner.setFirstName("Sam");
+	owner.setLastName("Schultz");
+	owner.setAddress("4, Evans Street");
+	owner.setCity("Wollongong");
+	owner.setTelephone("4444444444");
+	User user = new User();
+	user.setUsername("Sam");
+	user.setPassword("supersecretpassword");
+	user.setEnabled(true);
+	owner.setUser(user);
 
-		Owner owner = new Owner();
-		owner.setFirstName("Sam");
-		owner.setLastName("Schultz");
-		owner.setAddress("4, Evans Street");
-		owner.setCity("Wollongong");
-		owner.setTelephone("4444444444");
-		User user = new User();
-		user.setUsername("Sam");
-		user.setPassword("supersecretpassword");
-		user.setEnabled(true);
-		owner.setUser(user);
+	this.ownerService.saveOwner(owner);
+	Assertions.assertThat(owner.getId().longValue()).isNotEqualTo(0);
 
-		this.ownerService.saveOwner(owner);
-		Assertions.assertThat(owner.getId().longValue()).isNotEqualTo(0);
+	owners = this.ownerService.findOwnerByLastName("Schultz");
+	Assertions.assertThat(owners.size()).isEqualTo(found + 1);
+    }
 
-		owners = this.ownerService.findOwnerByLastName("Schultz");
-		Assertions.assertThat(owners.size()).isEqualTo(found + 1);
-	}
+    @Test
+    @Transactional
+    void shouldUpdateOwner() throws DataAccessException, DuplicatedUsernameException {
+	Owner owner = this.ownerService.findOwnerById(1);
+	String oldLastName = owner.getLastName();
+	String newLastName = oldLastName + "X";
 
-	@Test
-	@Transactional
-	void shouldUpdateOwner() {
-		Owner owner = this.ownerService.findOwnerById(1);
-		String oldLastName = owner.getLastName();
-		String newLastName = oldLastName + "X";
+	owner.setLastName(newLastName);
+	this.ownerService.saveOwner(owner);
 
-		owner.setLastName(newLastName);
-		this.ownerService.saveOwner(owner);
+	// retrieving new name from database
+	owner = this.ownerService.findOwnerById(1);
+	Assertions.assertThat(owner.getLastName()).isEqualTo(newLastName);
+    }
 
-		// retrieving new name from database
-		owner = this.ownerService.findOwnerById(1);
-		Assertions.assertThat(owner.getLastName()).isEqualTo(newLastName);
-	}
-
-	@Test
-	void shouldFindOwnerByUsername() {
-		Owner owner = this.ownerService.findOwnerByUsername("prueba");
-		Assertions.assertThat(owner != null);
-	}
+    @Test
+    void shouldFindOwnerByUsername() {
+	Owner owner = this.ownerService.findOwnerByUsername("prueba");
+	Assertions.assertThat(owner != null);
+    }
 
 }

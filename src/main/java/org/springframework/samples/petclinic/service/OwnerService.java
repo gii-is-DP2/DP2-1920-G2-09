@@ -22,6 +22,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.OwnerCrudRepository;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,14 +61,35 @@ public class OwnerService {
 	return this.ownerRepository.findByLastName(lastName);
     }
 
-    @Transactional
-    public void saveOwner(final Owner owner) throws DataAccessException {
-	// creating owner
-	this.ownerRepository.save(owner);
-	// creating user
-	this.userService.saveUser(owner.getUser());
-	// creating authorities
-	this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+    @Transactional(rollbackFor = DuplicatedPetNameException.class)
+    public void saveOwner(final Owner owner) throws DuplicatedUsernameException {
+	Integer countOwnerWithSameUsername = this.ownerCrudRepository
+		.countOwnersWithSameUserName(owner.getUser().getUsername());
+	// CASO DE CREAR
+
+	if (owner.getId() == null && countOwnerWithSameUsername > 0) {
+	    throw new DuplicatedUsernameException();
+	    // CASO EDITAR
+	} else if (owner.getId() != null) {
+	    Owner old = this.ownerCrudRepository.findById(owner.getId()).get();
+	    if (!owner.getUser().getUsername().equals(old.getUser().getUsername()) && countOwnerWithSameUsername > 0) {
+		throw new DuplicatedUsernameException();
+	    } else {
+		this.ownerRepository.save(owner);
+		// creating user
+		this.userService.saveUser(owner.getUser());
+		// creating authorities
+		this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+	    }
+	} else {
+	    // creating owner
+	    this.ownerRepository.save(owner);
+	    // creating user
+	    this.userService.saveUser(owner.getUser());
+	    // creating authorities
+	    this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+	}
+
     }
 
     @Transactional

@@ -27,10 +27,12 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.UserService;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,8 +91,8 @@ public class OwnerController {
 	dataBinder.setDisallowedFields("id");
     }
 
-    @InitBinder("owner")
-    public void initPetBinder(final WebDataBinder dataBinder) {
+    @InitBinder("owner.creditCardNumber")
+    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
 	dataBinder.setValidator(new PaymentDetailsValidator());
     }
 
@@ -102,12 +104,18 @@ public class OwnerController {
     }
 
     @PostMapping(value = "/owners/new")
-    public String processCreationForm(@Valid final Owner owner, final BindingResult result) {
+    public String processCreationForm(@Valid final Owner owner, final BindingResult result)
+	    throws DataAccessException, DuplicatedUsernameException {
 	if (result.hasErrors()) {
 	    return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	} else {
+	    try {
+		this.ownerService.saveOwner(owner);
+	    } catch (DuplicatedUsernameException ex) {
+		result.rejectValue("user.username", "duplicate", "already exists");
+		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+	    }
 	    // creating owner, user and authorities
-	    this.ownerService.saveOwner(owner);
 
 	    return "redirect:/owners/" + owner.getId();
 	}
@@ -157,8 +165,14 @@ public class OwnerController {
 	if (result.hasErrors()) {
 	    return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	} else {
-	    owner.setId(ownerId);
-	    this.ownerService.saveOwner(owner);
+	    try {
+		owner.setId(ownerId);
+		this.ownerService.saveOwner(owner);
+	    } catch (DuplicatedUsernameException ex) {
+		result.rejectValue("user.username", "duplicate", "already exists");
+		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+	    }
+
 	    return "redirect:/owners/{ownerId}";
 	}
     }
@@ -177,7 +191,8 @@ public class OwnerController {
     }
 
     @PostMapping(value = "/owners/payment-details")
-    public String processUpdateForm(final ModelMap model, @Valid final Owner own, final BindingResult result) {
+    public String processUpdateForm(final ModelMap model, @Valid final Owner own, final BindingResult result)
+	    throws DataAccessException, DuplicatedUsernameException {
 
 	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 	Object principal = auth.getPrincipal();
