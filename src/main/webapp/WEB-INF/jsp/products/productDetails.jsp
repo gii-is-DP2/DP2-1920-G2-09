@@ -59,7 +59,7 @@
 	</sec:authorize>
 	
 	
-<!--  COMENTARIOS Y VALORACIONES -->	
+<!--  COMENTARIOS Y VALORACIONES -->
 	<form:form modelAttribute="productComent" class="form-horizontal" id="add-productComent-form" action ="/products/${product.id}/add-product-coment/" method="POST">
 	<sec:authorize access="isAuthenticated()">
 	<petclinic:inputField label="Title" name="title"/>
