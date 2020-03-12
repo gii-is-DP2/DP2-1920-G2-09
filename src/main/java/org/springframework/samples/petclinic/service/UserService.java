@@ -1,4 +1,5 @@
 /*
+
  * Copyright 2002-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +15,6 @@
  * limitations under the License.
  */
 package org.springframework.samples.petclinic.service;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -32,16 +32,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 
-	@Autowired
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+    @Autowired
+    public UserService(final UserRepository userRepository) {
+	this.userRepository = userRepository;
+    }
 
-	@Transactional
-	public void saveUser(User user) throws DataAccessException {
-		user.setEnabled(true);
-		userRepository.save(user);
-	}
+    @Transactional
+    public void saveUser(final User user) throws DataAccessException {
+	user.setEnabled(true);
+	this.userRepository.save(user);
+    }
 }
