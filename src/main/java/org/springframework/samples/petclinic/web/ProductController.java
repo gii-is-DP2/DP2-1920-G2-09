@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/products")
@@ -40,7 +39,7 @@ public class ProductController {
     }
 
     @InitBinder("product")
-    public void initPetBinder(final WebDataBinder dataBinder) {
+    public void initProductBinder(final WebDataBinder dataBinder) {
 	dataBinder.setValidator(new ProductValidator());
     }
 
@@ -71,14 +70,19 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{productId}")
-    public ModelAndView showProduct(@PathVariable("productId") final int productId) {
+    public String showProduct(@PathVariable("productId") final int productId, final ModelMap model) {
 	ProductComent pc = new ProductComent();
 	Collection<ProductComent> coments = this.productComentService.findAllComentsOfTheProduct(productId);
-	ModelAndView mav = new ModelAndView("products/productDetails");
-	mav.addObject(this.productService.findProductById(productId));
-	mav.addObject("productComent", pc);
-	mav.addObject("coments", coments);
-	return mav;
+	if (!model.containsAttribute("OKmessage") && model.containsAttribute("productComent")) {
+	    model.put("productComent", model.get("productComent"));
+	} else {
+	    model.put("productComent", pc);
+	}
+	Double rating = this.productComentService.getAverageRatingOfProduct(productId);
+	model.put("rating", rating == null ? 0.0 : rating);
+	model.put("coments", coments);
+	model.put("product", this.productService.findProductById(productId));
+	return "products/productDetails";
     }
 
     @GetMapping(value = "/new")

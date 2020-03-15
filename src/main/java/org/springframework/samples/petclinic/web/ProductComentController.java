@@ -44,7 +44,7 @@ public class ProductComentController {
 	if (errors.hasErrors()) {
 	    model.put("productComent", productComent);
 	    result.addAllErrors(errors);
-	    return "redirect:/products/{productId}";
+	    return new ProductController(this.productService, this.productComentService).showProduct(productId, model);
 	} else {
 	    Product product = this.productService.findProductById(productId);
 
@@ -61,7 +61,8 @@ public class ProductComentController {
 	    productComent.setHighlight(false);
 	    productComent.setPostDate(LocalDate.now());
 	    this.productComentService.saveProductComent(productComent);
-	    return "redirect:/products/{productId}";
+	    model.addAttribute("OKmessage", "Your comment have been submited correctly");
+	    return new ProductController(this.productService, this.productComentService).showProduct(productId, model);
 	}
 
     }

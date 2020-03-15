@@ -10,7 +10,7 @@
     
     <form:form modelAttribute="owner" class="form-horizontal" id="add-paymentDetails-form">
     <c:if test = "${ not empty OKmessage}">
-   <div class="alert success" role="alert">
+   <div class="alert-success" role="alert">
   <c:out value = "${OKmessage}"/>
 </div>
 </c:if>

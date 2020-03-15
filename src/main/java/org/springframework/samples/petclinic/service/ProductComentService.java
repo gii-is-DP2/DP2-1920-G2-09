@@ -34,4 +34,9 @@ public class ProductComentService {
 	this.productComentRepository.save(pc);
     }
 
+    @Transactional
+    public Double getAverageRatingOfProduct(final int ProductId) {
+	return this.productComentRepository.getAverageRatingOfProduct(ProductId);
+    }
+
 }
