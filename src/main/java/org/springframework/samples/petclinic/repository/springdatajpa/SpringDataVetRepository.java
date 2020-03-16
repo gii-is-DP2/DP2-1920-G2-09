@@ -15,7 +15,11 @@
  */
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepository;
 
@@ -27,4 +31,9 @@ import org.springframework.samples.petclinic.repository.VetRepository;
  */
 public interface SpringDataVetRepository extends VetRepository, Repository<Vet, Integer> {
 
+	@Override
+	@Modifying
+	@Query(value = "INSERT INTO vet_specialties (vet_id, specialty_id) VALUES (:id_vet, :id_specialty)", nativeQuery = true)
+	void saveVetSpecialty(@Param("id_vet") int idVet, @Param("id_specialty") int idSpecialty) throws DataAccessException;
+	
 }

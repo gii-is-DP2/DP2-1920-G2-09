@@ -16,13 +16,23 @@
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
+import java.util.Set;
+
+import javax.validation.Valid;
 
 /**
  * @author Juergen Hoeller
@@ -32,6 +42,8 @@ import java.util.Map;
  */
 @Controller
 public class VetController {
+	
+	private static final String	VIEWS_VETS_CREATE_OR_UPDATE_FORM = "vets/createOrUpdateVetForm";
 
 	private final VetService vetService;
 
@@ -39,7 +51,12 @@ public class VetController {
 	public VetController(VetService clinicService) {
 		this.vetService = clinicService;
 	}
-
+	
+	@ModelAttribute("specialties")
+	public Iterable<Specialty> populateSpecialties() {
+		return this.vetService.findAllSpecialties();
+	}
+	
 	@GetMapping(value = { "/vets" })
 	public String showVetList(Map<String, Object> model) {
 		// Here we are returning an object of type 'Vets' rather than a collection of Vet
@@ -59,6 +76,29 @@ public class VetController {
 		Vets vets = new Vets();
 		vets.getVetList().addAll(this.vetService.findVets());
 		return vets;
+	}
+
+	@GetMapping(value = "/vets/new")
+	public String initCreationForm(final ModelMap model) {
+		Vet vet = new Vet();
+		model.put("vet", vet);
+		return VetController.VIEWS_VETS_CREATE_OR_UPDATE_FORM;
+	}
+
+	@PostMapping(value = "/vets/new")
+	public String processCreationForm(@Valid final Vet vet, final BindingResult result, @RequestParam(required = false) final Integer[] specialties) {
+		if (result.hasErrors()) {
+			return VetController.VIEWS_VETS_CREATE_OR_UPDATE_FORM;
+		} else {
+			if (specialties != null) {
+				Set<Specialty> esp = this.vetService.findSpecialiesById(specialties);
+				for (Specialty e : esp) {
+					vet.addSpecialty(e);
+				}
+			}
+			this.vetService.saveVet(vet);
+			return "redirect:/vets/";
+		}
 	}
 
 }

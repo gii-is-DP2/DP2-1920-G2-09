@@ -16,23 +16,17 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.model.Visit;
-import org.springframework.samples.petclinic.repository.OwnerRepository;
-import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.samples.petclinic.repository.VetRepository;
-import org.springframework.samples.petclinic.repository.VisitRepository;
-import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
+import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataSpecialtyRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 /**
  * Mostly used as a facade for all Petclinic controllers Also a placeholder
@@ -45,6 +39,7 @@ public class VetService {
 
 	private VetRepository vetRepository;
 
+	private SpringDataSpecialtyRepository specialtyRepository;
 
 	@Autowired
 	public VetService(VetRepository vetRepository) {
@@ -55,5 +50,35 @@ public class VetService {
 	public Collection<Vet> findVets() throws DataAccessException {
 		return vetRepository.findAll();
 	}	
+	
+	@Transactional(readOnly = true)
+	public Vet findVetById(final int id) throws DataAccessException {
+		return this.vetRepository.findById(id);
+	}
+
+	@Transactional(readOnly = true)
+	public Set<Specialty> findSpecialiesById(final Integer[] ids) {
+		Set<Specialty> res = new HashSet<>();
+		for (Integer id : ids) {
+			res.add(this.specialtyRepository.findOne(id));
+		}
+		return res;
+	}
+	
+	@Transactional
+	public Iterable<Specialty> findAllSpecialties() {
+		Iterable<Specialty> iSp = this.specialtyRepository.findAll();
+		return iSp;
+	}
+
+	@Transactional
+	public void saveVet(final Vet vet) throws DataAccessException {
+		this.vetRepository.save(vet);
+		if (!vet.getSpecialties().isEmpty()) {
+			for (Specialty s : vet.getSpecialties()) {
+				this.vetRepository.saveVetSpecialty(vet.getId(), s.getId());
+			}
+		}
+	}
 
 }
