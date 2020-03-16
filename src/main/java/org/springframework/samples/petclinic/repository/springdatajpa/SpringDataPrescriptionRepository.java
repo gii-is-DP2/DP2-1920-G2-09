@@ -26,7 +26,7 @@ import org.springframework.samples.petclinic.model.Prescription;
 public interface SpringDataPrescriptionRepository extends  CrudRepository<Prescription, Integer> {
 
 	
-	@Query("SELECT p FROM Prescription p WHERE p.pet.id =:petId")
+	@Query("SELECT p FROM Prescription p WHERE p.pet.id =:petId ORDER BY p.dateInicio")
 	Collection<Prescription> findPrescriptionByPetId(@Param("petId")int petId);
 	
 	

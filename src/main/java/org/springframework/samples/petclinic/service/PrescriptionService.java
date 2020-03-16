@@ -32,10 +32,10 @@ public class PrescriptionService {
 		return prescriptionRepository.findPrescriptionByPetId(petId);
 	}
 
-//	@Transactional(readOnly = true)
-//	public Optional<Prescription> findPrescriptionById(int prId) {
-//		
-//		return prescriptionRepository.findById(prId);
-//	}
+	@Transactional(readOnly = true)
+	public Optional<Prescription> findPrescriptionById(int prId) {
+		
+		return prescriptionRepository.findById(prId);
+	}
 
 }
