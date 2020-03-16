@@ -15,7 +15,13 @@
  */
 package org.springframework.samples.petclinic.repository.springdatajpa;
 
+import java.util.Collection;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.VetRepository;
 
@@ -25,6 +31,11 @@ import org.springframework.samples.petclinic.repository.VetRepository;
  * @author Michael Isvy
  * @since 15.1.2013
  */
-public interface SpringDataVetRepository extends VetRepository, Repository<Vet, Integer> {
+public interface SpringDataVetRepository extends  CrudRepository<Vet, Integer> {
 
+	Collection<Vet> findAll() throws DataAccessException;
+	
+	
+	@Query("SELECT v FROM Vet v WHERE v.user.username =:vetUser")
+	Vet findVetbyUser(@Param("vetUser")String vetUser);
 }

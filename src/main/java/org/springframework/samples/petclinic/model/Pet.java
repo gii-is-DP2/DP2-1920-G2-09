@@ -52,6 +52,7 @@ public class Pet extends NamedEntity {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate birthDate;
 
+	
 	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private PetType type;
@@ -89,7 +90,7 @@ public class Pet extends NamedEntity {
 		return this.owner;
 	}
 
-	protected void setOwner(Owner owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 

@@ -9,7 +9,8 @@
     <jsp:attribute name="customScript">
         <script>
             $(function () {
-                $("#date").datepicker({dateFormat: 'yy/mm/dd'});
+                $("#dateInicio").datepicker({dateFormat: 'yy/mm/dd'});
+                $("#dateFinal").datepicker({dateFormat: 'yy/mm/dd'});
             });
         </script>
     </jsp:attribute>
@@ -31,12 +32,14 @@
                 <td><petclinic:localDate date="${prescription.pet.birthDate}" pattern="yyyy/MM/dd"/></td>
                 <td><c:out value="${prescription.pet.type.name}"/></td>
                 <td><c:out value="${prescription.pet.owner.firstName} ${prescription.pet.owner.lastName}"/></td>
+           		
             </tr>
         </table>
 
         <form:form modelAttribute="prescription" class="form-horizontal">
             <div class="form-group has-feedback">
-                <petclinic:inputField label="Date" name="date"/>
+                <petclinic:inputField label="Start Date" name="dateInicio"/>
+                <petclinic:inputField label="End Date" name="dateFinal"/>
                 <petclinic:inputField label="Title" name="name"/>
                 <petclinic:inputField label="Description" name="description"/>
             </div>
@@ -44,12 +47,13 @@
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <input type="hidden" name="petId" value="${prescription.pet.id}"/>
+                    
                     <button class="btn btn-default" type="submit">Add Prescription</button>
                 </div>
             </div>
         </form:form>
 
-        <br/>
+        <!-- <br/>
         <b>Previous Prescription</b>
         <table class="table table-striped">
             <tr>
@@ -60,12 +64,13 @@
             <c:forEach var="previa" items="${previa}" end="2" >
                 
                     <tr>
-                        <td><petclinic:localDate date="${previa.date}" pattern="yyyy/MM/dd"/></td>
+                        <td><petclinic:localDate date="${previa.dateInicio}" pattern="yyyy/MM/dd"/></td>
                         <td><c:out value="${previa.name}"></c:out>
-                        <td><c:out value="${previa.description}"/></td>
+                        <td><c:out value="${previa.vet.user.username}"/></td>
                     </tr>
             </c:forEach>
         </table>
+        -->
     </jsp:body>
 
 </petclinic:layout>

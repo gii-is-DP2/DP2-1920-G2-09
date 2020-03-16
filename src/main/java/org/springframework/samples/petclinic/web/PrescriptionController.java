@@ -15,27 +15,24 @@
  */
 package org.springframework.samples.petclinic.web;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collector;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Prescription;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.PetService;
+import org.springframework.samples.petclinic.service.PrescriptionService;
 import org.springframework.samples.petclinic.service.VetService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Juergen Hoeller
@@ -47,10 +44,15 @@ import org.springframework.web.servlet.ModelAndView;
 public class PrescriptionController {
 
 	private final PetService petService;
+	private final PrescriptionService prescriptionService;
+	private final VetService vetService;
 
 	@Autowired
-	public PrescriptionController(PetService petService) {
+public PrescriptionController(PetService petService, PrescriptionService prescriptionService,VetService vetService) {
+		
 		this.petService = petService;
+		this.prescriptionService = prescriptionService;
+		this.vetService = vetService;
 	}
 
 	@InitBinder
@@ -58,7 +60,13 @@ public class PrescriptionController {
 		dataBinder.setDisallowedFields("id");
 	}
 
+	@InitBinder("prescription")
+	public void initPetBinder(WebDataBinder dataBinder) {
+		dataBinder.setValidator(new PrescriptionValidator());
+	}
 	
+
+
 	@ModelAttribute("prescription")
 	public Prescription loadPetWithPrescription(@PathVariable("petId") int petId) {
 		Pet pet = this.petService.findPetById(petId);
@@ -72,7 +80,9 @@ public class PrescriptionController {
 	public String initNewPrescriptionForm(@PathVariable("petId") int petId,Map<String, Object> model) {
 		
 		
-		model.put("previa", this.petService.findPrescriptionsByPetId(petId));
+		
+		model.put("previa", this.prescriptionService.findPrescriptionsByPetId(petId));
+		
 		
 		return "prescriptions/createOrUpdatePrescriptionForm";
 	}
@@ -83,45 +93,45 @@ public class PrescriptionController {
 			return "prescriptions/createOrUpdatePrescriptionForm";
 		}
 		else {
-			this.petService.savePrescription(prescription);
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			Object sesion = auth.getPrincipal();
+			UserDetails us = null;
+			if(sesion instanceof UserDetails) {
+				us = (UserDetails) sesion;
+			}
+			
+			String userName = us.getUsername();
+			Vet vet = this.vetService.findVetbyUser(userName);
+			
+			prescription.setVet(vet);
+			
+			
+			this.prescriptionService.savePrescription(prescription);
 			return "redirect:/owners/{ownerId}";
 		}
 	}
 
-//	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions")
-//	public String showPrescriptions(@PathVariable int petId, Map<String, Object> model) {
-//		model.put("prescriptions", this.petService.findPetById(petId).getPrescriptions());
-//		return "prescriptionsList";
-//	}
+
 	
 //	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
-//	public String processFindForm(@PathVariable("petId") int petId, BindingResult result, Map<String, Object> model) {
-//
+//	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
 //		
-//		Collection<Prescription> results = this.petService.findPrescriptionsByPetId(petId);
+//		model.addAttribute("selections", this.prescriptionService.findPrescriptionsByPetId(petId));
 //		
-//			model.put("selections", results);
-//			return "prescriptions/prescriptionsList";
-//		}
-	
-	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
-	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
-		
-		model.addAttribute("selections", this.petService.findPrescriptionsByPetId(petId));
-		
-		return "prescriptions/prescriptionsList";
-	}
+//		return "prescriptions/prescriptionsList";
+//	}
 	
 	
-	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
-	public String showPrescription(@PathVariable("prescriptionId") int prId,Map<String, Object> model) {
-		
-		Prescription pres =  this.petService.findPrescriptionById(prId).get();
-		
-		model.put("prescription",pres);
-		
-		return "prescriptions/prescriptionDetails";
-	}
+//	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
+//	public String showPrescription(@PathVariable("prescriptionId") int prId,Map<String, Object> model) {
+//		
+//		Prescription pres =  this.prescriptionService.findPrescriptionById(prId).get();
+//		
+//		model.put("prescription",pres);
+//		
+//		return "prescriptions/prescriptionDetails";
+//	}
 	}
 
 

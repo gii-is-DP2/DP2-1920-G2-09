@@ -2,12 +2,10 @@ package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -18,11 +16,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Prescription extends NamedEntity {
 	
 	@NotEmpty
-	@Column(name = "description")  
 	private String description;
 	
 	@ManyToOne
-	@JoinColumn(name = "pet")
+	@JoinColumn(name = "pet_id")
 	private Pet pet;
 	
 	
@@ -30,20 +27,32 @@ public class Prescription extends NamedEntity {
 	@JoinColumn(name = "vet_id")
 	private Vet vet;
 
-	@NotNull
-	@Column(name = "date")        
+	@NotNull     
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDate date;
+	private LocalDate dateInicio;
 	
+	@NotNull  
+	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	private LocalDate dateFinal;
 	
-	
-	public LocalDate getDate() {
-		return date;
+
+	public LocalDate getDateFinal() {
+		return dateFinal;
 	}
 
 
-	public void setDate(LocalDate prescriptionDate) {
-		this.date = prescriptionDate;
+	public void setDateFinal(LocalDate dateFinal) {
+		this.dateFinal = dateFinal;
+	}
+
+
+	public LocalDate getDateInicio() {
+		return dateInicio;
+	}
+
+
+	public void setDateInicio(LocalDate prescriptionDate) {
+		this.dateInicio = prescriptionDate;
 	}
 
 

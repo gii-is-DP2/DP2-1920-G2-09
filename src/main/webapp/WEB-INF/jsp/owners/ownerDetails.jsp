@@ -69,11 +69,13 @@
 						<spring:param name="petId" value="${pet.id}" />
 					</spring:url> <a href="${fn:escapeXml(prescriptionUrl)}">Add Prescription</a> </sec:authorize> </td>
 					
-					<td><spring:url value="/owners/{ownerId}/pets/{petId}/prescriptions/list"
+					<!-- <td><spring:url value="/owners/{ownerId}/pets/{petId}/prescriptions/list"
 						var="prescriptionListUrl">
 						<spring:param name="ownerId" value="${owner.id}" />
 						<spring:param name="petId" value="${pet.id}" />
 					</spring:url> <a href="${fn:escapeXml(prescriptionListUrl)}">Prescription List</a></td>
+					-->
+					
 					
 				<td valign="top">
 					<table class="table-condensed">

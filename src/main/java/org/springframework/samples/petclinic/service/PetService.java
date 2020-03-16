@@ -16,17 +16,12 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.PetRepository;
-import org.springframework.samples.petclinic.repository.PrescriptionRepository;
 import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataPrescriptionRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -47,15 +42,11 @@ public class PetService {
 	
 	private VisitRepository visitRepository;
 	
-	private SpringDataPrescriptionRepository prescriptionRepository;
-	
-
 	@Autowired
 	public PetService(PetRepository petRepository,
 			VisitRepository visitRepository, SpringDataPrescriptionRepository prescriptionRepository ) {
 		this.petRepository = petRepository;
 		this.visitRepository = visitRepository;
-		this.prescriptionRepository = prescriptionRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -87,21 +78,5 @@ public class PetService {
 		return visitRepository.findByPetId(petId);
 	}
 
-	@Transactional
-	public void savePrescription(Prescription prescription) throws DataAccessException {
-		prescriptionRepository.save(prescription);
-	}
-
-	@Transactional(readOnly = true)
-	public Collection<Prescription> findPrescriptionsByPetId(int petId) {
-		
-		return prescriptionRepository.findPrescriptionByPetId(petId);
-	}
-
-	@Transactional(readOnly = true)
-	public Optional<Prescription> findPrescriptionById(int prId) {
-		
-		return prescriptionRepository.findById(prId);
-	}
-
+	
 }
