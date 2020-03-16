@@ -41,12 +41,15 @@ public class PaymentDetailsValidator implements Validator {
 	    String cvv = owner.getCvv();
 	    Integer expMonth = owner.getExpirationMonth();
 	    Integer expYear = owner.getExpirationYear();
-
-	    if (!this.checkCard(owner.getCreditCardNumber())) {
-		errors.rejectValue("creditCardNumber", "Credit Card Number is not correct",
-			"Credit Card Number is not correct");
+	    if (owner.getCreditCardNumber().matches("^[0-9]*$")) {
+		if (!this.checkCard(owner.getCreditCardNumber())) {
+		    errors.rejectValue("creditCardNumber", "Credit Card Number is not correct",
+			    "Credit Card Number is not correct");
+		}
+	    } else {
+		errors.rejectValue("creditCardNumber", "Credit Card NumberVV must only contains numbers",
+			"Credit Card Number must only contains numbers");
 	    }
-
 	    if (!cvv.matches("^[0-9]*$")) {
 		errors.rejectValue("cvv", "CVV must only contains numbers", "CVV must only contains numbers");
 	    } else {

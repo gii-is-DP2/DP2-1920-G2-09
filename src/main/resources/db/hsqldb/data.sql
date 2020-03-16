@@ -84,3 +84,5 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 --- LOS NUEVOS A PARTIR DE AQUI ---
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
 
+INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Titulo de prueba',false,3,1,'prueba');
+
