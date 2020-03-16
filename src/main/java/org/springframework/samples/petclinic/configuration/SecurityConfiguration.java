@@ -27,8 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     DataSource dataSource;
+
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.permitAll().antMatchers("/owners/payment-details").hasAnyAuthority("owner")
 		.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
-		.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/owners/**")
+		.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/prescription/**").permitAll().antMatchers("/owners/**")
 		.hasAnyAuthority("owner", "admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
 		.formLogin()
 		/* .loginPage("/login") */
