@@ -39,6 +39,20 @@
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 					<span>Veterinarians</span>
 				</petclinic:menuItem>
+				
+				<petclinic:menuItem active="${name eq 'products'}" url="/products/all"
+					title="products">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span>Products</span>
+				</petclinic:menuItem>
+				
+				<sec:authorize access="hasAnyAuthority('admin')">
+				<petclinic:menuItem active="${name eq 'admin'}" url="/admin"
+					title="Admin">
+					<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+					<span>Admin</span>
+				</petclinic:menuItem>
+				</sec:authorize>
 
 				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
 					title="trigger a RuntimeException to see how it is handled">
@@ -78,6 +92,11 @@
 											<p class="text-left">
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
+											</p>
+											
+											<p class="text-left">
+												<a href="<c:url value="/owners/payment-details" />"
+													class="btn btn-primary btn-block btn-sm">Payment Details</a>
 											</p>
 										</div>
 									</div>

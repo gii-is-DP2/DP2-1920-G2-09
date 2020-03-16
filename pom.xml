@@ -33,6 +33,8 @@
     </properties>
 
     <dependencies>
+    
+    
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
