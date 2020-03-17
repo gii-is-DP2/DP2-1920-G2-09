@@ -17,30 +17,23 @@ package org.springframework.samples.petclinic.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
 
+import javax.validation.ConstraintViolationException;
+
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
-import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.User;
-import org.springframework.samples.petclinic.model.Authorities;
-import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -79,15 +72,58 @@ class VetServiceTests {
 	protected VetService vetService;	
 
 	@Test
-	void shouldFindVets() {
-		Collection<Vet> vets = this.vetService.findVets();
-
+	void shouldFindAllVets() {
+		Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
+		Assertions.assertTrue(!vets.isEmpty());
+		
 		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
 		assertThat(vet.getLastName()).isEqualTo("Douglas");
 		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
 		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
 		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
 	}
+	
+	@Test
+	void shouldFindVetById() {
+		Vet vet = this.vetService.findVetById(1);
+		Assertions.assertTrue(vet != null);
+	}
+	
+	@Test
+	void shouldFindSpecialtiesById() {
+		Integer [] ids = {1, 2};
+		Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
+		Assertions.assertTrue(!specialties.isEmpty());
+	}
+	
+	@Test
+	void shouldFindAllSpecialties() {
+		Collection<Specialty> specialties = (Collection<Specialty>) this.vetService.findAllSpecialties();
+		Assertions.assertTrue(!specialties.isEmpty());
+	}
+	
+	@Test
+	void shouldSaveVet() {
+		Vet vet = new Vet();
+		vet.setFirstName("Juan");
+		vet.setLastName("Montes");
+		
+		User user = new User();
+		user.setUsername("vet25");
+		user.setPassword("123456");
+		user.setEnabled(true);
+		vet.setUser(user);
 
+		this.vetService.saveVet(vet);
+		Assert.assertTrue(vet.getId() != 0);
+	}
+	
+	@Test
+	void shouldNotSaveVet() {
+		Vet vet = new Vet();
+		User user = new User();
+		vet.setUser(user);
+		Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
+	}
 
 }

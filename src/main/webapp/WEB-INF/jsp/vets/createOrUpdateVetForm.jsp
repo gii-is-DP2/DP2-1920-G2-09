@@ -14,20 +14,24 @@
         <div class="form-group has-feedback">
             <petclinic:inputField label="Nombre" name="firstName"/>
             <petclinic:inputField label="Apellidos" name="lastName"/>
-            <form:select label="Especialidades" path="specialties" size="1" items="${specialties}" itemLabel="name" itemValue="id"/>
-            
-        </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <c:choose>
-                    <c:when test="${vet['new']}">
-                        <button class="btn btn-default" type="submit">Añadir veterinario</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="btn btn-default" type="submit">Actualizar veterinario</button>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
+            <petclinic:selectFieldVet label="Especialidades" name="specialties" size="1" names="${specialties}" itemLabel="name" itemValue="id"></petclinic:selectFieldVet>
+            <hr>
+            <form:form modelAttribute="user" class="form-horizontal" id="add-vet-form">
+            	<petclinic:inputField label="Usuario" name="username"/>
+            	<petclinic:passwordField label="Contraseña" name="password"/>
+       			<div class="form-group">
+            		<div class="col-sm-offset-2 col-sm-10">
+                		<c:choose>
+                   			<c:when test="${vet['new']}">
+                       			<button class="btn btn-default" type="submit">Añadir veterinario</button>
+                   			</c:when>
+                		 	<c:otherwise>
+                       			<button class="btn btn-default" type="submit">Actualizar veterinario</button>
+                   			</c:otherwise>
+                		</c:choose>
+            		</div>
+        		</div>
+        	</form:form>
+   		</div>
     </form:form>
 </petclinic:layout>

@@ -15,16 +15,17 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.VetRepository;
+import org.springframework.samples.petclinic.repository.AuthoritiesRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataSpecialtyRepository;
+import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataVetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,28 +37,32 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class VetService {
-
-	private VetRepository vetRepository;
+	
+	private SpringDataVetRepository vetRepository;
 
 	private SpringDataSpecialtyRepository specialtyRepository;
+	
+	private AuthoritiesRepository authoritiesRepository;
 
 	@Autowired
-	public VetService(VetRepository vetRepository) {
+	public VetService(SpringDataVetRepository vetRepository, SpringDataSpecialtyRepository specialtyRepository, AuthoritiesRepository authoritiesRepository) {
 		this.vetRepository = vetRepository;
+		this.specialtyRepository = specialtyRepository;
+		this.authoritiesRepository = authoritiesRepository;
 	}		
 
 	@Transactional(readOnly = true)	
-	public Collection<Vet> findVets() throws DataAccessException {
+	public Iterable<Vet> findVets() throws DataAccessException {
 		return vetRepository.findAll();
 	}	
 	
 	@Transactional(readOnly = true)
 	public Vet findVetById(final int id) throws DataAccessException {
-		return this.vetRepository.findById(id);
+		return this.vetRepository.findById(id).get();
 	}
 
 	@Transactional(readOnly = true)
-	public Set<Specialty> findSpecialiesById(final Integer[] ids) {
+	public Set<Specialty> findSpecialtiesById(final Integer[] ids) {
 		Set<Specialty> res = new HashSet<>();
 		for (Integer id : ids) {
 			res.add(this.specialtyRepository.findOne(id));
@@ -73,12 +78,11 @@ public class VetService {
 
 	@Transactional
 	public void saveVet(final Vet vet) throws DataAccessException {
+		Authorities author = new Authorities();
+		author.setAuthority("veterinarian");
+		author.setUsername(vet.getUser().getUsername());
+		this.authoritiesRepository.save(author);
 		this.vetRepository.save(vet);
-		if (!vet.getSpecialties().isEmpty()) {
-			for (Specialty s : vet.getSpecialties()) {
-				this.vetRepository.saveVetSpecialty(vet.getId(), s.getId());
-			}
-		}
 	}
 
 }

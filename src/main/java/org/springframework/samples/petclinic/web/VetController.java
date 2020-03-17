@@ -17,22 +17,24 @@ package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.model.Vets;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import javax.validation.Valid;
 
 /**
  * @author Juergen Hoeller
@@ -63,7 +65,7 @@ public class VetController {
 		// objects
 		// so it is simpler for Object-Xml mapping
 		Vets vets = new Vets();
-		vets.getVetList().addAll(this.vetService.findVets());
+		vets.getVetList().addAll((Collection<? extends Vet>) this.vetService.findVets());
 		model.put("vets", vets);
 		return "vets/vetList";
 	}
@@ -74,7 +76,7 @@ public class VetController {
 		// objects
 		// so it is simpler for JSon/Object mapping
 		Vets vets = new Vets();
-		vets.getVetList().addAll(this.vetService.findVets());
+		vets.getVetList().addAll((Collection<? extends Vet>) this.vetService.findVets());
 		return vets;
 	}
 
@@ -82,20 +84,36 @@ public class VetController {
 	public String initCreationForm(final ModelMap model) {
 		Vet vet = new Vet();
 		model.put("vet", vet);
+		User user = new User();
+		model.put("user", user);
 		return VetController.VIEWS_VETS_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping(value = "/vets/new")
-	public String processCreationForm(@Valid final Vet vet, final BindingResult result, @RequestParam(required = false) final Integer[] specialties) {
-		if (result.hasErrors()) {
+	public String processCreationForm(ModelMap model, final Vet vet, final User user, final BindingResult result, @RequestParam(required = false) final Integer[] specialties) {
+		VetValidator vetValidator = new VetValidator();
+		Errors vetErrors = new BeanPropertyBindingResult(vet, "vet");
+		vetValidator.validate(vet, vetErrors);
+		
+		UserValidator userValidator = new UserValidator();
+		Errors userErrors = new BeanPropertyBindingResult(user, "user");
+		userValidator.validate(user, userErrors);
+		
+		if (vetErrors.hasErrors() || userErrors.hasErrors()) {
+			result.addAllErrors(vetErrors);
+			result.addAllErrors(userErrors);
+			model.put("vet", vet);
+			model.put("user", user);
 			return VetController.VIEWS_VETS_CREATE_OR_UPDATE_FORM;
 		} else {
 			if (specialties != null) {
-				Set<Specialty> esp = this.vetService.findSpecialiesById(specialties);
+				Set<Specialty> esp = this.vetService.findSpecialtiesById(specialties);
 				for (Specialty e : esp) {
 					vet.addSpecialty(e);
 				}
 			}
+			user.setEnabled(true);
+			vet.setUser(user);
 			this.vetService.saveVet(vet);
 			return "redirect:/vets/";
 		}
