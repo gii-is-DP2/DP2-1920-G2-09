@@ -21,7 +21,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * <code>Validator</code> for <code>Pet</code> forms.
+ * <code>Validator</code> for <code>Vet</code> forms.
  * <p>
  * We're not using Bean Validation annotations here because it is easier to define such
  * validation rule in Java.

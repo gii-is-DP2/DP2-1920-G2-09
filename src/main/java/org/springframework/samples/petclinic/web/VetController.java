@@ -26,6 +26,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,9 +101,14 @@ public class VetController {
 		userValidator.validate(user, userErrors);
 		
 		if (vetErrors.hasErrors() || userErrors.hasErrors()) {
-			result.addAllErrors(vetErrors);
-			result.addAllErrors(userErrors);
+			for (ObjectError e : vetErrors.getAllErrors()) {
+				result.addError(e);
+			}
 			model.put("vet", vet);
+			
+			for (ObjectError e : userErrors.getAllErrors()) {
+				result.addError(e);
+			}
 			model.put("user", user);
 			return VetController.VIEWS_VETS_CREATE_OR_UPDATE_FORM;
 		} else {
