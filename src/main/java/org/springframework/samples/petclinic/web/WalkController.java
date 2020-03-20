@@ -15,10 +15,13 @@
  */
 package org.springframework.samples.petclinic.web;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.service.WalkService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -66,6 +69,24 @@ public class WalkController {
 		ModelAndView mav = new ModelAndView("walks/walkDetails");
 		mav.addObject(this.walkService.findWalkById(walkId));
 		return mav;
+	}
+    
+    @GetMapping(value = "/new")
+	public String initCreationForm(final ModelMap model) {
+		Walk walk = new Walk();
+		model.put("walk", walk);
+		return "walks/createOrUpdateWalkForm";
+	}
+    
+	@PostMapping(value = "/new")
+	public String processCreationForm(@Valid final Walk walk, final BindingResult result, final ModelMap model) {
+		if (result.hasErrors()) {
+			model.put("walk", walk);
+			return "walks/createOrUpdateWalkForm";
+		} else {
+			this.walkService.saveWalk(walk);
+			return this.findAllWalks(model);
+		}
 	}
 
 }

@@ -39,7 +39,7 @@ public class WalkValidator implements Validator {
 	}
 	
 	private static final String URL_REGEX =
-			"^((((https?|ftps?|gopher|telnet|nntp)://)|(mailto:|news:))" +
+			"^((((https?|ftps?|gopher|telnet|nntp)://))" +
 			"(%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@&=+$,A-Za-z0-9])+)" +
 			"([).!';/?:,][[:blank:]])?$";
 

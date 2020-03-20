@@ -46,11 +46,21 @@
 					<span>Products</span>
 				</petclinic:menuItem>
 				
+				<sec:authorize access="!hasAnyAuthority('admin')">
 				<petclinic:menuItem active="${name eq 'walks'}" url="/walks/userAll"
 					title="walks">
-					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
 					<span>Walks</span>
 				</petclinic:menuItem>
+				</sec:authorize>
+				
+				<sec:authorize access="hasAnyAuthority('admin')">
+				<petclinic:menuItem active="${name eq 'walks'}" url="/walks/all"
+					title="walks">
+					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+					<span>Walks</span>
+				</petclinic:menuItem>
+				</sec:authorize>
 				
 				<sec:authorize access="hasAnyAuthority('admin')">
 				<petclinic:menuItem active="${name eq 'admin'}" url="/admin"

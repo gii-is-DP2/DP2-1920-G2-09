@@ -65,6 +65,15 @@ public class WalkValidatorTests {
 
 	// Description
 	@Test
+	void shouldNotValidateWhenDescriptionEmpty() {
+		this.walk.setDescription("");
+		WalkValidator wv = new WalkValidator();
+		Errors errors = new BeanPropertyBindingResult(this.walk, "");
+		wv.validate(this.walk, errors);
+		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
+	}
+	
+	@Test
 	void shouldNotValidateDescriptionIfLessThanLimitCharacters() {
 		this.walk.setDescription("3j");
 		WalkValidator wv = new WalkValidator();

@@ -23,21 +23,7 @@
         </tr>
     </table>
     
-    <sec:authorize access="hasAnyAuthority('admin')">
-    <spring:url value="{walkId}/edit" var="editUrl">
-        <spring:param name="walkId" value="${walk.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Walk</a>
-	</sec:authorize>
-    <br/>
-    
-    <sec:authorize access="hasAnyAuthority('admin')">
-    <spring:url value="{walkId}/delete" var="deleteUrl">
-        <spring:param name="walkId" value="${walk.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default">Delete Walk</a>
-	</sec:authorize>
-    <br/>
+  
     
     
     
