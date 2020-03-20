@@ -15,11 +15,12 @@
             <petclinic:inputField label="Nombre" name="firstName"/>
             <petclinic:inputField label="Apellidos" name="lastName"/>
             <petclinic:selectFieldVet label="Especialidades" name="specialties" size="1" names="${specialties}" itemLabel="name" itemValue="id"/>
-            <hr>
-            <form:form modelAttribute="user" class="form-horizontal" id="add-user-form">
-            	<petclinic:inputField label="Usuario" name="username"/>
-            	<petclinic:passwordField label="Contraseña" name="password"/>
+            	<hr>
+            	<petclinic:inputField label="Usuario" name="user.username"/>
+            	<petclinic:passwordField label="Contraseña" name="user.password"/>
+            	
        			<div class="form-group">
+       			
             		<div class="col-sm-offset-2 col-sm-10">
                 		<c:choose>
                    			<c:when test="${vet['new']}">
@@ -31,7 +32,8 @@
                 		</c:choose>
             		</div>
         		</div>
-        	</form:form>
+        	
    		</div>
-    </form:form>
+   		</form:form>
+   
 </petclinic:layout>
