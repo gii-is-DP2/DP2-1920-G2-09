@@ -51,6 +51,11 @@ public class WalkService {
 	public Walk findWalkById(final int id) throws DataAccessException {
 		return this.walkRepository.findById(id);
 	}
+	
+	@Transactional
+	public void saveWalk(final Walk walk){
+		this.walkRepository.save(walk);
+	}
 
 
 }

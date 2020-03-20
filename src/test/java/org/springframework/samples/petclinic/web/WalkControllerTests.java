@@ -38,11 +38,11 @@ class WalkControllerTests {
 	@MockBean
 	private WalkService walkService;
         
-        @MockBean
+    @MockBean
 	private UserService user5Service;
         
-        @MockBean
-        private AuthoritiesService authoritiesService; 
+    @MockBean
+    private AuthoritiesService authoritiesService; 
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -62,7 +62,7 @@ class WalkControllerTests {
 
 	}
 
-        @WithMockUser(value = "spring")
+    @WithMockUser(value = "spring")
 	@Test
 	void testShowWalk() throws Exception {
 		mockMvc.perform(get("/walks/{walkId}", TEST_WALK_ID)).andExpect(status().isOk())
@@ -71,6 +71,38 @@ class WalkControllerTests {
 				.andExpect(model().attribute("walk", hasProperty("map", is("https://tinyurl.com/wygb5vu"))))
 				.andExpect(model().attribute("walk", hasProperty("available", is(true))))
 				.andExpect(view().name("walks/walkDetails"));
+	}
+        
+    @WithMockUser(value = "spring")
+    @Test
+	void testInitCreationForm() throws Exception {
+		mockMvc.perform(get("/walks/new")).andExpect(status().isOk()).andExpect(model().attributeExists("walk"))
+				.andExpect(view().name("walks/createOrUpdateWalkForm"));
+	}
+
+	@WithMockUser(value = "spring")
+    @Test
+	void testProcessCreationFormSuccess() throws Exception {
+		mockMvc.perform(post("/walks/new").param("name", "NotLaputa")
+							.with(csrf())
+							.param("description", "This is not an Island of riches")
+							.param("map", "https://tinyurl.com/wygbvu")
+							.param("available", "false"))
+				.andExpect(status().is2xxSuccessful());
+	}
+
+	@WithMockUser(value = "spring")
+    @Test
+	void testProcessCreationFormHasErrors() throws Exception {
+		mockMvc.perform(post("/walks/new")
+							.with(csrf())
+							.param("name", "NotLaputa")
+							.param("available", "true"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("walk"))
+				.andExpect(model().attributeHasFieldErrors("walk", "map"))
+				.andExpect(model().attributeHasFieldErrors("walk", "description"))
+				.andExpect(view().name("walks/createOrUpdateWalkForm"));
 	}
 
 }
