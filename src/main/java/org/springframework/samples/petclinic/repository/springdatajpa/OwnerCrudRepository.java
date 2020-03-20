@@ -9,7 +9,7 @@ public interface OwnerCrudRepository extends CrudRepository<Owner, Integer> {
     @Query("Select owner from Owner owner where owner.user.username = ?1")
     Owner findOwnerByUsername(String username);
 
-    @Query("Select count(owner) from Owner owner where owner.user.username = ?1")
+    @Query("Select count(user) from User user where username = ?1")
     Integer countOwnersWithSameUserName(String username);
 
 }
