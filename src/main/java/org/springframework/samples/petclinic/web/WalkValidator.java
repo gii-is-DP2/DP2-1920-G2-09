@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.web;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.Walk;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
@@ -66,14 +65,14 @@ public class WalkValidator implements Validator {
 		
 		// name validation
 		if (!StringUtils.hasLength(name) || name.length()>50 || name.length()<3) {
-			errors.rejectValue("name", "The length of the description must be greater than 3 and no less than 50 characters",
-					"The length of the description must be between 3 and 50 characters");
+			errors.rejectValue("name", "The length of the name must be greater than 3 and no less than 50 characters",
+					"The length of the name must be greater than 3 and no less than 50 characters");
 		}
 		
 		// description validation
 		if (!StringUtils.hasLength(description) || description.length()>300 || description.length()<3) {
-			errors.rejectValue("description", "The length of the description must be between 3 and 300 characters",
-					"The length of the description must be between 3 and 300 characters");
+			errors.rejectValue("description", "The length of the description must be greater than 3 and no less than 300 characters",
+					"The length of the description must be greater than 3 and no less than 300 characters");
 		}
 		
 		// map validation
