@@ -52,6 +52,7 @@ public class Pet extends NamedEntity {
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate birthDate;
 
+	
 	@ManyToOne
 	@JoinColumn(name = "type_id")
 	private PetType type;
@@ -59,9 +60,15 @@ public class Pet extends NamedEntity {
 	@ManyToOne
 	@JoinColumn(name = "owner_id")
 	private Owner owner;
+	
+	
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
 	private Set<Visit> visits;
+	
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
+	private Set<Prescription> prescription;
 
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
@@ -83,7 +90,7 @@ public class Pet extends NamedEntity {
 		return this.owner;
 	}
 
-	protected void setOwner(Owner owner) {
+	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
 
@@ -93,9 +100,20 @@ public class Pet extends NamedEntity {
 		}
 		return this.visits;
 	}
+	
+	protected Set<Prescription> getPrescriptionsInternal() {
+		if (this.prescription == null) {
+			this.prescription = new HashSet<>();
+		}
+		return this.prescription;
+	}
 
 	protected void setVisitsInternal(Set<Visit> visits) {
 		this.visits = visits;
+	}
+	
+	protected void setPrescriptionInternal(Set<Prescription> prescription ) {
+		this.prescription = prescription;
 	}
 
 	public List<Visit> getVisits() {
@@ -107,6 +125,18 @@ public class Pet extends NamedEntity {
 	public void addVisit(Visit visit) {
 		getVisitsInternal().add(visit);
 		visit.setPet(this);
+	}
+
+	public void addPrescription(Prescription prescription) {
+		getPrescriptionsInternal().add(prescription);
+		prescription.setPet(this);
+		
+	}
+
+	public Object getPrescriptions() {
+		List<Prescription> sortedPrescriptions = new ArrayList<>(getPrescriptionsInternal());
+		PropertyComparator.sort(sortedPrescriptions, new MutableSortDefinition("date", false, false));
+		return Collections.unmodifiableList(sortedPrescriptions);
 	}
 
 }

@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.repository.springdatajpa;
+package org.springframework.samples.petclinic.repository;
 
-import java.util.Collection;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.samples.petclinic.model.Vet;
-import org.springframework.samples.petclinic.repository.VetRepository;
+import org.springframework.samples.petclinic.model.Walk;
 
 /**
- * Spring Data JPA specialization of the {@link VetRepository} interface
+ * Repository class for <code>Walk</code> domain objects All method names are compliant
+ * with Spring Data naming conventions so this interface can easily be extended for Spring
+ * Data See here:
+ * http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
  *
- * @author Michael Isvy
- * @since 15.1.2013
  */
-public interface SpringDataVetRepository extends  CrudRepository<Vet, Integer> {
+public interface WalkRepository extends CrudRepository<Walk, Integer>{
 
-	Collection<Vet> findAll() throws DataAccessException;
+	@Query("Select w from Walk w where available=true")
+    Iterable<Walk> findAllAvailable();
 	
-	
-	@Query("SELECT v FROM Vet v WHERE v.user.username =:vetUser")
-	Vet findVetbyUser(@Param("vetUser")String vetUser);
+	Walk findById(int id) throws DataAccessException;
+
+
+
 }

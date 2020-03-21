@@ -11,12 +11,27 @@ INSERT INTO authorities VALUES ('vet1','veterinarian');
 INSERT INTO users(username,password,enabled) VALUES ('prueba','prueba',TRUE);
 INSERT INTO authorities VALUES ('prueba','owner');
 
-INSERT INTO vets VALUES (1, 'James', 'Carter', 'vet1');
-INSERT INTO vets VALUES (2, 'Helen', 'Leary', 'vet1');
-INSERT INTO vets VALUES (3, 'Linda', 'Douglas', 'vet1');
-INSERT INTO vets VALUES (4, 'Rafael', 'Ortega', 'vet1');
-INSERT INTO vets VALUES (5, 'Henry', 'Stevens', 'vet1');
-INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins', 'vet1');
+INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t',TRUE);
+INSERT INTO authorities VALUES ('vet2','veterinarian');
+
+INSERT INTO users(username,password,enabled) VALUES ('vet3','v3t',TRUE);
+INSERT INTO authorities VALUES ('vet3','veterinarian');
+
+INSERT INTO users(username,password,enabled) VALUES ('vet4','v3t',TRUE);
+INSERT INTO authorities VALUES ('vet4','veterinarian');
+
+INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t',TRUE);
+INSERT INTO authorities VALUES ('vet5','veterinarian');
+
+INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t',TRUE);
+INSERT INTO authorities VALUES ('vet6','veterinarian');
+
+INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');
+INSERT INTO vets VALUES (2, 'Helen', 'Leary','vet2');
+INSERT INTO vets VALUES (3, 'Linda', 'Douglas','vet3');
+INSERT INTO vets VALUES (4, 'Rafael', 'Ortega','vet4');
+INSERT INTO vets VALUES (5, 'Henry', 'Stevens','vet5');
+INSERT INTO vets VALUES (6, 'Sharon', 'Jenkins','vet6');
 
 INSERT INTO specialties VALUES (1, 'radiology');
 INSERT INTO specialties VALUES (2, 'surgery');
@@ -68,4 +83,10 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 
 --- LOS NUEVOS A PARTIR DE AQUI ---
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
+
+INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Titulo de prueba',false,3,1,'prueba');
+
+--- WALKS ---
+INSERT INTO walks VALUES (1,'Primer Paseo',true, 'Esto es un paseo1','https://tinyurl.com/wygb5vu');
+INSERT INTO walks VALUES (2,'Segundp Paseo',false, 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
 

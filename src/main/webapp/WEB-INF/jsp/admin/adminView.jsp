@@ -23,7 +23,15 @@
                     </spring:url>
                     <a href="${fn:escapeXml(ownerUrl)}">Añadir Producto</a>
                 </td>
-                </tr>
+        </tr>
+        <tr>
+        <td> AÑADIR PASEO </td>
+        		<td>
+                    <spring:url value="/walks/new" var="walkUrl">
+                    </spring:url>
+                    <a href="${fn:escapeXml(walkUrl)}">Añadir Paseo</a>
+                </td>
+        </tr>
         </tbody>
     </table>
 

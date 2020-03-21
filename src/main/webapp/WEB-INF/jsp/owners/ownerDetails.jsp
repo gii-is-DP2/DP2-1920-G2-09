@@ -3,6 +3,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <petclinic:layout pageName="owners">
 
@@ -56,40 +58,56 @@
                         <dt>Type</dt>
                         <dd><c:out value="${pet.type.name}"/></dd>
                     </dl>
+                    
                 </td>
-                <td valign="top">
-                    <table class="table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Visit Date</th>
-                            <th>Description</th>
-                        </tr>
-                        </thead>
-                        <c:forEach var="visit" items="${pet.visits}">
-                            <tr>
-                                <td><petclinic:localDate date="${visit.date}" pattern="yyyy-MM-dd"/></td>
-                                <td><c:out value="${visit.description}"/></td>
-                            </tr>
-                        </c:forEach>
-                        <tr>
-                            <td>
-                                <spring:url value="/owners/{ownerId}/pets/{petId}/edit" var="petUrl">
-                                    <spring:param name="ownerId" value="${owner.id}"/>
-                                    <spring:param name="petId" value="${pet.id}"/>
-                                </spring:url>
-                                <a href="${fn:escapeXml(petUrl)}">Edit Pet</a>
-                            </td>
-                            <td>
-                                <spring:url value="/owners/{ownerId}/pets/{petId}/visits/new" var="visitUrl">
-                                    <spring:param name="ownerId" value="${owner.id}"/>
-                                    <spring:param name="petId" value="${pet.id}"/>
-                                </spring:url>
-                                <a href="${fn:escapeXml(visitUrl)}">Add Visit</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+				
+				<td> <sec:authorize access="hasAuthority('veterinarian')">
+		
+	<spring:url value="/owners/{ownerId}/pets/{petId}/prescriptions/new"
+						var="prescriptionUrl">
+						<spring:param name="ownerId" value="${owner.id}" />
+						<spring:param name="petId" value="${pet.id}" />
+					</spring:url> <a href="${fn:escapeXml(prescriptionUrl)}">Add Prescription</a> </sec:authorize> </td>
+					
+					<!-- <td><spring:url value="/owners/{ownerId}/pets/{petId}/prescriptions/list"
+						var="prescriptionListUrl">
+						<spring:param name="ownerId" value="${owner.id}" />
+						<spring:param name="petId" value="${pet.id}" />
+					</spring:url> <a href="${fn:escapeXml(prescriptionListUrl)}">Prescription List</a></td>
+					-->
+					
+					
+				<td valign="top">
+					<table class="table-condensed">
+						<thead>
+							<tr>
+								<th>Visit Date</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<c:forEach var="visit" items="${pet.visits}">
+							<tr>
+								<td><petclinic:localDate date="${visit.date}"
+										pattern="yyyy-MM-dd" /></td>
+								<td><c:out value="${visit.description}" /></td>
+							</tr>
+						</c:forEach>
+						<tr>
+							<td><spring:url value="/owners/{ownerId}/pets/{petId}/edit"
+									var="petUrl">
+									<spring:param name="ownerId" value="${owner.id}" />
+									<spring:param name="petId" value="${pet.id}" />
+								</spring:url> <a href="${fn:escapeXml(petUrl)}">Edit Pet</a></td>
+							<td><spring:url
+									value="/owners/{ownerId}/pets/{petId}/visits/new"
+									var="visitUrl">
+									<spring:param name="ownerId" value="${owner.id}" />
+									<spring:param name="petId" value="${pet.id}" />
+								</spring:url> <a href="${fn:escapeXml(visitUrl)}">Add Visit</a></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 
         </c:forEach>
     </table>

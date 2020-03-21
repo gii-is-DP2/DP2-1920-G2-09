@@ -25,7 +25,13 @@ import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.AuthoritiesRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataSpecialtyRepository;
+import org.springframework.samples.petclinic.model.Visit;
+import org.springframework.samples.petclinic.repository.OwnerRepository;
+import org.springframework.samples.petclinic.repository.PetRepository;
+import org.springframework.samples.petclinic.repository.VetRepository;
+import org.springframework.samples.petclinic.repository.VisitRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataVetRepository;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +89,10 @@ public class VetService {
 		author.setUsername(vet.getUser().getUsername());
 		this.authoritiesRepository.save(author);
 		this.vetRepository.save(vet);
+	
+	@Transactional(readOnly = true)
+	public Vet findVetbyUser(String User)throws DataAccessException {
+		return vetRepository.findVetbyUser(User);
 	}
 
 }

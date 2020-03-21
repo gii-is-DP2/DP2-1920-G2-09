@@ -39,7 +39,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -91,10 +93,10 @@ public class OwnerController {
 	dataBinder.setDisallowedFields("id");
     }
 
-    @InitBinder("owner.creditCardNumber")
-    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
-	dataBinder.setValidator(new PaymentDetailsValidator());
-    }
+//    @InitBinder("owner")
+//    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
+//	dataBinder.setValidator(new PaymentDetailsValidator());
+//    }
 
     @GetMapping(value = "/owners/new")
     public String initCreationForm(final Map<String, Object> model) {
@@ -203,8 +205,11 @@ public class OwnerController {
 	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
 	BeanUtils.copyProperties(own, owner, "id", "firstName", "lastName", "address", "city", "telephone", "pets",
 		"user");
-
-	if (result.hasErrors()) {
+	PaymentDetailsValidator p = new PaymentDetailsValidator();
+	Errors errors = new BeanPropertyBindingResult(owner, "owner");
+	p.validate(owner, errors);
+	if (errors.hasErrors()) {
+	    result.addAllErrors(errors);
 	    model.put("owner", own);
 	    return "/owners/paymentDetails";
 	} else {

@@ -50,7 +50,21 @@ public class Vet extends Person {
 	@JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"),
 			inverseJoinColumns = @JoinColumn(name = "specialty_id"))
 	private Set<Specialty> specialties;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "username", referencedColumnName = "username")
+	private User user;
+	
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 	protected Set<Specialty> getSpecialtiesInternal() {
 		if (this.specialties == null) {
 			this.specialties = new HashSet<>();
