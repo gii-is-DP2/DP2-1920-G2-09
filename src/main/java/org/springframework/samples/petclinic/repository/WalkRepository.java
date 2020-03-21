@@ -30,11 +30,9 @@ import org.springframework.samples.petclinic.model.Walk;
  */
 public interface WalkRepository extends CrudRepository<Walk, Integer>{
 
-	@Query("Select w from Walk w where available=true")
-    Iterable<Walk> findAllAvailable();
 	
 	Walk findById(int id) throws DataAccessException;
 
-
+	void deleteById(int id);
 
 }

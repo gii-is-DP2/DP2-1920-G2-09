@@ -87,6 +87,6 @@ INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.2
 INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Titulo de prueba',false,3,1,'prueba');
 
 --- WALKS ---
-INSERT INTO walks VALUES (1,'Primer Paseo',true, 'Esto es un paseo1','https://tinyurl.com/wygb5vu');
-INSERT INTO walks VALUES (2,'Segundp Paseo',false, 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
+INSERT INTO walks VALUES (1,'Primer Paseo', 'Esto es un paseo1','https://tinyurl.com/wygb5vu');
+INSERT INTO walks VALUES (2,'Segundp Paseo', 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
 

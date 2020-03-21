@@ -20,7 +20,5 @@ public class Walk extends NamedEntity {
 	@NotEmpty
 	@URL
 	private String		map;
-	@NotNull
-	private boolean		available;
 
 }
