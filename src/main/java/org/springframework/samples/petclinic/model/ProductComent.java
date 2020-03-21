@@ -15,12 +15,12 @@ public class ProductComent extends Coment {
 
 	// USUARIO QUE HA PUBLICADO EL COMENTARIO/VALORACIÓN (PUEDE SER TANTO OWNER, VET
 	// O ADMIN)
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "username")
 	private User	user;
 
 	// PRODUCTO AL QUE SE LE HACE EL COMENTARIO/VALORACIÓN
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "product_id")
 	private Product	product;
 
@@ -52,9 +52,11 @@ public class ProductComent extends Coment {
 	public Product getProduct() {
 		return this.product;
 	}
-
+ 
 	public void setProduct(final Product product) {
 		this.product = product;
 	}
+	
+
 
 }
