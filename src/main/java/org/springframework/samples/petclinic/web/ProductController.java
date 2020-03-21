@@ -81,8 +81,14 @@ public class ProductController {
 	Double rating = this.productComentService.getAverageRatingOfProduct(productId);
 	model.put("rating", rating == null ? 0.0 : rating);
 	model.put("coments", coments);
-	model.put("product", this.productService.findProductById(productId));
-	return "products/productDetails";
+	Product product = this.productService.findProductById(productId);
+	if (product == null) {
+	    return "exception";
+	} else {
+	    model.put("product", product);
+	    return "products/productDetails";
+	}
+
     }
 
     @GetMapping(value = "/new")
@@ -106,7 +112,7 @@ public class ProductController {
     @GetMapping(value = "/{productId}/edit")
     public String initUpdateProductForm(@PathVariable("productId") final int productId, final Model model) {
 	Product product = this.productService.findProductById(productId);
-	model.addAttribute(product);
+	model.addAttribute("product", product);
 	return "products/createOrUpdateProductForm";
     }
 
