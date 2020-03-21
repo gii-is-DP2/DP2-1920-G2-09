@@ -9,7 +9,7 @@
 <petclinic:layout pageName="walks">
 
 	<h2>
-        <c:if test="${walk['new']}">New </c:if> Walk
+   	Save Walk
     </h2>
     
     <form:form modelAttribute="walk" class="form-horizontal" id="add-walk-form">
@@ -22,14 +22,9 @@
         
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-            	<c:choose>
-                    <c:when test="${walk['new']}">
-                        <button class="btn btn-default" type="submit">Add Walk</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="btn btn-default" type="submit">Update Walk</button>
-                    </c:otherwise>
-                </c:choose>                  
+            	
+                        <button class="btn btn-default" type="submit">Save Walk</button>
+                            
             </div>
         </div>
     </form:form>
