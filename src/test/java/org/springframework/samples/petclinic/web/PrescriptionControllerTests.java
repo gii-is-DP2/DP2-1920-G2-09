@@ -41,6 +41,7 @@ import java.util.List;
 		excludeAutoConfiguration= SecurityConfiguration.class)
 class PrescriptionControllerTests {
 
+	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_PET_ID = 1;
 
 	@Autowired
@@ -107,23 +108,24 @@ class PrescriptionControllerTests {
 	@WithMockUser(value = "spring")
     	@Test
     void testInitNewPrescriptionForm() throws Exception {
-    	mockMvc.perform(get("/owners/*/pets/{petId}/prescriptions/new", TEST_PET_ID)).andExpect(status().isOk())
+    	mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/prescriptions/new", TEST_OWNER_ID, TEST_PET_ID)).andExpect(status().isOk())
 			.andExpect(view().name("/prescriptions/createOrUpdatePrescriptionForm"));
     }
 
     @WithMockUser(value = "spring")
     	@Test
     void testProcessNewPrescriptionFormSuccess() throws Exception {
-	mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/prescriptions/new", 1, TEST_PET_ID).with(csrf()).param("dateInicio", "2020/10/15").param("dateFinal", "2020/10/20")
+	mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/prescriptions/new", TEST_OWNER_ID, TEST_PET_ID).with(csrf()).param("dateInicio", "2020/10/15").param("dateFinal", "2020/10/20")
 			.param("name", "Titulo").param("description", "Una gran descripcion para la prescription"))                                
             .andExpect(status().isOk())
-			.andExpect(view().name("redirect:/owners/{ownerId}"));
+			.andExpect(view().name("redirect:/owners/" + TEST_OWNER_ID));
     }
 
     @WithMockUser(value = "spring")
     	@Test
     void testProcessNewPrescriptionFormHasErrors() throws Exception {
-	mockMvc.perform(post("/owners/*/pets/{petId}/prescriptions/new", TEST_PET_ID).with(csrf()).param("dateInicio", "").param("dateFinal", "").param("name", "").param("description", ""))
+	mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/prescriptions/new", TEST_OWNER_ID, TEST_PET_ID).with(csrf())
+			.param("dateInicio", "").param("dateFinal", "").param("name", "").param("description", ""))
 			.andExpect(model().attributeExists("prescription"))
 			.andExpect(model().attributeHasErrors("prescription"))
 			.andExpect(model().attributeHasFieldErrors("prescription", "dateInicio"))

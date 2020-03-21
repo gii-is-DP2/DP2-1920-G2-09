@@ -75,28 +75,27 @@ public class PrescriptionController {
 	}
 	
 	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions/new")
-	public String initNewPrescriptionForm(@PathVariable("petId") int petId,Map<String, Object> model) {
+	public String initNewPrescriptionForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		model.put("previa", this.prescriptionService.findPrescriptionsByPetId(petId));
-		return "prescriptions/createOrUpdatePrescriptionForm";
+		Prescription prescription = new Prescription();
+		model.put("prescription", prescription);
+		return "/prescriptions/createOrUpdatePrescriptionForm";
 	}
 
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/new")
 	public String processNewPrescriptionForm(ModelMap model, @Valid Prescription prescription, BindingResult result) {
 		if (result.hasErrors()) {
 			model.addAttribute("prescription", prescription);
-			return "prescriptions/createOrUpdatePrescriptionForm";
+			return "/prescriptions/createOrUpdatePrescriptionForm";
 		} else {
-			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object sesion = auth.getPrincipal();
 			UserDetails us = null;
 			if(sesion instanceof UserDetails) {
 				us = (UserDetails) sesion;
 			}
-			
 			String userName = us.getUsername();
 			Vet vet = this.vetService.findVetbyUser(userName);
-			
 			prescription.setVet(vet);
 			
 			this.prescriptionService.savePrescription(prescription);

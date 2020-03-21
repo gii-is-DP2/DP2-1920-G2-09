@@ -1,7 +1,9 @@
 package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +17,7 @@ import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Prescription;
+import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -103,6 +106,11 @@ public class PrescriptionServiceTests {
 		owner.setLastName("javi");
 		owner.setTelephone("988755839");
 		
+		owner.setCreditCardNumber("5536848370023594");
+		owner.setCvv("821");
+		owner.setExpirationMonth(1);
+		owner.setExpirationYear(2023);
+		
 		Pet pet = new Pet();
 		pet.setBirthDate(LocalDate.of(2020, 01, 01));
 		pet.setName("pepa");
@@ -112,7 +120,7 @@ public class PrescriptionServiceTests {
 		pet.setOwner(owner);
 		
 		User user2 = new User();
-		user.setUsername("carcru2");
+		user.setUsername("carcrum");
 		user.setPassword("12345628");
 		user.setEnabled(true);
 		
@@ -120,6 +128,10 @@ public class PrescriptionServiceTests {
 		vet.setFirstName("carlos");
 		vet.setLastName("cruz");
 		vet.setUser(user2);
+		
+		Specialty sp = new Specialty();
+		sp.setName("surgery");
+		vet.addSpecialty(sp);
 		
 		p.setName("Titulo de Prueba");
 		p.setDateInicio(LocalDate.of(2020, 12, 12));
