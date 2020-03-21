@@ -57,7 +57,6 @@ class WalkControllerTests {
 		laputa.setName("Laputa");
 		laputa.setDescription("This is a wonderful Island of riches and technology");
 		laputa.setMap("https://tinyurl.com/wygb5vu");
-		laputa.setAvailable(true);
 		given(this.walkService.findWalkById(TEST_WALK_ID)).willReturn(laputa);
 
 	}
@@ -69,7 +68,6 @@ class WalkControllerTests {
 				.andExpect(model().attribute("walk", hasProperty("name", is("Laputa"))))
 				.andExpect(model().attribute("walk", hasProperty("description", is("This is a wonderful Island of riches and technology"))))
 				.andExpect(model().attribute("walk", hasProperty("map", is("https://tinyurl.com/wygb5vu"))))
-				.andExpect(model().attribute("walk", hasProperty("available", is(true))))
 				.andExpect(view().name("walks/walkDetails"));
 	}
         
@@ -86,8 +84,7 @@ class WalkControllerTests {
 		mockMvc.perform(post("/walks/new").param("name", "NotLaputa")
 							.with(csrf())
 							.param("description", "This is not an Island of riches")
-							.param("map", "https://tinyurl.com/wygbvu")
-							.param("available", "false"))
+							.param("map", "https://tinyurl.com/wygbvu"))
 				.andExpect(status().is2xxSuccessful());
 	}
 
@@ -96,13 +93,48 @@ class WalkControllerTests {
 	void testProcessCreationFormHasErrors() throws Exception {
 		mockMvc.perform(post("/walks/new")
 							.with(csrf())
-							.param("name", "NotLaputa")
-							.param("available", "true"))
+							.param("name", "NotLaputa"))
 				.andExpect(status().isOk())
 				.andExpect(model().attributeHasErrors("walk"))
 				.andExpect(model().attributeHasFieldErrors("walk", "map"))
 				.andExpect(model().attributeHasFieldErrors("walk", "description"))
 				.andExpect(view().name("walks/createOrUpdateWalkForm"));
 	}
+	
+    @WithMockUser(value = "spring")
+	@Test
+	void testInitUpdateWalkForm() throws Exception {
+		mockMvc.perform(get("/walks/{walkId}/edit", TEST_WALK_ID)).andExpect(status().isOk())
+				.andExpect(model().attributeExists("walk"))
+				.andExpect(model().attribute("walk", hasProperty("description", is("This is a wonderful Island of riches and technology"))))
+				.andExpect(model().attribute("walk", hasProperty("name", is("Laputa"))))
+				.andExpect(model().attribute("walk", hasProperty("map", is("https://tinyurl.com/wygb5vu"))))
+				.andExpect(view().name("walks/createOrUpdateWalkForm"));
+	}
 
+      @WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateWalkFormSuccess() throws Exception {
+		mockMvc.perform(post("/walks/{walkId}/edit", TEST_WALK_ID)
+							.with(csrf())
+							.param("name", "LaIsla")
+							.param("description", "Bloggers everywhere")
+							.param("map", "https://tinyurl.com/wygb5vu"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(view().name("redirect:/walks/{walkId}"));
+	}
+
+      @WithMockUser(value = "spring")
+	@Test
+	void testProcessUpdateWalkFormHasErrors() throws Exception {
+		mockMvc.perform(post("/walks/{walkId}/edit", TEST_WALK_ID)
+							.with(csrf())
+							.param("name", "Joe")
+							.param("available", "false"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeHasErrors("walk"))
+				.andExpect(model().attributeHasFieldErrors("walk", "map"))
+				.andExpect(model().attributeHasFieldErrors("walk", "description"))
+				.andExpect(view().name("walks/createOrUpdateWalkForm"));
+	}
 }

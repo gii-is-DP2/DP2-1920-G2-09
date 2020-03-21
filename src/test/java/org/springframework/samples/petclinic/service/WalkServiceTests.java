@@ -48,7 +48,6 @@ public class WalkServiceTests {
     	walk.setName("Paseo");
     	walk.setDescription("This is a try description");
     	walk.setMap("https://tinyurl.com/wygb5vu");
-    	walk.setAvailable(true);
     	this.walkService.saveWalk(walk);
     	Assertions.assertTrue(walk != null);
     }

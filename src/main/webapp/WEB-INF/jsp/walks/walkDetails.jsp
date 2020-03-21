@@ -29,6 +29,14 @@
         </tr>
     </table>
     
+
+  	<sec:authorize access="hasAnyAuthority('admin')">
+    <spring:url value="{walkId}/edit" var="editUrl">
+        <spring:param name="walkId" value="${walk.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Walk</a>
+	</sec:authorize>
+
     <!--  COMENTARIOS Y VALORACIONES -->
  	<c:if test = "${ not empty OKmessage}">
    		<div class="alert-success" role="alert">
@@ -44,10 +52,20 @@
 		</form:form>
 	</sec:authorize>
 
+
     <br/>
     <br/>
     <br/>
     
+
+    <sec:authorize access="hasAnyAuthority('admin')">
+    <spring:url value="{walkId}/delete" var="deleteUrl">
+        <spring:param name="walkId" value="${walk.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default">Delete Walk</a>
+	</sec:authorize>
+    <br/>
+
     
 <!--  LISTA DE COMENATARIOS -->
 
@@ -82,6 +100,7 @@
 </div>
     
   
+
     
     
     

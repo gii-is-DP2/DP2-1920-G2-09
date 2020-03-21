@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Walk;
 import org.springframework.samples.petclinic.model.WalkComent;
@@ -54,22 +55,21 @@ public class WalkController {
 		dataBinder.setValidator(new WalkValidator());
 	}
 
-	@GetMapping(value = "/all")
-	public String findAllWalks(final ModelMap model) {
-		Walk w = new Walk();
-		model.put("walk", w);
-		Iterable<Walk> walks = this.walkService.findAllWalks();
-		model.addAttribute("walks", walks);
-		return "walks/listWalks";
-	}
-
-	@GetMapping(value = "/userAll")
-	public String findAllWalksAvailable(final ModelMap model) {
-		Walk w = new Walk();
-		model.put("walk", w);
-		Iterable<Walk> walks = this.walkService.findAllWalksAvailable();
-		model.addAttribute("walks", walks);
-		return "walks/listWalks";
+	
+    @GetMapping(value = "/all")
+    public String findAllWalks(final ModelMap model) {
+    	Walk w = new Walk();
+    	model.put("walk", w);
+    	Iterable<Walk> walks = this.walkService.findAllWalks();
+    	model.addAttribute("walks", walks);
+    	return "walks/listWalks";
+    }
+    
+    @GetMapping(value = "/{walkId}")
+	public ModelAndView showWalk(@PathVariable("walkId") final int walkId) {
+		ModelAndView mav = new ModelAndView("walks/walkDetails");
+		mav.addObject(this.walkService.findWalkById(walkId));
+		return mav;
 	}
 
 	@GetMapping(value = "/{walkId}")
@@ -104,6 +104,33 @@ public class WalkController {
 			this.walkService.saveWalk(walk);
 			return this.findAllWalks(model);
 		}
+	}
+	
+	@GetMapping(value = "/{walkId}/edit")
+	public String initUpdateWalkForm(@PathVariable("walkId") int walkId, ModelMap model) {
+		Walk walk = this.walkService.findWalkById(walkId);
+		model.put("walk", walk);
+		return "walks/createOrUpdateWalkForm";
+	}
+
+    @PostMapping(value = "/{walkId}/edit")
+	public String processUpdateWalkForm(@Valid Walk walk, BindingResult result,@PathVariable("walkId") int walkId, ModelMap model) {
+		if (result.hasErrors()) {
+			model.put("walk", walk);
+			return "walks/createOrUpdateWalkForm";
+		}
+		else {
+            Walk walkToUpdate=this.walkService.findWalkById(walkId);
+			BeanUtils.copyProperties(walk, walkToUpdate, "id");
+			this.walkService.saveWalk(walkToUpdate);
+			return "redirect:/walks/{walkId}";
+		}
+	}
+    
+    @GetMapping(value = "/{walkId}/delete")
+	public String initDeleteWalk(@PathVariable("walkId") int walkId, ModelMap model) {
+		this.walkService.deleteWalk(walkId);
+		return this.findAllWalks(model);
 	}
 
 }

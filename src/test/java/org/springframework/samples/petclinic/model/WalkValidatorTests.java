@@ -20,7 +20,6 @@ public class WalkValidatorTests {
 		w.setName("Nombre");
 		w.setDescription("Descripción de prueba");
 		w.setMap("http://www.urldeprueba.com");
-		w.setAvailable(true);
 		this.walk = w;
 	}
 

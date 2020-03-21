@@ -41,12 +41,6 @@ public class WalkService {
 		return walks;
 	}
 	
-	@Transactional
-	public Iterable<Walk> findAllWalksAvailable(){
-		Iterable<Walk> walks = this.walkRepository.findAllAvailable();
-		return walks;
-	}
-	
 	@Transactional(readOnly = true)
 	public Walk findWalkById(final int id) throws DataAccessException {
 		return this.walkRepository.findById(id);
@@ -55,6 +49,11 @@ public class WalkService {
 	@Transactional
 	public void saveWalk(final Walk walk){
 		this.walkRepository.save(walk);
+	}
+	
+	@Transactional
+	public void deleteWalk(final int id){
+		this.walkRepository.deleteById(id);
 	}
 
 
