@@ -27,13 +27,13 @@
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					<span>Home</span>
 				</petclinic:menuItem>
-
+				<sec:authorize access="hasAnyAuthority('admin','veterinarian')">
 				<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"
 					title="find owners">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Find owners</span>
 				</petclinic:menuItem>
-
+					</sec:authorize>	
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
@@ -94,11 +94,12 @@
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
 											</p>
-											
+											<sec:authorize access="hasAnyAuthority('owner')">
 											<p class="text-left">
 												<a href="<c:url value="/owners/payment-details" />"
 													class="btn btn-primary btn-block btn-sm">Payment Details</a>
 											</p>
+											</sec:authorize>
 										</div>
 									</div>
 								</div>

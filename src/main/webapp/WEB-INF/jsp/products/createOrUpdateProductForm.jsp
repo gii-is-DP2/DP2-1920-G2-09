@@ -16,20 +16,18 @@
             <petclinic:inputField label="Image URL" name="urlImage"/>
             <petclinic:inputField label="Unit Price" name="unitPrice"/>
             <p style="margin-left:9%" ><b> Check if it is available</b> <c:choose><c:when test="${product.available == true }">
-            <input type="checkbox" label="Available" name="available" checked="checked"/>
+            <input type="checkbox"  name="available" checked="checked"/>
             </c:when>
-            <c:otherwise><input type="checkbox" label="Available" name="available"/></c:otherwise>
+            <c:otherwise><input type="checkbox"  name="available"/></c:otherwise>
             </c:choose></p>
             <div class="control-group">
             <petclinic:selectField name="category" label="Type " names="${categories}" size="4" />
             </div>
         </div>
         <div class="form-group">
+         
             <div class="col-sm-offset-2 col-sm-10">
-                       <button class="btn btn-default" type="submit">Add Product</button>                   
-            </div>
-            <div class="col-sm-offset-2 col-sm-10">
-                       <button class="btn btn-default" type="submit">Update Product</button>                   
+                       <button class="btn btn-default" type="submit">Save Product</button>                   
             </div>
         </div>
     </form:form>

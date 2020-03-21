@@ -27,26 +27,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     DataSource dataSource;
 
-
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-	http.authorizeRequests()
-		.antMatchers("/products/new").hasAnyAuthority("admin")
-		.antMatchers("/products/**").permitAll()
-		.antMatchers("/owners/payment-details").hasAnyAuthority("owner")
+	http.authorizeRequests().antMatchers("/products/new").hasAnyAuthority("admin")
+		.antMatchers("/products/{productId}/edit").hasAnyAuthority("admin").antMatchers("/products/**")
+		.permitAll().antMatchers("/owners/payment-details").hasAnyAuthority("owner")
 		.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
-		.antMatchers(HttpMethod.GET, "/", "/oups").permitAll()
-		.antMatchers("/users/new").permitAll()
-		.antMatchers("/admin/**").hasAnyAuthority("admin")
-		.antMatchers("/prescription/**").permitAll()
-		.antMatchers("/owners/**").hasAnyAuthority("owner", "admin")
-		.antMatchers("/walks/**").permitAll()
-		.antMatchers("/walks/new").hasAnyAuthority("admin")
-		.antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
+		.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
+		.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/prescription/**").permitAll()
+		.antMatchers("/owners/**").hasAnyAuthority("admin", "veterinarian").antMatchers("/walks/new")
+		.hasAnyAuthority("admin").antMatchers("/walks/**").permitAll().antMatchers("/vets/new")
+		.hasAnyAuthority("admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
 		.formLogin()
 		/* .loginPage("/login") */
 		.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");
