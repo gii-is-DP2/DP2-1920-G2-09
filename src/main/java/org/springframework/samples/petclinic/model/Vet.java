@@ -71,6 +71,18 @@ public class Vet extends Person {
 		}
 		return this.specialties;
 	}
+	
+	@OneToOne(cascade = CascadeType.ALL)     
+	@JoinColumn(name = "username", referencedColumnName = "username") 	
+	private User user; 	  	
+	
+	public User getUser() { 		
+		return user; 	
+	}  	
+	
+	public void setUser(User user) { 		
+		this.user = user; 	
+	}
 
 	protected void setSpecialtiesInternal(Set<Specialty> specialties) {
 		this.specialties = specialties;
