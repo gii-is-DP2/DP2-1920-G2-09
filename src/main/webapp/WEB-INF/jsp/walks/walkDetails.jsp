@@ -5,7 +5,8 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
-
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <petclinic:layout pageName="walks">
 
     <h2>Walk Information</h2>
@@ -20,6 +21,11 @@
         <tr>
             <th>Description</th>
             <td><c:out value="${walk.description}"/></td>
+        </tr>
+    
+        <tr>
+            <th>Rating</th>
+            <td><fmt:formatNumber minFractionDigits="2" type="number" maxFractionDigits="2" value="${rating}"/>
         </tr>
     </table>
     

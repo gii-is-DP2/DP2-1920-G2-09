@@ -89,4 +89,4 @@ INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Ti
 --- WALKS ---
 INSERT INTO walks VALUES (1,'Primer Paseo',true, 'Esto es un paseo1','https://tinyurl.com/wygb5vu');
 INSERT INTO walks VALUES (2,'Segundp Paseo',false, 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
-INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1, 'Leo','descripción','2010-09-07',2,'admin1', 1);
+INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1,'Leo','descripción','2010-09-07',2,'admin1', 1);

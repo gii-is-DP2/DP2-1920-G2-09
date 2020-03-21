@@ -18,4 +18,7 @@ public interface WalkComentRepository extends CrudRepository<WalkComent, Integer
 
 	@Query("SELECT AVG(wc.rating) FROM WalkComent wc where wc.walk.id =?1 and wc.rating is not null")
 	Double getAverageRatingOfWalk(int walkId);
+
+	@Query("Select wc from WalkComent wc where wc.id = ?1")
+	WalkComent findWalkComentById(int walkComentid);
 }
