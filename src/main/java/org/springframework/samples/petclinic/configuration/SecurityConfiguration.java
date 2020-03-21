@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 		.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
 		.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/prescription/**").permitAll().antMatchers("/owners/**")
-		.hasAnyAuthority("owner", "admin").antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
+		.permitAll().antMatchers("/vets/**").authenticated().anyRequest().denyAll().and()
 		.formLogin()
 		/* .loginPage("/login") */
 		.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");

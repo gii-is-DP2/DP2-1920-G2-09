@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class PrescriptionController {
 	private final VetService vetService;
 
 	@Autowired
-public PrescriptionController(PetService petService, PrescriptionService prescriptionService,VetService vetService) {
+	public PrescriptionController(PetService petService, PrescriptionService prescriptionService,VetService vetService) {
 		
 		this.petService = petService;
 		this.prescriptionService = prescriptionService;
@@ -64,8 +65,6 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 	public void initPetBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new PrescriptionValidator());
 	}
-	
-
 
 	@ModelAttribute("prescription")
 	public Prescription loadPetWithPrescription(@PathVariable("petId") int petId) {
@@ -74,25 +73,19 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 		pet.addPrescription(prescription);
 		return prescription;
 	}
-
 	
 	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions/new")
 	public String initNewPrescriptionForm(@PathVariable("petId") int petId,Map<String, Object> model) {
-		
-		
-		
 		model.put("previa", this.prescriptionService.findPrescriptionsByPetId(petId));
-		
-		
 		return "prescriptions/createOrUpdatePrescriptionForm";
 	}
 
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/new")
-	public String processNewPrescriptionForm(@Valid Prescription prescription, BindingResult result) {
+	public String processNewPrescriptionForm(ModelMap model, @Valid Prescription prescription, BindingResult result) {
 		if (result.hasErrors()) {
+			model.addAttribute("prescription", prescription);
 			return "prescriptions/createOrUpdatePrescriptionForm";
-		}
-		else {
+		} else {
 			
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object sesion = auth.getPrincipal();
@@ -105,7 +98,6 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 			Vet vet = this.vetService.findVetbyUser(userName);
 			
 			prescription.setVet(vet);
-			
 			
 			this.prescriptionService.savePrescription(prescription);
 			return "redirect:/owners/{ownerId}";
