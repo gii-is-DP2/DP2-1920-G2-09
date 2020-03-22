@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Prescription;
@@ -33,9 +31,9 @@ public class PrescriptionService {
 	}
 
 	@Transactional(readOnly = true)
-	public Optional<Prescription> findPrescriptionById(int prId) {
+	public Prescription findPrescriptionById(int prId) {
+		return prescriptionRepository.findById(prId).orElse(null);
 		
-		return prescriptionRepository.findById(prId);
 	}
 
 }

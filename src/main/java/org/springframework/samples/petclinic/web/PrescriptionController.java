@@ -30,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -77,61 +78,47 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 
 	
 	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions/new")
-	public String initNewPrescriptionForm(@PathVariable("petId") int petId,Map<String, Object> model) {
-		
-		
-		
+	public String initNewPrescriptionForm(@PathVariable("petId") int petId, Map<String, Object> model) {
 		model.put("previa", this.prescriptionService.findPrescriptionsByPetId(petId));
-		
-		
-		return "prescriptions/createOrUpdatePrescriptionForm";
+		Prescription prescription = new Prescription();
+		model.put("prescription", prescription);
+		return "/prescriptions/createOrUpdatePrescriptionForm";
 	}
 
 	@PostMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/new")
-	public String processNewPrescriptionForm(@Valid Prescription prescription, BindingResult result) {
+	public String processNewPrescriptionForm(ModelMap model, @Valid Prescription prescription, BindingResult result) {
 		if (result.hasErrors()) {
-			return "prescriptions/createOrUpdatePrescriptionForm";
-		}
-		else {
-			
+			model.addAttribute("prescription", prescription);
+			return "/prescriptions/createOrUpdatePrescriptionForm";
+		} else {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			Object sesion = auth.getPrincipal();
 			UserDetails us = null;
 			if(sesion instanceof UserDetails) {
 				us = (UserDetails) sesion;
 			}
-			
 			String userName = us.getUsername();
 			Vet vet = this.vetService.findVetbyUser(userName);
-			
 			prescription.setVet(vet);
-			
 			
 			this.prescriptionService.savePrescription(prescription);
 			return "redirect:/owners/{ownerId}";
 		}
 	}
-
-
 	
 	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
 	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
-		
 		model.addAttribute("selections", this.prescriptionService.findPrescriptionsByPetId(petId));
-		
 		return "prescriptions/prescriptionsList";
 	}
 	
 	
 	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
-	public String showPrescription(@PathVariable("prescriptionId") int prId,Map<String, Object> model) {
-		
-		Prescription pres =  this.prescriptionService.findPrescriptionById(prId).get();
-		
+	public String showPrescription(@PathVariable("prescriptionId") int prId, Map<String, Object> model) {
+		Prescription pres =  this.prescriptionService.findPrescriptionById(prId);
 		model.put("prescription",pres);
-		
 		return "prescriptions/prescriptionDetails";
 	}
-	}
+}
 
 

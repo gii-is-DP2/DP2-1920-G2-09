@@ -84,3 +84,5 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 --- LOS NUEVOS A PARTIR DE AQUI ---
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
 
+INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (1, 'Tratamiento', 'Tomar paracetamol 2 semanas', 1, 1, '2020-10-15', '2020-10-20');
+
