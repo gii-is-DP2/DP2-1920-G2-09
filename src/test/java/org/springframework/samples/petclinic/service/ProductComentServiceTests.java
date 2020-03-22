@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.samples.petclinic.model.Category;
 import org.springframework.samples.petclinic.model.Product;
 import org.springframework.samples.petclinic.model.ProductComent;
 import org.springframework.samples.petclinic.model.User;
@@ -21,17 +20,35 @@ public class ProductComentServiceTests {
 
 	@Autowired
 	protected ProductComentService productComentService;
+	
+	@Autowired
+	protected ProductService productService;
+	
+	@Autowired
+	protected VetService  vetService;
 
 
 	@Test
-	void shouldFindProductComents() {
-		Collection<ProductComent> productComents = this.productComentService.findAllComentsOfTheProduct(1);
+	void shouldFindProductOwnerComents() {
+		Collection<ProductComent> productComents = this.productComentService.findAllComentsOwnersOfTheProduct(1);
 		Assertions.assertTrue(!productComents.isEmpty());
 	}
 
 	@Test
-	void shouldNotFindProductComents() {
-		Collection<ProductComent> productComents = this.productComentService.findAllComentsOfTheProduct(-1);
+	void shouldNotFindProductOwnerComents() {
+		Collection<ProductComent> productComents = this.productComentService.findAllComentsOwnersOfTheProduct(-1);
+		Assertions.assertTrue(productComents.isEmpty());
+	}
+	
+	@Test
+	void shouldFindProductVetComents() {
+		Collection<ProductComent> productComents = this.productComentService.findAllComentsVetsOfTheProduct(1);
+		Assertions.assertTrue(!productComents.isEmpty());
+	}
+
+	@Test
+	void shouldNotFindProductVetComents() {
+		Collection<ProductComent> productComents = this.productComentService.findAllComentsVetsOfTheProduct(-1);
 		Assertions.assertTrue(productComents.isEmpty());
 	}
 
@@ -48,31 +65,27 @@ public class ProductComentServiceTests {
 		Assertions.assertTrue(user == null);
 
 	}
-
+	
 	@Test
 	void shouldInsertProductComent() {
+		
 		ProductComent pC = new ProductComent();
-		Product p = new Product();
-		p.setName("Producto de prueba");
-		p.setUrlImage("http://www.urldeprueba.com");
-		p.setDescription("Descripción de prueba");
-		p.setCategory(Category.ACCESORY);
-		p.setUnitPrice(10.20);
-		p.setStock(20);
-		User u = new User();
-		u.setEnabled(true);
-		u.setPassword("contraseña");
-		u.setUsername("u");
+		Product p = this.productService.findProductById(1);
+		Integer found = this.productComentService.findAllComentsOwnersOfTheProduct(p.getId()).size()
+				+ this.productComentService.findAllComentsVetsOfTheProduct(p.getId()).size();
+		
 		pC.setDescription("Descripcion de prueba");
 		pC.setHighlight(false);
 		pC.setPostDate(LocalDate.now().minusDays(2));
 		pC.setProduct(p);
 		pC.setRating(4);
 		pC.setTitle("Esto es un titulo");
-		pC.setUser(u);
+		pC.setUser(this.vetService.findVetById(1).getUser());
+		
 		this.productComentService.saveProductComent(pC);
+		
 		Assert.assertTrue(pC.getId().longValue() != 0);
-		Assert.assertTrue(this.productComentService.findAllComentsOfTheProduct(p.getId()).size() == 1);
+		Assert.assertTrue(this.productComentService.findAllComentsOwnersOfTheProduct(p.getId()).size()
+				+ this.productComentService.findAllComentsVetsOfTheProduct(p.getId()).size() == found + 1 );
 	}
-
 }

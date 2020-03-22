@@ -20,8 +20,14 @@ public class ProductComentService {
     }
 
     @Transactional
-    public Collection<ProductComent> findAllComentsOfTheProduct(final Integer idProduct) {
-	return this.productComentRepository.findComentsOfTheProduct(idProduct);
+    public Collection<ProductComent> findAllComentsVetsOfTheProduct(final Integer idProduct) {
+	return this.productComentRepository.findComentsVetsOfTheProduct(idProduct);
+	
+    }
+    @Transactional
+    public Collection<ProductComent> findAllComentsOwnersOfTheProduct(final Integer idProduct) {
+	return this.productComentRepository.findComentsOwnersOfTheProduct(idProduct);
+	
     }
 
     @Transactional
