@@ -15,17 +15,35 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.OwnerCrudRepository;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Mostly used as a facade for all Petclinic controllers Also a placeholder
@@ -95,6 +113,132 @@ public class OwnerService {
     @Transactional
     public Owner findOwnerByUsername(final String username) {
 	return this.ownerCrudRepository.findOwnerByUsername(username);
+    }
+
+    public ByteArrayInputStream generatePDF(final Prescription p) throws MalformedURLException, IOException {
+	Document document = new Document();
+	ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+	try {
+	    File file = new File(this.getClass()
+		    .getResource("/static/resources/images/" + p.getPet().getType().getName() + ".png").getFile());
+	    Image image1 = Image.getInstance(file.getAbsolutePath());
+	    image1.setAlignment(Element.ALIGN_CENTER);
+	    image1.scaleAbsolute(document.getPageSize().getHeight() * 0.5f, document.getPageSize().getWidth() * 0.2f);
+	    FontFactory.register("https://fonts.googleapis.com/css?family=Liu+Jian+Mao+Cao&display=swap", "titleFont");
+	    FontFactory.register("https://fonts.googleapis.com/css?family=Quicksand&display=swap", "textfont");
+
+	    Font textFont = FontFactory.getFont("textfont", 13);
+
+	    Font titleFont = FontFactory.getFont("titleFont", 16);
+
+	    PdfPTable table = new PdfPTable(1);
+	    table.setWidthPercentage(95);
+	    table.setSpacingBefore(15);
+	    table.setSpacingAfter(15);
+
+	    PdfPCell hcell;
+	    hcell = new PdfPCell(new Phrase("Vet", titleFont));
+	    hcell.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase(p.getVet().getFirstName() + " " + p.getVet().getLastName(), textFont));
+	    hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase("Owner of the pet", titleFont));
+	    hcell.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase(
+		    p.getPet().getOwner().getFirstName() + " " + p.getPet().getOwner().getLastName(), textFont));
+	    hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase("Pet", titleFont));
+	    hcell.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase(p.getPet().getName(), textFont));
+	    hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase("Pet Type", titleFont));
+	    hcell.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    hcell = new PdfPCell(new Phrase(p.getPet().getType().getName(), textFont));
+	    hcell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table.addCell(hcell);
+
+	    PdfPTable table2 = new PdfPTable(1);
+	    table2.setWidthPercentage(95);
+	    table2.setSpacingBefore(15);
+	    table2.setSpacingAfter(15);
+	    PdfPCell hcell2;
+
+	    hcell2 = new PdfPCell(new Phrase("Title", titleFont));
+	    hcell2.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase(p.getName(), textFont));
+	    hcell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase("Description", titleFont));
+	    hcell2.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase(p.getDescription(), textFont));
+	    hcell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase("Start Date", titleFont));
+	    hcell2.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase(p.getDateInicio().toString(), textFont));
+	    hcell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase("End Date", titleFont));
+	    hcell2.setBackgroundColor(new BaseColor(104, 221, 122));
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    hcell2 = new PdfPCell(new Phrase(p.getDateFinal().toString(), textFont));
+	    hcell2.setBackgroundColor(BaseColor.LIGHT_GRAY);
+	    hcell2.setHorizontalAlignment(Element.ALIGN_LEFT);
+	    table2.addCell(hcell2);
+
+	    PdfWriter.getInstance(document, out);
+	    document.open();
+	    document.setMargins(0, 0, 30, 30);
+	    document.addTitle("Prescripción de la mascota:" + p.getPet().getName());
+	    document.add(image1);
+	    document.add(table);
+	    document.add(table2);
+	    document.close();
+
+	} catch (DocumentException ex) {
+
+	}
+
+	return new ByteArrayInputStream(out.toByteArray());
     }
 
 }
