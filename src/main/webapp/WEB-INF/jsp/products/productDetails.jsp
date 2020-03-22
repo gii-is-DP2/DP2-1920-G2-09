@@ -96,7 +96,20 @@
                 </div>
                 <div class="panel-body">
                     <ul class="media-list">
-                    <c:forEach items="${coments}" var = "coment">
+                    <c:forEach items="${comentsVet}" var = "coment">
+                        <li class="media">
+                            <div class="media-body-vet">
+                            
+                                <span class="text-muted pull-right">
+                                    <small class="text-muted"><c:out value = "${coment.postDate}" /></small>
+                                </span>
+                                <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
+                                <strong class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
+                                <p> <c:out value = "${coment.description}" /></p>
+                            </div>
+                        </li>
+                        </c:forEach>
+                        <c:forEach items="${comentsOwner}" var = "coment">
                         <li class="media">
                             <div class="media-body">
                                 <span class="text-muted pull-right">
