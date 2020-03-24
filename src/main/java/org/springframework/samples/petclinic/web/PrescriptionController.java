@@ -49,7 +49,7 @@ public class PrescriptionController {
 	private final VetService vetService;
 
 	@Autowired
-public PrescriptionController(PetService petService, PrescriptionService prescriptionService,VetService vetService) {
+	public PrescriptionController(PetService petService, PrescriptionService prescriptionService,VetService vetService) {
 		
 		this.petService = petService;
 		this.prescriptionService = prescriptionService;
@@ -65,8 +65,6 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 	public void initPetBinder(WebDataBinder dataBinder) {
 		dataBinder.setValidator(new PrescriptionValidator());
 	}
-	
-
 
 	@ModelAttribute("prescription")
 	public Prescription loadPetWithPrescription(@PathVariable("petId") int petId) {
@@ -75,7 +73,6 @@ public PrescriptionController(PetService petService, PrescriptionService prescri
 		pet.addPrescription(prescription);
 		return prescription;
 	}
-
 	
 	@GetMapping(value = "/owners/*/pets/{petId}/prescriptions/new")
 	public String initNewPrescriptionForm(@PathVariable("petId") int petId, Map<String, Object> model) {

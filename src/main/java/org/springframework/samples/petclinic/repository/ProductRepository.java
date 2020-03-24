@@ -8,9 +8,9 @@ import org.springframework.samples.petclinic.model.Product;
 
 public interface ProductRepository extends CrudRepository<Product, Integer> {
 
-	@Query("Select p from Product p where LOWER(p.name) like LOWER(concat('%',?1,'%'))")
-	Iterable<Product> findProductsFiltered(String name);
+    @Query("Select p from Product p where LOWER(p.name) like LOWER(concat('%',?1,'%'))")
+    Iterable<Product> findProductsFiltered(String name);
 
-	Product findById(int id) throws DataAccessException;
+    Product findById(int id) throws DataAccessException;
 
 }

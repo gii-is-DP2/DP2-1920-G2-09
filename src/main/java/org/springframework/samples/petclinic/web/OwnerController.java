@@ -29,8 +29,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PrescriptionService;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.security.core.Authentication;
@@ -39,7 +41,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -60,11 +64,13 @@ public class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
     private final OwnerService ownerService;
+    private final PrescriptionService prescriptionService;
 
     @Autowired
     public OwnerController(final OwnerService ownerService, final UserService userService,
-	    final AuthoritiesService authoritiesService) {
+	    final AuthoritiesService authoritiesService, final PrescriptionService prescriptionService) {
 	this.ownerService = ownerService;
+	this.prescriptionService = prescriptionService;
     }
 
     @ModelAttribute("months")
@@ -91,10 +97,10 @@ public class OwnerController {
 	dataBinder.setDisallowedFields("id");
     }
 
-    @InitBinder("owner.creditCardNumber")
-    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
-	dataBinder.setValidator(new PaymentDetailsValidator());
-    }
+//    @InitBinder("owner")
+//    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
+//	dataBinder.setValidator(new PaymentDetailsValidator());
+//    }
 
     @GetMapping(value = "/owners/new")
     public String initCreationForm(final Map<String, Object> model) {
@@ -203,8 +209,11 @@ public class OwnerController {
 	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
 	BeanUtils.copyProperties(own, owner, "id", "firstName", "lastName", "address", "city", "telephone", "pets",
 		"user");
-
-	if (result.hasErrors()) {
+	PaymentDetailsValidator p = new PaymentDetailsValidator();
+	Errors errors = new BeanPropertyBindingResult(owner, "owner");
+	p.validate(owner, errors);
+	if (errors.hasErrors()) {
+	    result.addAllErrors(errors);
 	    model.put("owner", own);
 	    return "/owners/paymentDetails";
 	} else {
@@ -213,6 +222,21 @@ public class OwnerController {
 
 	    return "/owners/paymentDetails";
 	}
+    }
+
+    @GetMapping(value = "/owners/profile")
+    public String showOwnerProfile(final ModelMap model) {
+	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	Object principal = auth.getPrincipal();
+	UserDetails us = null;
+	if (principal instanceof UserDetails) {
+	    us = (UserDetails) principal;
+	}
+	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
+	Collection<Prescription> pcs = this.prescriptionService.findPrescriptionsByOwnerId(owner.getId());
+	model.addAttribute("prescriptions", pcs);
+	model.addAttribute("owner", owner);
+	return "/owners/ownerProfile";
     }
 
     /**

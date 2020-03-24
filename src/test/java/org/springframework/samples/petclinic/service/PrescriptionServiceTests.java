@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDate;
@@ -107,7 +108,17 @@ public class PrescriptionServiceTests {
 	@Test
 	void shouldNotSavePrescription() {
 		Prescription prescription = new Prescription();
-		Assertions.assertThrows(ConstraintViolationException.class, () -> this.prescriptionService.savePrescription(prescription));
+		User user1 = new User();
+		Owner owner = new Owner();
+		owner.setUser(user1);
+		Pet pet = new Pet();
+		pet.setOwner(owner);
+		prescription.setPet(pet);
+		User user2 = new User();
+		Vet vet = new Vet();
+		vet.setUser(user2);
+		prescription.setVet(vet);
+		Assertions.assertThrows(JpaSystemException.class, () -> this.prescriptionService.savePrescription(prescription));
 	}
 
 	@Test
@@ -123,3 +134,7 @@ public class PrescriptionServiceTests {
 	}
 	
 }
+
+
+
+

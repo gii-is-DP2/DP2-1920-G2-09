@@ -2,6 +2,8 @@ package org.springframework.samples.petclinic.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,20 +20,22 @@ public class Prescription extends NamedEntity {
 	@NotEmpty
 	private String description;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "pet_id")
 	private Pet pet;
 	
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "vet_id")
 	private Vet vet;
 
 	@NotNull     
+	@Column(name = "date_inicio")
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate dateInicio;
 	
 	@NotNull  
+	@Column(name = "date_final")
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private LocalDate dateFinal;
 	

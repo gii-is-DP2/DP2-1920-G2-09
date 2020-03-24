@@ -39,7 +39,9 @@ import java.util.List;
 		excludeAutoConfiguration= SecurityConfiguration.class)
 class PrescriptionControllerTests {
 
+
 	private static final int TEST_PRESCRIPTION_ID = 1;
+
 	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_PET_ID = 1;
 
@@ -88,18 +90,24 @@ class PrescriptionControllerTests {
 		user.setEnabled(true);
 		
 		Vet vet = new Vet();
+
 		vet.setId(1);
+
 		vet.setFirstName("carlos");
 		vet.setLastName("cruz");
 		vet.setUser(user2);
 		
+
 		p.setId(TEST_PRESCRIPTION_ID);
+
 		p.setName("Titulo de Prueba");
 		p.setDateInicio(LocalDate.of(2020, 12, 12));
 		p.setDateFinal(LocalDate.of(2020, 12, 15));
 		p.setDescription("esta es una descripcion de prueba para los test");
+
 		p.setPet(petService.findPetById(1));
 		p.setVet(vetService.findVetbyUser("vet1"));
+
 		
 		List<Prescription> listPrescription = new ArrayList<Prescription>();
 		listPrescription.add(p);
@@ -107,8 +115,10 @@ class PrescriptionControllerTests {
 		
 		given(this.petService.findPetById(PrescriptionControllerTests.TEST_PET_ID)).willReturn(pet);
 		
+
 		given(this.clinicService.findPrescriptionById(TEST_PRESCRIPTION_ID)).willReturn(p);
 		
+
 		given(this.vetService.findVetbyUser(user2.getUsername())).willReturn(vet);
 	}
 	
@@ -142,6 +152,7 @@ class PrescriptionControllerTests {
 			.andExpect(status().isOk())
 			.andExpect(view().name("/prescriptions/createOrUpdatePrescriptionForm"));
     }
+
     
     @WithMockUser(value = "spring")
     @Test
@@ -163,3 +174,4 @@ class PrescriptionControllerTests {
 	}
 	
 }
+

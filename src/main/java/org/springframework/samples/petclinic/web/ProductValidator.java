@@ -23,8 +23,8 @@ public class ProductValidator implements Validator {
 	}
 
 	if (p.getDescription().length() < 20 || p.getDescription().length() > 128) {
-	    errors.rejectValue("description", "The lenght of the description must be between 20 and 128 characters",
-		    "The lenght of the description must be between 20 and 128 characters");
+	    errors.rejectValue("description", "The length of the description must be between 20 and 128 characters",
+		    "The length of the description must be between 20 and 128 characters");
 	}
 
 	if (p.getStock() < 0) {
