@@ -74,7 +74,7 @@ INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (9, 'Lucky', '2011-
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (10, 'Mulligan', '2007-02-24', 2, 8);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (11, 'Freddy', '2010-03-09', 5, 9);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (12, 'Lucky', '2010-06-24', 2, 10);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-06-08', 1, 10);
+INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (13, 'Sly', '2012-06-08', 1, 11);
 
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (1, 7, '2013-01-01', 'rabies shot');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02', 'rabies shot');
@@ -92,4 +92,5 @@ INSERT INTO walks VALUES (1,'Primer Paseo', 'Esto es un paseo1','https://tinyurl
 INSERT INTO walks VALUES (2,'Segundp Paseo', 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1,'Leo','descripción','2010-09-07',2,'admin1', 1);
+INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (1,'Titulo de la nueva prescripción','Descripción de la nueva descripción',13,1,'2013-01-01','2013-01-01');
 

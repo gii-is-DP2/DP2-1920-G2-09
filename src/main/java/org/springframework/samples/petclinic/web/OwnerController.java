@@ -29,8 +29,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PrescriptionService;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.security.core.Authentication;
@@ -62,11 +64,13 @@ public class OwnerController {
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
     private final OwnerService ownerService;
+    private final PrescriptionService prescriptionService;
 
     @Autowired
     public OwnerController(final OwnerService ownerService, final UserService userService,
-	    final AuthoritiesService authoritiesService) {
+	    final AuthoritiesService authoritiesService, final PrescriptionService prescriptionService) {
 	this.ownerService = ownerService;
+	this.prescriptionService = prescriptionService;
     }
 
     @ModelAttribute("months")
@@ -218,6 +222,21 @@ public class OwnerController {
 
 	    return "/owners/paymentDetails";
 	}
+    }
+
+    @GetMapping(value = "/owners/profile")
+    public String showOwnerProfile(final ModelMap model) {
+	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	Object principal = auth.getPrincipal();
+	UserDetails us = null;
+	if (principal instanceof UserDetails) {
+	    us = (UserDetails) principal;
+	}
+	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
+	Collection<Prescription> pcs = this.prescriptionService.findPrescriptionsByOwnerId(owner.getId());
+	model.addAttribute("prescriptions", pcs);
+	model.addAttribute("owner", owner);
+	return "/owners/ownerProfile";
     }
 
     /**

@@ -72,7 +72,9 @@ public class ProductComentController {
 	    productComent.setPostDate(LocalDate.now());
 	    this.productComentService.saveProductComent(productComent);
 	    model.addAttribute("OKmessage", "Your comment have been submited correctly");
-	    return new ProductController(this.productService, this.productComentService).showProduct(productId, model);
+	    // new ProductController(this.productService,
+	    // this.productComentService).showProduct(productId, model)
+	    return "redirect:/products/{productId}";
 	}
 
     }

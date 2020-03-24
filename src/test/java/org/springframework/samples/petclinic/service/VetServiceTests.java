@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Collection;
 import java.util.Set;
 
@@ -26,33 +24,36 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.samples.petclinic.util.EntityUtils;
 import org.springframework.stereotype.Service;
 
 /**
  * Integration test of the Service and the Repository layer.
  * <p>
- * ClinicServiceSpringDataJpaTests subclasses benefit from the following services provided
- * by the Spring TestContext Framework:
+ * ClinicServiceSpringDataJpaTests subclasses benefit from the following
+ * services provided by the Spring TestContext Framework:
  * </p>
  * <ul>
- * <li><strong>Spring IoC container caching</strong> which spares us unnecessary set up
- * time between test execution.</li>
- * <li><strong>Dependency Injection</strong> of test fixture instances, meaning that we
- * don't need to perform application context lookups. See the use of
+ * <li><strong>Spring IoC container caching</strong> which spares us unnecessary
+ * set up time between test execution.</li>
+ * <li><strong>Dependency Injection</strong> of test fixture instances, meaning
+ * that we don't need to perform application context lookups. See the use of
  * {@link Autowired @Autowired} on the <code>{@link
- * ClinicServiceTests#clinicService clinicService}</code> instance variable, which uses
- * autowiring <em>by type</em>.
- * <li><strong>Transaction management</strong>, meaning each test method is executed in
- * its own transaction, which is automatically rolled back by default. Thus, even if tests
- * insert or otherwise change database state, there is no need for a teardown or cleanup
- * script.
- * <li>An {@link org.springframework.context.ApplicationContext ApplicationContext} is
- * also inherited and can be used for explicit bean lookup if necessary.</li>
+ * ClinicServiceTests#clinicService clinicService}</code> instance variable,
+ * which uses autowiring <em>by type</em>.
+ * <li><strong>Transaction management</strong>, meaning each test method is
+ * executed in its own transaction, which is automatically rolled back by
+ * default. Thus, even if tests insert or otherwise change database state, there
+ * is no need for a teardown or cleanup script.
+ * <li>An {@link org.springframework.context.ApplicationContext
+ * ApplicationContext} is also inherited and can be used for explicit bean
+ * lookup if necessary.</li>
  * </ul>
  *
  * @author Ken Krebs
@@ -66,62 +67,62 @@ import org.springframework.stereotype.Service;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class VetServiceTests {
 
-	@Autowired
-	protected VetService vetService;	
+    @Autowired
+    protected VetService vetService;
 
-	@Test
-	void shouldFindAllVets() {
-		Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
-		Assertions.assertTrue(!vets.isEmpty());
-		
-		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-		assertThat(vet.getLastName()).isEqualTo("Douglas");
-		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
-	}
-	
-	@Test
-	void shouldFindVetById() {
-		Vet vet = this.vetService.findVetById(1);
-		Assertions.assertTrue(vet != null);
-	}
-	
-	@Test
-	void shouldFindSpecialtiesById() {
-		Integer [] ids = {1, 2};
-		Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
-		Assertions.assertTrue(!specialties.isEmpty());
-	}
-	
-	@Test
-	void shouldFindAllSpecialties() {
-		Collection<Specialty> specialties = (Collection<Specialty>) this.vetService.findAllSpecialties();
-		Assertions.assertTrue(!specialties.isEmpty());
-	}
-	
-	@Test
-	void shouldSaveVet() {
-		Vet vet = new Vet();
-		vet.setFirstName("Juan");
-		vet.setLastName("Montes");
-		
-		User user = new User();
-		user.setUsername("vet25");
-		user.setPassword("123456");
-		user.setEnabled(true);
-		vet.setUser(user);
+    @Test
+    void shouldFindAllVets() {
+	Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
+	Assertions.assertTrue(!vets.isEmpty());
 
-		this.vetService.saveVet(vet);
-		Assert.assertTrue(vet.getId() != 0);
-	}
-	
-	@Test
-	void shouldNotSaveVet() {
-		Vet vet = new Vet();
-		User user = new User();
-		vet.setUser(user);
-		Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
-	}
+	Vet vet = EntityUtils.getById(vets, Vet.class, 3);
+	Assertions.assertTrue(vet.getLastName().equals("Douglas"));
+	Assertions.assertTrue(vet.getNrOfSpecialties() == 2);
+	Assertions.assertTrue(vet.getSpecialties().get(0).getName().equals("dentistry"));
+	Assertions.assertTrue(vet.getSpecialties().get(1).getName().equals("surgery"));
+    }
+
+    @Test
+    void shouldFindVetById() {
+	Vet vet = this.vetService.findVetById(1);
+	Assertions.assertTrue(vet != null);
+    }
+
+    @Test
+    void shouldFindSpecialtiesById() {
+	Integer[] ids = { 1, 2 };
+	Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
+	Assertions.assertTrue(!specialties.isEmpty());
+    }
+
+    @Test
+    void shouldFindAllSpecialties() {
+	Collection<Specialty> specialties = (Collection<Specialty>) this.vetService.findAllSpecialties();
+	Assertions.assertTrue(!specialties.isEmpty());
+    }
+
+    @Test
+    void shouldSaveVet() throws DataAccessException, DuplicatedUsernameException {
+	Vet vet = new Vet();
+	vet.setFirstName("Juan");
+	vet.setLastName("Montes");
+
+	User user = new User();
+	user.setUsername("vet25");
+	user.setPassword("123456");
+	user.setEnabled(true);
+	vet.setUser(user);
+
+	this.vetService.saveVet(vet);
+	Assert.assertTrue(vet.getId() != 0);
+    }
+
+    @Test
+    void shouldNotSaveVet() {
+	Vet vet = new Vet();
+	User user = new User();
+	vet.setUser(user);
+	Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
+    }
 
 }
