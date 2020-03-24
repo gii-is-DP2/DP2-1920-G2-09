@@ -85,7 +85,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
 
 INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Titulo de prueba',false,3,1,'prueba');
-INSERT INTO product_coment VALUES (2,'Descripción de prueba 2','2013-01-02','Titulo de prueba2',false,3,1,'vet1');
+INSERT INTO product_coment VALUES (2,'Descripción de prueba 2','2013-01-02','Titulo de prueba2',true,3,1,'vet1');
 --- WALKS ---
 
 INSERT INTO walks VALUES (1,'Primer Paseo', 'Esto es un paseo1','https://tinyurl.com/wygb5vu');

@@ -19,16 +19,13 @@ public class ProductComentService {
 	this.productComentRepository = productComentRepository;
     }
 
+    
     @Transactional
-    public Collection<ProductComent> findAllComentsVetsOfTheProduct(final Integer idProduct) {
-	return this.productComentRepository.findComentsVetsOfTheProduct(idProduct);
-	
+    public Collection<ProductComent> findAllComentsOfTheProduct(final Integer idProduct) {
+    	return this.productComentRepository.findComentsOfTheProduct(idProduct);
+    
     }
-    @Transactional
-    public Collection<ProductComent> findAllComentsOwnersOfTheProduct(final Integer idProduct) {
-	return this.productComentRepository.findComentsOwnersOfTheProduct(idProduct);
-	
-    }
+    
 
     @Transactional
     public User findUserByUsername(final String username) {

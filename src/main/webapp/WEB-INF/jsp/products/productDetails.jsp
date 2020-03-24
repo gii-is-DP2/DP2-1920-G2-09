@@ -96,7 +96,8 @@
                 </div>
                 <div class="panel-body">
                     <ul class="media-list">
-                    <c:forEach items="${comentsVet}" var = "coment">
+                    <c:forEach items="${coments}" var = "coment">
+                    <c:if test="${coment.highlight == true }">
                         <li class="media">
                             <div class="media-body-vet">
                             
@@ -108,8 +109,10 @@
                                 <p> <c:out value = "${coment.description}" /></p>
                             </div>
                         </li>
+                        </c:if>
                         </c:forEach>
-                        <c:forEach items="${comentsOwner}" var = "coment">
+                        <c:forEach items="${coments}" var = "coment">
+                        <c:if test="${coment.highlight == false }">
                         <li class="media">
                             <div class="media-body">
                                 <span class="text-muted pull-right">
@@ -120,6 +123,7 @@
                                 <p> <c:out value = "${coment.description}" /></p>
                             </div>
                         </li>
+                        </c:if>
                         </c:forEach>
                     </ul>
                 </div>

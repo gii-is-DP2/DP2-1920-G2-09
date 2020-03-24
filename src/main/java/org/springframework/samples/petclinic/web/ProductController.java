@@ -72,8 +72,7 @@ public class ProductController {
     @GetMapping(value = "/{productId}")
     public String showProduct(@PathVariable("productId") final int productId, final ModelMap model) {
 	ProductComent pc = new ProductComent();
-	Collection<ProductComent> comentsVets = this.productComentService.findAllComentsVetsOfTheProduct(productId);
-	Collection<ProductComent> comentsOwners = this.productComentService.findAllComentsOwnersOfTheProduct(productId);
+	Collection<ProductComent> coments = this.productComentService.findAllComentsOfTheProduct(productId);
 	if (!model.containsAttribute("OKmessage") && model.containsAttribute("productComent")) {
 	    model.put("productComent", model.get("productComent"));
 	    
@@ -83,8 +82,7 @@ public class ProductController {
 	}
 	Double rating = this.productComentService.getAverageRatingOfProduct(productId);
 	model.put("rating", rating == null ? 0.0 : rating);
-	model.put("comentsVet", comentsVets);
-	model.put("comentsOwner",comentsOwners);
+	model.put("coments", coments);
 	Product product = this.productService.findProductById(productId);
 	if (product == null) {
 	    return "exception";
