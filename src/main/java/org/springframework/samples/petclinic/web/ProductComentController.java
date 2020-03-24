@@ -1,6 +1,8 @@
 package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -11,6 +13,7 @@ import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.ProductComentService;
 import org.springframework.samples.petclinic.service.ProductService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -55,10 +58,17 @@ public class ProductComentController {
 		us = (UserDetails) principal;
 	    }
 
+	    
+	    List<GrantedAuthority> c = new ArrayList<>(us.getAuthorities());
 	    User user = this.productComentService.findUserByUsername(us.getUsername());
 	    productComent.setProduct(product);
 	    productComent.setUser(user);
-	    productComent.setHighlight(false);
+	    
+	    if(c.get(0).toString().equals("veterinarian")) {
+	    	productComent.setHighlight(true);
+	    }else {
+	    	productComent.setHighlight(false);
+	    }
 	    productComent.setPostDate(LocalDate.now());
 	    this.productComentService.saveProductComent(productComent);
 	    model.addAttribute("OKmessage", "Your comment have been submited correctly");
