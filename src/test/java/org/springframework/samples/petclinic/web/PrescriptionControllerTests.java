@@ -105,6 +105,8 @@ class PrescriptionControllerTests {
 		listPrescription.add(p);
 		given(this.clinicService.findPrescriptionsByPetId(TEST_PET_ID)).willReturn(listPrescription);
 		
+		given(this.petService.findPetById(PrescriptionControllerTests.TEST_PET_ID)).willReturn(pet);
+		
 		given(this.clinicService.findPrescriptionById(TEST_PRESCRIPTION_ID)).willReturn(p);
 		
 		given(this.vetService.findVetbyUser(user2.getUsername())).willReturn(vet);
@@ -122,8 +124,8 @@ class PrescriptionControllerTests {
     void testProcessNewPrescriptionFormSuccess() throws Exception {
 	mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/prescriptions/new", TEST_OWNER_ID, TEST_PET_ID).with(csrf()).param("dateInicio", "2020/10/15").param("dateFinal", "2020/10/20")
 			.param("name", "Titulo").param("description", "Una gran descripcion para la prescription"))                                
-            .andExpect(status().isOk())
-			.andExpect(view().name("redirect:/owners/" + TEST_OWNER_ID));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
     }
 
     @WithMockUser(value = "spring")
@@ -139,6 +141,16 @@ class PrescriptionControllerTests {
 			.andExpect(model().attributeHasFieldErrors("prescription", "description"))
 			.andExpect(status().isOk())
 			.andExpect(view().name("/prescriptions/createOrUpdatePrescriptionForm"));
+    }
+    
+    @WithMockUser(value = "spring")
+    @Test
+    void testFindAllPrescription() throws Exception {
+	this.mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/prescriptions/list", TEST_OWNER_ID, TEST_PET_ID))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("selections"))
+		.andExpect(model().attributeExists("selections"))
+		.andExpect(view().name("prescriptions/prescriptionsList"));
     }
 
     @WithMockUser(value = "spring")
