@@ -16,9 +16,6 @@
 
 package org.springframework.samples.petclinic.web;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,11 +27,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
@@ -244,18 +237,6 @@ public class OwnerController {
 	model.addAttribute("prescriptions", pcs);
 	model.addAttribute("owner", owner);
 	return "/owners/ownerProfile";
-    }
-
-    @GetMapping(value = "/owners/profile/prescription-download/{prescriptionId}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> generatePDF(@PathVariable("prescriptionId") final int prescriptionId,
-	    final ModelMap model) throws MalformedURLException, IOException {
-	Prescription p = this.prescriptionService.findPrescriptionById(prescriptionId);
-	ByteArrayInputStream bis = this.ownerService.generatePDF(p);
-	HttpHeaders headers = new HttpHeaders();
-	headers.add("Content-Disposition", "inline; filename=Prescription of pet:" + p.getPet().getName() + ".pdf");
-
-	return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-		.body(new InputStreamResource(bis));
     }
 
     /**

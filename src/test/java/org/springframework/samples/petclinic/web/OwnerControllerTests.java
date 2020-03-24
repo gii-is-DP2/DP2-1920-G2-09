@@ -1,5 +1,9 @@
 package org.springframework.samples.petclinic.web;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.assertj.core.util.Lists;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +16,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.Pet;
+import org.springframework.samples.petclinic.model.Prescription;
+import org.springframework.samples.petclinic.model.Specialty;
+import org.springframework.samples.petclinic.model.User;
+import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.PrescriptionService;
@@ -33,6 +42,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 class OwnerControllerTests {
 
     private static final int TEST_OWNER_ID = 1;
+    private static final int TEST_PRESCRIPTION_ID = 1;
 
     @MockBean
     private OwnerService clinicService;
@@ -50,6 +60,7 @@ class OwnerControllerTests {
     private MockMvc mockMvc;
 
     private Owner george;
+    private Prescription pc;
 
     @BeforeEach
     void setup() {
@@ -61,6 +72,32 @@ class OwnerControllerTests {
 	this.george.setAddress("110 W. Liberty St.");
 	this.george.setCity("Madison");
 	this.george.setTelephone("6085551023");
+
+	User user1 = new User();
+	user1.setUsername("vet");
+	user1.setPassword("asd");
+
+	Vet james = new Vet();
+	james.setFirstName("James");
+	james.setLastName("Carter");
+	james.setId(1);
+	james.setUser(user1);
+	Set<Specialty> esp = new HashSet<>();
+	james.setSpecialtiesInternal(esp);
+
+	Pet pet = new Pet();
+	pet.setName("pet1");
+	pet.setOwner(this.george);
+
+	this.pc = new Prescription();
+	this.pc.setId(OwnerControllerTests.TEST_PRESCRIPTION_ID);
+	this.pc.setVet(james);
+	this.pc.setPet(pet);
+	this.pc.setName("hola");
+	this.pc.setDescription("hello");
+	this.pc.setDateInicio(LocalDate.of(2020, 03, 11));
+	this.pc.setDateFinal(LocalDate.of(2020, 03, 11));
+
 	BDDMockito.given(this.clinicService.findOwnerById(OwnerControllerTests.TEST_OWNER_ID)).willReturn(this.george);
 	BDDMockito.given(this.clinicService.findOwnerByUsername("prueba")).willReturn(this.george);
 
@@ -231,6 +268,17 @@ class OwnerControllerTests {
 		.andExpect(MockMvcResultMatchers.model().attributeHasErrors("owner"))
 		.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("owner", "expirationYear"))
 		.andExpect(MockMvcResultMatchers.view().name("/owners/paymentDetails"));
+    }
+
+    @WithMockUser(username = "prueba", password = "pwd", roles = "owner")
+    @Test
+    void testShowOwnerProfile() throws Exception {
+	this.mockMvc.perform(MockMvcRequestBuilders.get("/owners/profile"))
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.model().attributeExists("prescriptions"))
+		.andExpect(MockMvcResultMatchers.model().attributeExists("owner"))
+		.andExpect(MockMvcResultMatchers.model().attribute("owner", Matchers.hasProperty("pets")))
+		.andExpect(MockMvcResultMatchers.view().name("/owners/ownerProfile"));
     }
 
 }

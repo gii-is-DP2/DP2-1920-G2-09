@@ -39,7 +39,7 @@
 
 
 
-    <spring:url value="{ownerId}/pets/new" var="addUrl">
+    <spring:url value="/owners/{ownerId}/pets/new" var="addUrl">
         <spring:param name="ownerId" value="${owner.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(addUrl)}" class="btn btn-default">Add New Pet</a> <br>
@@ -47,13 +47,7 @@
 <h1 > MY PETS</h1> 
     <c:forEach items="${owner.pets}" var="pet">
 	<div class="gallery">
-   		<spring:url value="/owners/{ownerId}/pets/{petId}/edit" var="petUrl">
-   			<spring:param name="ownerId" value="${owner.id}"/>
-   			<spring:param name="petId" value="${pet.id}"/>
-    	</spring:url>
-    	<a href="${fn:escapeXml(petUrl)}">
     	<img src="/resources/images/<c:out value="${pet.type}" />.png " width="20%" height="20%">
-  		</a>
   		<div class = "texto-producto">
     		<b><c:out value="${pet.name}"/></b><br>
      		<c:out value="${pet.type}"/>
@@ -61,13 +55,16 @@
 	</div>
 </c:forEach>
 
- <table id="ownersTable" class="table table-striped">
+ <table id="ownersTable" class="table table-striped" >
+ <caption>MY PRESCRIPTIONS</caption>
         <thead>
         <tr>
-            <th style="width: 25%;">Start Date</th>
-            <th style="width: 25%;">End Date</th>
-            <th style="width: 25%;">Name</th>
-            <th style="width: 25%;">Download (as PDF)</th>
+            <th style="width: 15%;">Title</th>
+            <th style="width: 30%;">Description</th>
+            <th style="width: 15%;">Start Date</th>
+            <th style="width: 15%;">End Date</th>
+            <th style="width: 10%;">Pet Name</th>
+            <th style="width: 15%;">Vet</th>
         </tr>
         </thead>
         <tbody>
@@ -75,7 +72,12 @@
  <c:forEach items="${prescriptions}" var="pcs">
 
             <tr>
-               
+               <td>
+                    <c:out value="${pcs.name}"/>
+                </td>
+                <td>
+                    <c:out value="${pcs.description}"/>
+                </td>
                 <td>
                     <c:out value="${pcs.dateInicio}"/>
                 </td>
@@ -85,12 +87,12 @@
                 <td>
                     <c:out value="${pcs.pet.name}"/>
                 </td>
-               <td>
-                <spring:url value="/owners/profile/prescription-download/{prescriptionId}" var="addUrl">
-        <spring:param name="prescriptionId" value="${pcs.id}"/>
-    </spring:url>
-    <a target="_blank" href="${fn:escapeXml(addUrl)}" class="btn btn-default">Download</a>
-          <td>
+                
+                <td>
+                    <c:out value="${pcs.vet.firstName} ${pcs.vet.lastName }"/>
+                </td>
+               
+                
             </tr>
         </c:forEach>
 
