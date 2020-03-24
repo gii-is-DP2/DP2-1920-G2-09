@@ -3,6 +3,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <petclinic:layout pageName="vets">
     <h2>Veterinarians</h2>
@@ -38,4 +40,9 @@
             </td>            
         </tr>
     </table>
+    
+    <br/>
+    <sec:authorize access="hasAnyAuthority('admin')">
+    <a class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'>Añadir veterinario</a>
+    </sec:authorize>
 </petclinic:layout>

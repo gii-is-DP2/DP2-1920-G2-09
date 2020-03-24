@@ -27,13 +27,13 @@
 					<span class="glyphicon glyphicon-home" aria-hidden="true"></span>
 					<span>Home</span>
 				</petclinic:menuItem>
-
+				<sec:authorize access="hasAnyAuthority('admin','veterinarian')">
 				<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"
 					title="find owners">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					<span>Find owners</span>
 				</petclinic:menuItem>
-
+					</sec:authorize>	
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
@@ -46,6 +46,13 @@
 					<span>Products</span>
 				</petclinic:menuItem>
 				
+				
+				<petclinic:menuItem active="${name eq 'walks'}" url="/walks/all"
+					title="walks">
+					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+					<span>Walks</span>
+				</petclinic:menuItem>
+				
 				<sec:authorize access="hasAnyAuthority('admin')">
 				<petclinic:menuItem active="${name eq 'admin'}" url="/admin"
 					title="Admin">
@@ -53,12 +60,6 @@
 					<span>Admin</span>
 				</petclinic:menuItem>
 				</sec:authorize>
-
-				<petclinic:menuItem active="${name eq 'error'}" url="/oups"
-					title="trigger a RuntimeException to see how it is handled">
-					<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-					<span>Error</span>
-				</petclinic:menuItem>
 
 			</ul>
 
@@ -93,11 +94,20 @@
 												<a href="<c:url value="/logout" />"
 													class="btn btn-primary btn-block btn-sm">Logout</a>
 											</p>
-											
+											<sec:authorize access="hasAnyAuthority('owner')">
 											<p class="text-left">
 												<a href="<c:url value="/owners/payment-details" />"
 													class="btn btn-primary btn-block btn-sm">Payment Details</a>
 											</p>
+											
+											<p class="text-left">
+												<a href="<c:url value="/owners/profile"/>"
+													class="btn btn-primary btn-block btn-sm">My profile</a>
+											</p>
+											
+											
+											
+											</sec:authorize>
 										</div>
 									</div>
 								</div>
