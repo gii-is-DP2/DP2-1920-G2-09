@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
 	http.authorizeRequests().antMatchers("/products/new").hasAnyAuthority("admin")
+
 		.antMatchers("/products/{productId}/edit").hasAnyAuthority("admin").antMatchers("/products/**")
 		.permitAll().antMatchers("/owners/payment-details").hasAnyAuthority("owner")
 		.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
@@ -45,12 +46,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/vets/**").authenticated().anyRequest().denyAll().and().formLogin()
 		/* .loginPage("/login") */
 		.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");
-	// Configuración para que funcione la consola de administración
-	// de la BD H2 (deshabilitar las cabeceras de protección contra
-	// ataques de tipo csrf y habilitar los framesets si su contenido
-	// se sirve desde esta misma página.
-	http.csrf().ignoringAntMatchers("/h2-console/**");
-	http.headers().frameOptions().sameOrigin();
+		// Configuración para que funcione la consola de administración
+		// de la BD H2 (deshabilitar las cabeceras de protección contra
+		// ataques de tipo csrf y habilitar los framesets si su contenido
+		// se sirve desde esta misma página.
+		http.csrf().ignoringAntMatchers("/h2-console/**");
+		http.headers().frameOptions().sameOrigin();
     }
 
     @Override
@@ -63,8 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-	PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
-	return encoder;
+		PasswordEncoder encoder = NoOpPasswordEncoder.getInstance();
+		return encoder;
     }
 
 }
