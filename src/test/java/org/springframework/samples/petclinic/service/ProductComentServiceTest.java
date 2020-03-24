@@ -99,7 +99,9 @@ public class ProductComentServiceTest {
 		pC.setTitle("Esto es un titulo");
 		pC.setUser(u);
 		this.productComentService.saveProductComent(pC);
+		
 		Assert.assertTrue(pC.getId().longValue() != 0);
+		
 		this.productComentService.deleteProductComent(pC.getId());
 		Assert.assertTrue(this.productComentService.findAllComentsOfTheProduct(p.getId()).size() == 0);
 	}
