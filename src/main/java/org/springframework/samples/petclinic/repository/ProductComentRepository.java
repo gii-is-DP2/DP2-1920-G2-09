@@ -19,5 +19,6 @@ public interface ProductComentRepository extends CrudRepository<ProductComent, I
     
     @Query("SELECT AVG(pc.rating) FROM ProductComent pc where pc.product.id =?1 and pc.rating is not null")
     Double getAverageRatingOfProduct(int ProductId);
+    
 
 }

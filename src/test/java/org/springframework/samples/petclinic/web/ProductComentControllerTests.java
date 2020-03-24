@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.web;
+﻿package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
 
@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -72,8 +73,8 @@ public class ProductComentControllerTests {
 			.post("/products/{productId}/add-product-coment", ProductComentControllerTests.TEST_PRODUCT_ID)
 			.with(SecurityMockMvcRequestPostProcessors.csrf()).param("description", "descripcion 2")
 			.param("rating", "3").param("title", "titulo 2"))
-		.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-		.andExpect(MockMvcResultMatchers.view().name("redirect:/products/{productId}"));
+		.andExpect(MockMvcResultMatchers.status().isOk())
+		.andExpect(MockMvcResultMatchers.view().name("products/productDetails"));
     }
 
     @WithMockUser(username = "prueba", password = "pwd", roles = "owner")
@@ -117,4 +118,16 @@ public class ProductComentControllerTests {
 		.andExpect(MockMvcResultMatchers.view().name("products/productDetails"));
     }
 
+    @WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
+    @Test
+    void testDeleteProductComentSuccess() throws Exception {
+
+		
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/products/"+TEST_PRODUCT_ID+"/delete-product-coment/"+TEST_PRODUCT_COMENT_ID))
+		.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.view().name("products/productDetails"));
+    }
+    
+   
+    
 }
+

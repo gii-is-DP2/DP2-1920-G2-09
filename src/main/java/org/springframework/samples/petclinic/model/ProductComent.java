@@ -1,4 +1,4 @@
-
+﻿
 package org.springframework.samples.petclinic.model;
 
 import javax.persistence.CascadeType;
@@ -13,16 +13,17 @@ public class ProductComent extends Coment {
 
     private Integer rating;
 
-    // USUARIO QUE HA PUBLICADO EL COMENTARIO/VALORACIÓN (PUEDE SER TANTO OWNER, VET
-    // O ADMIN)
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "username")
-    private User user;
+	// USUARIO QUE HA PUBLICADO EL COMENTARIO/VALORACIÓN (PUEDE SER TANTO OWNER, VET
+	// O ADMIN)
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "username")
+	private User	user;
 
-    // PRODUCTO AL QUE SE LE HACE EL COMENTARIO/VALORACIÓN
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "product_id")
-    private Product product;
+	// PRODUCTO AL QUE SE LE HACE EL COMENTARIO/VALORACIÓN
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "product_id")
+	private Product	product;
+
 
     public Boolean getHighlight() {
 	return this.highlight;
@@ -47,13 +48,16 @@ public class ProductComent extends Coment {
     public void setUser(final User user) {
 	this.user = user;
     }
+   
+	public Product getProduct() {
+		return this.product;
+	}
+ 
+	public void setProduct(final Product product) {
+		this.product = product;
+	}
+	
 
-    public Product getProduct() {
-	return this.product;
-    }
 
-    public void setProduct(final Product product) {
-	this.product = product;
-    }
 
 }

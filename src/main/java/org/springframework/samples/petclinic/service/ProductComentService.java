@@ -1,7 +1,6 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.ProductComent;
 import org.springframework.samples.petclinic.model.User;
@@ -41,5 +40,14 @@ public class ProductComentService {
     public Double getAverageRatingOfProduct(final int ProductId) {
 	return this.productComentRepository.getAverageRatingOfProduct(ProductId);
     }
+    
+    @Transactional
+    public void deleteProductComent(final int pcId) {
+    	this.productComentRepository.deleteById(pcId);
+    }
+    
+   
+    
 
+    
 }

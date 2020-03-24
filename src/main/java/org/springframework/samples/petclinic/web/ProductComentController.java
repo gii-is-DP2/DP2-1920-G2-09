@@ -21,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -78,4 +79,18 @@ public class ProductComentController {
 	}
 
     }
+    
+    @GetMapping("products/{productId}/delete-product-coment/{productComentId}")
+    public String deleteProductComent(@PathVariable("productComentId") final int productComentId,@PathVariable("productId") final int productId, final ModelMap model) {
+    	
+    	
+		this.productComentService.deleteProductComent(productComentId);
+    	model.addAttribute("OKDeletemessage",  "El comentario se ha Eliminado Correctamente");
+
+    	
+		return new ProductController(this.productService, this.productComentService).showProduct(productId, model);
+    	
+    }
+    
+    
 }

@@ -65,6 +65,7 @@
 	
 	
 <!--  COMENTARIOS Y VALORACIONES -->
+ 	 <sec:authorize access="hasAnyAuthority('veterinarian','owner')">
  	 <c:if test = "${ not empty OKmessage}">
    <div class="alert-success" role="alert">
   <c:out value = "${OKmessage}"/>
@@ -78,7 +79,7 @@
 	<button class="btn btn-default" type="submit">Submit Comment </button>
 </form:form>
 </sec:authorize>
-
+</sec:authorize>
     <br/>
     <br/>
     <br/>
@@ -86,7 +87,11 @@
     
 <!--  LISTA DE COMENATARIOS -->
 
-
+<c:if test = "${ not empty OKDeletemessage}">
+   <div class="alert-success" role="alert">
+  <c:out value = "${OKDeletemessage}"/>
+</div>
+</c:if>
 <div class="row bootstrap snippets">
     <div class="col-md-6 col-md-offset-2 col-sm-12">
         <div class="comment-wrapper">
@@ -115,10 +120,18 @@
                         <c:if test="${coment.highlight == false }">
                         <li class="media">
                             <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted"><c:out value = "${coment.postDate}" /></small>
-                                </span>
-                                <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
+										<span class="text-muted pull-right"> <small
+											class="text-muted"><c:out value="${coment.postDate}" /></small>
+											<sec:authorize access="hasAnyAuthority('admin')">
+												<spring:url
+													value="{productId}/delete-product-coment/{productComentId}"
+													var="productComentDeleteUrl">
+													<spring:param name="productId" value="${product.id}" />
+													<spring:param name="productComentId" value="${coment.id}" />
+												</spring:url>
+												<a href="${fn:escapeXml(productComentDeleteUrl)}">Eliminar Comentario</a>
+											</sec:authorize>
+										</span> <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
                                 <strong class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
                                 <p> <c:out value = "${coment.description}" /></p>
                             </div>
