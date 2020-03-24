@@ -14,6 +14,7 @@ import org.springframework.samples.petclinic.configuration.SecurityConfiguration
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.PrescriptionService;
 import org.springframework.samples.petclinic.service.UserService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -33,9 +34,6 @@ class OwnerControllerTests {
 
     private static final int TEST_OWNER_ID = 1;
 
-    @Autowired
-    private OwnerController ownerController;
-
     @MockBean
     private OwnerService clinicService;
 
@@ -44,6 +42,9 @@ class OwnerControllerTests {
 
     @MockBean
     private AuthoritiesService authoritiesService;
+
+    @MockBean
+    private PrescriptionService prescriptionService;
 
     @Autowired
     private MockMvc mockMvc;

@@ -26,6 +26,7 @@ import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.repository.AuthoritiesRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataSpecialtyRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.SpringDataVetRepository;
+import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,7 +80,12 @@ public class VetService {
     }
 
     @Transactional
-    public void saveVet(final Vet vet) throws DataAccessException {
+    public void saveVet(final Vet vet) throws DataAccessException, DuplicatedUsernameException {
+	Integer countUsersWithSameUsername = this.vetRepository
+		.countOwnersWithSameUserName(vet.getUser().getUsername());
+	if (countUsersWithSameUsername > 0) {
+	    throw new DuplicatedUsernameException();
+	}
 	Authorities author = new Authorities();
 	author.setAuthority("veterinarian");
 	author.setUsername(vet.getUser().getUsername());

@@ -81,16 +81,16 @@ public class OwnerService {
 
     @Transactional(rollbackFor = DuplicatedPetNameException.class)
     public void saveOwner(final Owner owner) throws DuplicatedUsernameException {
-	Integer countOwnerWithSameUsername = this.ownerCrudRepository
+	Integer countUsersWithSameUsername = this.ownerCrudRepository
 		.countOwnersWithSameUserName(owner.getUser().getUsername());
 	// CASO DE CREAR
 
-	if (owner.getId() == null && countOwnerWithSameUsername > 0) {
+	if (owner.getId() == null && countUsersWithSameUsername > 0) {
 	    throw new DuplicatedUsernameException();
 	    // CASO EDITAR
 	} else if (owner.getId() != null) {
 	    Owner old = this.ownerCrudRepository.findById(owner.getId()).get();
-	    if (!owner.getUser().getUsername().equals(old.getUser().getUsername()) && countOwnerWithSameUsername > 0) {
+	    if (!owner.getUser().getUsername().equals(old.getUser().getUsername()) && countUsersWithSameUsername > 0) {
 		throw new DuplicatedUsernameException();
 	    } else {
 		this.ownerRepository.save(owner);

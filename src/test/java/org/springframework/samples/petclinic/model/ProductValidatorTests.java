@@ -61,7 +61,7 @@ public class ProductValidatorTests {
 	Errors errors = new BeanPropertyBindingResult(this.product, "");
 	pv.validate(this.product, errors);
 	Assertions.assertThat(errors.getFieldError("description").getCode())
-		.isEqualTo("The lenght of the description must be between 20 and 128 characters");
+		.isEqualTo("The length of the description must be between 20 and 128 characters");
     }
 
     @Test
