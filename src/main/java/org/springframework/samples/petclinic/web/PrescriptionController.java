@@ -102,8 +102,6 @@ public class PrescriptionController {
 			return "redirect:/owners/{ownerId}";
 		}
 	}
-
-
 	
 //	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
 //	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {

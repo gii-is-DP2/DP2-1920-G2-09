@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.web;
 
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -74,6 +71,7 @@ class PrescriptionControllerTests {
 		owner.setTelephone("988755839");
 		
 		Pet pet = new Pet();
+		pet.setId(TEST_PET_ID);
 		pet.setBirthDate(LocalDate.of(2020, 01, 01));
 		pet.setName("pepa");
 		PetType cat = new PetType();
@@ -102,6 +100,8 @@ class PrescriptionControllerTests {
 		listPrescription.add(p);
 		given(this.clinicService.findPrescriptionsByPetId(TEST_PET_ID)).willReturn(listPrescription);
 		
+		given(this.petService.findPetById(PrescriptionControllerTests.TEST_PET_ID)).willReturn(pet);
+		
 		given(this.vetService.findVetbyUser(user2.getUsername())).willReturn(vet);
 	}
 	
@@ -117,8 +117,8 @@ class PrescriptionControllerTests {
     void testProcessNewPrescriptionFormSuccess() throws Exception {
 	mockMvc.perform(post("/owners/{ownerId}/pets/{petId}/prescriptions/new", TEST_OWNER_ID, TEST_PET_ID).with(csrf()).param("dateInicio", "2020/10/15").param("dateFinal", "2020/10/20")
 			.param("name", "Titulo").param("description", "Una gran descripcion para la prescription"))                                
-            .andExpect(status().isOk())
-			.andExpect(view().name("redirect:/owners/" + TEST_OWNER_ID));
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/{ownerId}"));
     }
 
     @WithMockUser(value = "spring")

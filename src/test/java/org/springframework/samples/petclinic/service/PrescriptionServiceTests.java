@@ -93,52 +93,12 @@ public class PrescriptionServiceTests {
 		
 		Prescription p = new Prescription();
 		
-		User user = new User();
-		user.setUsername("carcru");
-		user.setPassword("1234568");
-		user.setEnabled(true);
-		
-		Owner owner = new Owner();
-		owner.setUser(user);
-		owner.setAddress("hsha");
-		owner.setCity("sevilla");
-		owner.setFirstName("ajajaja");
-		owner.setLastName("javi");
-		owner.setTelephone("988755839");
-		
-		owner.setCreditCardNumber("5536848370023594");
-		owner.setCvv("821");
-		owner.setExpirationMonth(1);
-		owner.setExpirationYear(2023);
-		
-		Pet pet = new Pet();
-		pet.setBirthDate(LocalDate.of(2020, 01, 01));
-		pet.setName("pepa");
-		PetType cat = new PetType();
-		cat.setName("cat");
-		pet.setType(cat);
-		pet.setOwner(owner);
-		
-		User user2 = new User();
-		user.setUsername("carcrum");
-		user.setPassword("12345628");
-		user.setEnabled(true);
-		
-		Vet vet = new Vet();
-		vet.setFirstName("carlos");
-		vet.setLastName("cruz");
-		vet.setUser(user2);
-		
-		Specialty sp = new Specialty();
-		sp.setName("surgery");
-		vet.addSpecialty(sp);
-		
 		p.setName("Titulo de Prueba");
 		p.setDateInicio(LocalDate.of(2020, 12, 12));
 		p.setDateFinal(LocalDate.of(2020, 12, 15));
 		p.setDescription("esta es una descripcion de prueba para los test");
-		p.setPet(pet);
-		p.setVet(vet);
+		p.setPet(petService.findPetById(1));
+		p.setVet(vetService.findVetbyUser("vet1"));
 		
 		this.prescriptionService.savePrescription(p);
 		Assertions.assertTrue(p.getId()!=0);
