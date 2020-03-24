@@ -85,8 +85,9 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
 
 
-
-INSERT INTO prescriptions(id,description,pet_id,vet_id,date_inicio,date_final) VALUES (1,'descripcionjajajaja',1,1,'2010-03-09','2010-03-19');
+INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (1, 'Tratamiento', 'Tomar paracetamol 2 semanas', 1, 1, '2020-10-15', '2020-10-20');
+INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (2,'Titulo de la nueva prescripción','Descripción de la nueva descripción',13,1,'2013-01-01','2013-01-01');
+INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (3,'jajajaja','descripcionjajajaja',1,1,'2010-03-09','2010-03-19');
 
 INSERT INTO product_coment VALUES (1,'Descripción de prueba 1','2013-01-04','Titulo de prueba',false,3,1,'prueba');
 INSERT INTO product_coment VALUES (2,'Descripción de prueba 2','2013-01-02','Titulo de prueba2',true,3,1,'vet1');
@@ -96,6 +97,7 @@ INSERT INTO walks VALUES (1,'Primer Paseo', 'Esto es un paseo1','https://tinyurl
 INSERT INTO walks VALUES (2,'Segundp Paseo', 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1,'Leo','descripción','2010-09-07',2,'admin1', 1);
-INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (2,'Titulo de la nueva prescripción','Descripción de la nueva descripción',13,1,'2013-01-01','2013-01-01');
+
+
 
 

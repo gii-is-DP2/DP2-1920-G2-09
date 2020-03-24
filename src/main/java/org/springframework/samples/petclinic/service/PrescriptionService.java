@@ -37,11 +37,13 @@ public class PrescriptionService {
 	return this.prescriptionRepository.findPrescriptionByOwner(ownerId);
     }
 
-//	@Transactional(readOnly = true)
-//	public Optional<Prescription> findPrescriptionById(int prId) {
-//
-//		return prescriptionRepository.findById(prId);
-//	}
+
+	@Transactional(readOnly = true)
+	public Prescription findPrescriptionById(int prId) {
+		return prescriptionRepository.findById(prId).orElse(null);
+		
+	}
+
 
     @Transactional
     public Prescription findPrescriptionById(final int idPresciption) {

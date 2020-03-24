@@ -53,7 +53,7 @@
             </div>
         </form:form>
 
-        <!-- <br/>
+         <br/>
         <b>Previous Prescription</b>
         <table class="table table-striped">
             <tr>
@@ -70,7 +70,7 @@
                     </tr>
             </c:forEach>
         </table>
-        -->
+        
     </jsp:body>
 
 </petclinic:layout>

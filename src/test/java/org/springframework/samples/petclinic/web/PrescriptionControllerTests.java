@@ -14,6 +14,7 @@ import org.springframework.samples.petclinic.service.PetService;
 import org.springframework.samples.petclinic.service.PrescriptionService;
 import org.springframework.samples.petclinic.service.VetService;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.BDDMockito.given;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,6 +38,9 @@ import java.util.List;
 		excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class),
 		excludeAutoConfiguration= SecurityConfiguration.class)
 class PrescriptionControllerTests {
+
+
+	private static final int TEST_PRESCRIPTION_ID = 1;
 
 	private static final int TEST_OWNER_ID = 1;
 	private static final int TEST_PET_ID = 1;
@@ -63,6 +67,7 @@ class PrescriptionControllerTests {
 		user.setEnabled(true);
 		
 		Owner owner = new Owner();
+		owner.setId(TEST_OWNER_ID);
 		owner.setUser(user);
 		owner.setAddress("hsha");
 		owner.setCity("sevilla");
@@ -85,16 +90,24 @@ class PrescriptionControllerTests {
 		user.setEnabled(true);
 		
 		Vet vet = new Vet();
+
+		vet.setId(1);
+
 		vet.setFirstName("carlos");
 		vet.setLastName("cruz");
 		vet.setUser(user2);
 		
+
+		p.setId(TEST_PRESCRIPTION_ID);
+
 		p.setName("Titulo de Prueba");
 		p.setDateInicio(LocalDate.of(2020, 12, 12));
 		p.setDateFinal(LocalDate.of(2020, 12, 15));
 		p.setDescription("esta es una descripcion de prueba para los test");
-		p.setPet(pet);
-		p.setVet(vet);
+
+		p.setPet(petService.findPetById(1));
+		p.setVet(vetService.findVetbyUser("vet1"));
+
 		
 		List<Prescription> listPrescription = new ArrayList<Prescription>();
 		listPrescription.add(p);
@@ -102,6 +115,10 @@ class PrescriptionControllerTests {
 		
 		given(this.petService.findPetById(PrescriptionControllerTests.TEST_PET_ID)).willReturn(pet);
 		
+
+		given(this.clinicService.findPrescriptionById(TEST_PRESCRIPTION_ID)).willReturn(p);
+		
+
 		given(this.vetService.findVetbyUser(user2.getUsername())).willReturn(vet);
 	}
 	
@@ -136,4 +153,25 @@ class PrescriptionControllerTests {
 			.andExpect(view().name("/prescriptions/createOrUpdatePrescriptionForm"));
     }
 
+    
+    @WithMockUser(value = "spring")
+    @Test
+    void testFindAllPrescription() throws Exception {
+	this.mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/prescriptions/list", TEST_OWNER_ID, TEST_PET_ID))
+		.andExpect(status().isOk())
+		.andExpect(model().attributeExists("selections"))
+		.andExpect(model().attributeExists("selections"))
+		.andExpect(view().name("prescriptions/prescriptionsList"));
+    }
+
+    @WithMockUser(value = "spring")
+	@Test
+	void testShowPrescription() throws Exception {
+		mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}", TEST_OWNER_ID, TEST_PET_ID, TEST_PRESCRIPTION_ID))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeExists("prescription"))
+				.andExpect(view().name("prescriptions/prescriptionDetails"));
+	}
+	
 }
+

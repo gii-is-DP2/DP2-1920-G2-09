@@ -1,23 +1,21 @@
+
 package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
+import javax.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataAccessException;
-import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
-import org.springframework.samples.petclinic.model.PetType;
 import org.springframework.samples.petclinic.model.Prescription;
-import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Vet;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedPetNameException;
@@ -43,34 +41,33 @@ public class PrescriptionServiceTests {
 	@Autowired
 	protected OwnerService ownerService;
 	
-	
-//	@BeforeEach
-//	public void setInitialPrescription() {
-//		Prescription p = new Prescription();
-//		
-//		User user = new User();
-//		user.setUsername("carcru");
-//		user.setPassword("1234568");
-//		user.setEnabled(true);
-//		
-//		Pet pet = new Pet();
-//		pet.setBirthDate(LocalDate.of(2020, 01, 01));
-//		pet.setName("pepa");
-//		pet.setType(null);
-//		
-//		Vet vet = new Vet();
-//		vet.setFirstName("carlos");
-//		vet.setLastName("cruz");
-//		vet.setUser(user);
-//		
-//		p.setName("Titulo de Pueba");
-//		p.setDateInicio(LocalDate.of(2020, 12, 12));
-//		p.setDateFinal(LocalDate.of(2020, 12, 15));
-//		p.setDescription("esta es una descripcion de prueba para los test");
-//		p.setPet(pet);
-//		p.setVet(vet);
-//		
-//	}
+	@BeforeEach
+	public void setInitialPrescription() {
+		Prescription p = new Prescription();
+		
+		User user = new User();
+		user.setUsername("carcru");
+		user.setPassword("1234568");
+		user.setEnabled(true);
+		
+		Pet pet = new Pet();
+		pet.setBirthDate(LocalDate.of(2020, 01, 01));
+		pet.setName("pepa");
+		pet.setType(null);
+		
+		Vet vet = new Vet();
+		vet.setFirstName("carlos");
+		vet.setLastName("cruz");
+		vet.setUser(user);
+		
+		p.setName("Titulo de Pueba");
+		p.setDateInicio(LocalDate.of(2020, 12, 12));
+		p.setDateFinal(LocalDate.of(2020, 12, 15));
+		p.setDescription("esta es una descripcion de prueba para los test");
+		p.setPet(pet);
+		p.setVet(vet);
+		
+	}
 	
 	@Test
 	void shouldFindPrescriptionsByPetId(){
@@ -124,4 +121,20 @@ public class PrescriptionServiceTests {
 		Assertions.assertThrows(JpaSystemException.class, () -> this.prescriptionService.savePrescription(prescription));
 	}
 
+	@Test
+	void shouldFindPrescriptionById(){
+		Prescription p = this.prescriptionService.findPrescriptionById(1);
+		Assertions.assertTrue(p != null);
+	}
+	
+	@Test
+	void shouldNoFindPrescriptionById(){
+		Prescription p = this.prescriptionService.findPrescriptionById(1435624);
+		Assertions.assertTrue(p == null);
+	}
+	
 }
+
+
+
+

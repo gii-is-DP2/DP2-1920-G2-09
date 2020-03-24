@@ -44,6 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.hasAnyAuthority("admin", "veterinarian").antMatchers("/walks/new").hasAnyAuthority("admin")
 		.antMatchers("/walks/**").permitAll().antMatchers("/vets/new").hasAnyAuthority("admin")
 		.antMatchers("/vets/**").authenticated().anyRequest().denyAll().and().formLogin()
+
 		/* .loginPage("/login") */
 		.failureUrl("/login-error").and().logout().logoutSuccessUrl("/");
 		// Configuración para que funcione la consola de administración

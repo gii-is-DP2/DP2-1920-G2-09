@@ -30,4 +30,9 @@ public interface SpringDataPrescriptionRepository extends CrudRepository<Prescri
     @Query("SELECT p FROM Prescription p WHERE p.pet.owner.id = ?1")
     Collection<Prescription> findPrescriptionByOwner(int ownerId);
 
+    @Query("SELECT p FROM Prescription p WHERE p.pet.id =:petId ORDER BY p.dateInicio")
+  	Collection<Prescription> findPrescriptionByPetId(@Param("petId")int petId);
+	
+	
+
 }

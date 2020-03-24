@@ -103,24 +103,19 @@ public class PrescriptionController {
 		}
 	}
 	
-//	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
-//	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
-//		
-//		model.addAttribute("selections", this.prescriptionService.findPrescriptionsByPetId(petId));
-//		
-//		return "prescriptions/prescriptionsList";
-//	}
-	
-	
-//	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
-//	public String showPrescription(@PathVariable("prescriptionId") int prId,Map<String, Object> model) {
-//		
-//		Prescription pres =  this.prescriptionService.findPrescriptionById(prId).get();
-//		
-//		model.put("prescription",pres);
-//		
-//		return "prescriptions/prescriptionDetails";
-//	}
+	@GetMapping(value = "/owners/{ownerId}/pets/{petId}/prescriptions/list")
+	public String listPrescriptions(@PathVariable("petId") int petId,Model model) {
+		model.addAttribute("selections", this.prescriptionService.findPrescriptionsByPetId(petId));
+		return "prescriptions/prescriptionsList";
 	}
+	
+	
+	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
+	public String showPrescription(@PathVariable("prescriptionId") int prId, Map<String, Object> model) {
+		Prescription pres =  this.prescriptionService.findPrescriptionById(prId);
+		model.put("prescription",pres);
+		return "prescriptions/prescriptionDetails";
+	}
+}
 
 
