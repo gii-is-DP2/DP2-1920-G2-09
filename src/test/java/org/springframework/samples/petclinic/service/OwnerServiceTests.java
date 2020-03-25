@@ -64,71 +64,89 @@ import org.springframework.transaction.annotation.Transactional;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class OwnerServiceTests {
 
-    @Autowired
-    protected OwnerService ownerService;
+	@Autowired
+	protected OwnerService ownerService;
 
-    @Test
-    void shouldFindOwnersByLastName() {
-	Collection<Owner> owners = this.ownerService.findOwnerByLastName("Davis");
-	Assertions.assertThat(owners.size()).isEqualTo(2);
+	@Test
+	void shouldFindOwnersByLastName() {
+		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Davis");
+		Assertions.assertThat(owners.size()).isEqualTo(2);
 
-	owners = this.ownerService.findOwnerByLastName("Daviss");
-	Assertions.assertThat(owners.isEmpty()).isTrue();
-    }
+		owners = this.ownerService.findOwnerByLastName("Daviss");
+		Assertions.assertThat(owners.isEmpty()).isTrue();
+	}
 
-    @Test
-    void shouldFindSingleOwnerWithPet() {
-	Owner owner = this.ownerService.findOwnerById(1);
-	Assertions.assertThat(owner.getLastName()).startsWith("Franklin");
-	Assertions.assertThat(owner.getPets().size()).isEqualTo(1);
-	Assertions.assertThat(owner.getPets().get(0).getType()).isNotNull();
-	Assertions.assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
-    }
+	@Test
+	void shouldFindSingleOwnerWithPet() {
+		Owner owner = this.ownerService.findOwnerById(1);
+		Assertions.assertThat(owner.getLastName()).startsWith("Franklin");
+		Assertions.assertThat(owner.getPets().size()).isEqualTo(1);
+		Assertions.assertThat(owner.getPets().get(0).getType()).isNotNull();
+		Assertions.assertThat(owner.getPets().get(0).getType().getName()).isEqualTo("cat");
+	}
 
-    @Test
-    @Transactional
-    public void shouldInsertOwner() throws DataAccessException, DuplicatedUsernameException {
-	Collection<Owner> owners = this.ownerService.findOwnerByLastName("Schultz");
-	int found = owners.size();
+	@Test
+	@Transactional
+	public void shouldInsertOwner() throws DataAccessException, DuplicatedUsernameException {
+		Collection<Owner> owners = this.ownerService.findOwnerByLastName("Schultz");
+		int found = owners.size();
 
-	Owner owner = new Owner();
-	owner.setFirstName("Sam");
-	owner.setLastName("Schultz");
-	owner.setAddress("4, Evans Street");
-	owner.setCity("Wollongong");
-	owner.setTelephone("4444444444");
-	User user = new User();
-	user.setUsername("Sam");
-	user.setPassword("supersecretpassword");
-	user.setEnabled(true);
-	owner.setUser(user);
+		Owner owner = new Owner();
+		owner.setFirstName("Sam");
+		owner.setLastName("Schultz");
+		owner.setAddress("4, Evans Street");
+		owner.setCity("Wollongong");
+		owner.setTelephone("4444444444");
+		User user = new User();
+		user.setUsername("Sam");
+		user.setPassword("supersecretpassword");
+		user.setEnabled(true);
+		owner.setUser(user);
 
-	this.ownerService.saveOwner(owner);
-	Assertions.assertThat(owner.getId().longValue()).isNotEqualTo(0);
+		this.ownerService.saveOwner(owner);
+		Assertions.assertThat(owner.getId().longValue()).isNotEqualTo(0);
 
-	owners = this.ownerService.findOwnerByLastName("Schultz");
-	Assertions.assertThat(owners.size()).isEqualTo(found + 1);
-    }
+		owners = this.ownerService.findOwnerByLastName("Schultz");
+		Assertions.assertThat(owners.size()).isEqualTo(found + 1);
+	}
 
-    @Test
-    @Transactional
-    void shouldUpdateOwner() throws DataAccessException, DuplicatedUsernameException {
-	Owner owner = this.ownerService.findOwnerById(1);
-	String oldLastName = owner.getLastName();
-	String newLastName = oldLastName + "X";
+	@Test
+	@Transactional
+	void shouldUpdateOwner() throws DataAccessException, DuplicatedUsernameException {
+		Owner owner = this.ownerService.findOwnerById(1);
+		String oldLastName = owner.getLastName();
+		String newLastName = oldLastName + "X";
 
-	owner.setLastName(newLastName);
-	this.ownerService.saveOwner(owner);
+		owner.setLastName(newLastName);
+		this.ownerService.saveOwner(owner);
 
-	// retrieving new name from database
-	owner = this.ownerService.findOwnerById(1);
-	Assertions.assertThat(owner.getLastName()).isEqualTo(newLastName);
-    }
+		// retrieving new name from database
+		owner = this.ownerService.findOwnerById(1);
+		Assertions.assertThat(owner.getLastName()).isEqualTo(newLastName);
+	}
 
-    @Test
-    void shouldFindOwnerByUsername() {
-	Owner owner = this.ownerService.findOwnerByUsername("prueba");
-	Assertions.assertThat(owner != null);
-    }
+	@Test
+	void shouldFindOwnerByUsername() {
+		Owner owner = this.ownerService.findOwnerByUsername("prueba");
+		Assertions.assertThat(owner != null);
+	}
+
+	@Test
+	void shouldNotFindOwnerByUsername() {
+		Owner owner = this.ownerService.findOwnerByUsername("ownerquenoexiste");
+		Assertions.assertThat(owner == null);
+	}
+
+	@Test
+	void shouldFindOwnerById() {
+		Owner owner = this.ownerService.findOwnerById(1);
+		Assertions.assertThat(owner != null);
+	}
+
+	@Test
+	void shouldNotFindOwnerById() {
+		Owner owner = this.ownerService.findOwnerById(1242194);
+		Assertions.assertThat(owner == null);
+	}
 
 }

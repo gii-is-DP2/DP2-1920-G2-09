@@ -18,7 +18,7 @@
             	<hr>
             	<petclinic:inputField label="User" name="user.username"/>
             	<petclinic:passwordField label="Password" name="user.password"/>
-            	
+            	<petclinic:inputField label="Email" name="user.email"/>
        			<div class="form-group">
        			
             		<div class="col-sm-offset-2 col-sm-10">

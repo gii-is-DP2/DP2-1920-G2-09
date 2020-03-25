@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.service;
 
 import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.ProductComent;
 import org.springframework.samples.petclinic.model.User;
@@ -11,43 +12,42 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductComentService {
 
-    ProductComentRepository productComentRepository;
+	ProductComentRepository productComentRepository;
 
-    @Autowired
-    public ProductComentService(final ProductComentRepository productComentRepository) {
-	this.productComentRepository = productComentRepository;
-    }
+	@Autowired
+	public ProductComentService(final ProductComentRepository productComentRepository) {
+		this.productComentRepository = productComentRepository;
+	}
 
-    
-    @Transactional
-    public Collection<ProductComent> findAllComentsOfTheProduct(final Integer idProduct) {
-    	return this.productComentRepository.findComentsOfTheProduct(idProduct);
-    
-    }
-    
+	@Transactional
+	public Collection<ProductComent> findAllComentsOfTheProduct(final Integer idProduct) {
+		return this.productComentRepository.findComentsOfTheProduct(idProduct);
 
-    @Transactional
-    public User findUserByUsername(final String username) {
-	return this.productComentRepository.findUserByUsername(username);
-    }
+	}
 
-    @Transactional
-    public void saveProductComent(final ProductComent pc) {
-	this.productComentRepository.save(pc);
-    }
+	@Transactional
+	public User findUserByUsername(final String username) {
+		return this.productComentRepository.findUserByUsername(username);
+	}
 
-    @Transactional
-    public Double getAverageRatingOfProduct(final int ProductId) {
-	return this.productComentRepository.getAverageRatingOfProduct(ProductId);
-    }
-    
-    @Transactional
-    public void deleteProductComent(final int pcId) {
-    	this.productComentRepository.deleteById(pcId);
-    }
-    
-   
-    
+	@Transactional
+	public void saveProductComent(final ProductComent pc) {
+		this.productComentRepository.save(pc);
+	}
 
-    
+	@Transactional
+	public Double getAverageRatingOfProduct(final int ProductId) {
+		if (this.productComentRepository.getAverageRatingOfProduct(ProductId) == null) {
+			return 0.0;
+		} else {
+			return this.productComentRepository.getAverageRatingOfProduct(ProductId);
+		}
+
+	}
+
+	@Transactional
+	public void deleteProductComent(final int pcId) {
+		this.productComentRepository.deleteById(pcId);
+	}
+
 }

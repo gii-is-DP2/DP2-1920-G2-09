@@ -1,29 +1,29 @@
 -- One admin user, named admin1 with passwor 4dm1n and authority admin
-INSERT INTO users(username,password,enabled) VALUES ('admin1','4dm1n',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('admin1','4dm1n','admin@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('admin1','admin');
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(username,password,enabled) VALUES ('owner1','0wn3r',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('owner1','0wn3r','owner@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('owner1','owner');
 -- One vet user, named vet1 with passwor v3t
-INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet1','v3t','vet1@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet1','veterinarian');
 -- Uno de prueba --
-INSERT INTO users(username,password,enabled) VALUES ('prueba','prueba',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('prueba','prueba','fraromgon2@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('prueba','owner');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet2','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet2','v3t','vet2@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet2','veterinarian');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet3','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet3','v3t','vet3@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet3','veterinarian');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet4','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet4','v3t','vet4@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet4','veterinarian');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet5','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet5','v3t','vet5@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet5','veterinarian');
 
-INSERT INTO users(username,password,enabled) VALUES ('vet6','v3t',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('vet6','v3t','vet6@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('vet6','veterinarian');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter','vet1');

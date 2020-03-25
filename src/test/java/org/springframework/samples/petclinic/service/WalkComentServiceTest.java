@@ -21,7 +21,6 @@ public class WalkComentServiceTest {
 	@Autowired
 	protected WalkComentService walkComentService;
 
-
 	@Test
 	void shouldFindWalkComents() {
 		Collection<WalkComent> walkComents = this.walkComentService.findAllComentsOfTheWalk(1);
@@ -68,6 +67,18 @@ public class WalkComentServiceTest {
 		this.walkComentService.saveWalkComent(wC);
 		Assert.assertTrue(wC.getId().longValue() != 0);
 		Assert.assertTrue(this.walkComentService.findAllComentsOfTheWalk(w.getId()).size() == 1);
+	}
+
+	@Test
+	void shouldGetRatingOfTheProduct() {
+		Double rating = this.walkComentService.getAverageRatingOfWalk(1);
+		Assert.assertTrue(rating > 0.0);
+	}
+
+	@Test
+	void shouldNotGetRatingOfTheProduct() {
+		Double rating = this.walkComentService.getAverageRatingOfWalk(1231231);
+		Assert.assertTrue(rating == 0.0);
 	}
 
 }

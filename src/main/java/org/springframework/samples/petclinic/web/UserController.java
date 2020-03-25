@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.OwnerService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Controller;
@@ -40,44 +41,47 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UserController {
 
-    private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
+	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
 
-    private final OwnerService ownerService;
+	private final OwnerService ownerService;
 
-    @Autowired
-    public UserController(final OwnerService clinicService) {
-	this.ownerService = clinicService;
-    }
-
-    @InitBinder
-    public void setAllowedFields(final WebDataBinder dataBinder) {
-	dataBinder.setDisallowedFields("id");
-    }
-
-    @GetMapping(value = "/users/new")
-    public String initCreationForm(final Map<String, Object> model) {
-	Owner owner = new Owner();
-	model.put("owner", owner);
-	return UserController.VIEWS_OWNER_CREATE_FORM;
-    }
-
-    @PostMapping(value = "/users/new")
-    public String processCreationForm(@Valid final Owner owner, final BindingResult result)
-	    throws DataAccessException, DuplicatedUsernameException {
-	if (result.hasErrors()) {
-	    return UserController.VIEWS_OWNER_CREATE_FORM;
-	} else {
-
-	    try {
-		this.ownerService.saveOwner(owner);
-	    } catch (DuplicatedUsernameException ex) {
-		result.rejectValue("user.username", "duplicate", "already exists");
-		return UserController.VIEWS_OWNER_CREATE_FORM;
-	    }
-	    // creating owner, user, and authority
-
-	    return "redirect:/";
+	@Autowired
+	public UserController(final OwnerService clinicService) {
+		this.ownerService = clinicService;
 	}
-    }
+
+	@InitBinder
+	public void setAllowedFields(final WebDataBinder dataBinder) {
+		dataBinder.setDisallowedFields("id");
+	}
+
+	@GetMapping(value = "/users/new")
+	public String initCreationForm(final Map<String, Object> model) {
+		Owner owner = new Owner();
+		User user = new User();
+		owner.setUser(user);
+		model.put("owner", owner);
+		model.put("user", user);
+		return UserController.VIEWS_OWNER_CREATE_FORM;
+	}
+
+	@PostMapping(value = "/users/new")
+	public String processCreationForm(@Valid final Owner owner, final BindingResult result)
+			throws DataAccessException, DuplicatedUsernameException {
+		if (result.hasErrors()) {
+			return UserController.VIEWS_OWNER_CREATE_FORM;
+		} else {
+
+			try {
+				this.ownerService.saveOwner(owner);
+			} catch (DuplicatedUsernameException ex) {
+				result.rejectValue("user.username", "duplicate", "already exists");
+				return UserController.VIEWS_OWNER_CREATE_FORM;
+			}
+			// creating owner, user, and authority
+
+			return "redirect:/";
+		}
+	}
 
 }
