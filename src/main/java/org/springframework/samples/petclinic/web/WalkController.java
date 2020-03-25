@@ -40,28 +40,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/walks")
 public class WalkController {
 
-    private final WalkService walkService;
-    private final WalkComentService walkComentService;
+	private final WalkService walkService;
+	private final WalkComentService walkComentService;
 
-    @Autowired
-    public WalkController(final WalkService walkService, final WalkComentService walkComentService) {
-	this.walkService = walkService;
-	this.walkComentService = walkComentService;
-    }
+	@Autowired
+	public WalkController(final WalkService walkService, final WalkComentService walkComentService) {
+		this.walkService = walkService;
+		this.walkComentService = walkComentService;
+	}
 
-    @InitBinder("walk")
-    public void initWalkBinder(final WebDataBinder dataBinder) {
-	dataBinder.setValidator(new WalkValidator());
-    }
+	@InitBinder("walk")
+	public void initWalkBinder(final WebDataBinder dataBinder) {
+		dataBinder.setValidator(new WalkValidator());
+	}
 
-    @GetMapping(value = "/all")
-    public String findAllWalks(final ModelMap model) {
-	Walk w = new Walk();
-	model.put("walk", w);
-	Iterable<Walk> walks = this.walkService.findAllWalks();
-	model.addAttribute("walks", walks);
-	return "walks/listWalks";
-    }
+	@GetMapping(value = "/all")
+	public String findAllWalks(final ModelMap model) {
+		Walk w = new Walk();
+		model.put("walk", w);
+		Iterable<Walk> walks = this.walkService.findAllWalks();
+		model.addAttribute("walks", walks);
+		return "walks/listWalks";
+	}
 
 //    @GetMapping(value = "/{walkId}")
 //    public ModelAndView showWalk(@PathVariable("walkId") final int walkId) {
@@ -70,65 +70,65 @@ public class WalkController {
 //	return mav;
 //    }
 
-    @GetMapping(value = "/{walkId}")
-    public String showWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
-	WalkComent wc = new WalkComent();
-	Collection<WalkComent> coments = this.walkComentService.findAllComentsOfTheWalk(walkId);
-	if (!model.containsAttribute("OKmessage") && model.containsAttribute("walkComent")) {
-	    model.put("walkComent", model.get("walkComent"));
-	} else {
-	    model.put("walkComent", wc);
+	@GetMapping(value = "/{walkId}")
+	public String showWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
+		WalkComent wc = new WalkComent();
+		Collection<WalkComent> coments = this.walkComentService.findAllComentsOfTheWalk(walkId);
+		if (!model.containsAttribute("OKmessage") && model.containsAttribute("walkComent")) {
+			model.put("walkComent", model.get("walkComent"));
+		} else {
+			model.put("walkComent", wc);
+		}
+		Double rating = this.walkComentService.getAverageRatingOfWalk(walkId);
+		model.put("rating", rating);
+		model.put("coments", coments);
+		model.put("walk", this.walkService.findWalkById(walkId));
+		return "walks/walkDetails";
 	}
-	Double rating = this.walkComentService.getAverageRatingOfWalk(walkId);
-	model.put("rating", rating == null ? 0.0 : rating);
-	model.put("coments", coments);
-	model.put("walk", this.walkService.findWalkById(walkId));
-	return "walks/walkDetails";
-    }
 
-    @GetMapping(value = "/new")
-    public String initCreationForm(final ModelMap model) {
-	Walk walk = new Walk();
-	model.put("walk", walk);
-	return "walks/createOrUpdateWalkForm";
-    }
-
-    @PostMapping(value = "/new")
-    public String processCreationForm(@Valid final Walk walk, final BindingResult result, final ModelMap model) {
-	if (result.hasErrors()) {
-	    model.put("walk", walk);
-	    return "walks/createOrUpdateWalkForm";
-	} else {
-	    this.walkService.saveWalk(walk);
-	    return this.findAllWalks(model);
+	@GetMapping(value = "/new")
+	public String initCreationForm(final ModelMap model) {
+		Walk walk = new Walk();
+		model.put("walk", walk);
+		return "walks/createOrUpdateWalkForm";
 	}
-    }
 
-    @GetMapping(value = "/{walkId}/edit")
-    public String initUpdateWalkForm(@PathVariable("walkId") final int walkId, final ModelMap model) {
-	Walk walk = this.walkService.findWalkById(walkId);
-	model.put("walk", walk);
-	return "walks/createOrUpdateWalkForm";
-    }
-
-    @PostMapping(value = "/{walkId}/edit")
-    public String processUpdateWalkForm(@Valid final Walk walk, final BindingResult result,
-	    @PathVariable("walkId") final int walkId, final ModelMap model) {
-	if (result.hasErrors()) {
-	    model.put("walk", walk);
-	    return "walks/createOrUpdateWalkForm";
-	} else {
-	    Walk walkToUpdate = this.walkService.findWalkById(walkId);
-	    BeanUtils.copyProperties(walk, walkToUpdate, "id");
-	    this.walkService.saveWalk(walkToUpdate);
-	    return "redirect:/walks/{walkId}";
+	@PostMapping(value = "/new")
+	public String processCreationForm(@Valid final Walk walk, final BindingResult result, final ModelMap model) {
+		if (result.hasErrors()) {
+			model.put("walk", walk);
+			return "walks/createOrUpdateWalkForm";
+		} else {
+			this.walkService.saveWalk(walk);
+			return this.findAllWalks(model);
+		}
 	}
-    }
 
-    @GetMapping(value = "/{walkId}/delete")
-    public String initDeleteWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
-	this.walkService.deleteWalk(walkId);
-	return this.findAllWalks(model);
-    }
+	@GetMapping(value = "/{walkId}/edit")
+	public String initUpdateWalkForm(@PathVariable("walkId") final int walkId, final ModelMap model) {
+		Walk walk = this.walkService.findWalkById(walkId);
+		model.put("walk", walk);
+		return "walks/createOrUpdateWalkForm";
+	}
+
+	@PostMapping(value = "/{walkId}/edit")
+	public String processUpdateWalkForm(@Valid final Walk walk, final BindingResult result,
+			@PathVariable("walkId") final int walkId, final ModelMap model) {
+		if (result.hasErrors()) {
+			model.put("walk", walk);
+			return "walks/createOrUpdateWalkForm";
+		} else {
+			Walk walkToUpdate = this.walkService.findWalkById(walkId);
+			BeanUtils.copyProperties(walk, walkToUpdate, "id");
+			this.walkService.saveWalk(walkToUpdate);
+			return "redirect:/walks/{walkId}";
+		}
+	}
+
+	@GetMapping(value = "/{walkId}/delete")
+	public String initDeleteWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
+		this.walkService.deleteWalk(walkId);
+		return this.findAllWalks(model);
+	}
 
 }

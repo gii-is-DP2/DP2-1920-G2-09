@@ -16,6 +16,8 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.User;
@@ -32,16 +34,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+	private UserRepository userRepository;
 
-    @Autowired
-    public UserService(final UserRepository userRepository) {
-	this.userRepository = userRepository;
-    }
+	@Autowired
+	public UserService(final UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
-    @Transactional
-    public void saveUser(final User user) throws DataAccessException {
-	user.setEnabled(true);
-	this.userRepository.save(user);
-    }
+	@Transactional
+	public void saveUser(final User user) throws DataAccessException {
+		user.setEnabled(true);
+		this.userRepository.save(user);
+	}
+
+	@Transactional
+	public List<User> findAllUsers() {
+		return (List<User>) this.userRepository.findAll();
+	}
 }

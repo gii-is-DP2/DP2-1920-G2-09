@@ -1,5 +1,4 @@
-﻿
-package org.springframework.samples.petclinic.service;
+﻿package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.samples.petclinic.model.Category;
 import org.springframework.samples.petclinic.model.Product;
 import org.springframework.samples.petclinic.model.ProductComent;
@@ -23,27 +21,24 @@ public class ProductComentServiceTests {
 
 	@Autowired
 	protected ProductComentService productComentService;
-	
+
 	@Autowired
 	protected ProductService productService;
-	
-	@Autowired
-	protected VetService  vetService;
 
+	@Autowired
+	protected VetService vetService;
 
 	@Test
-	void shouldFindProductOwnerComents() {
+	void shouldFindProductComents() {
 		Collection<ProductComent> productComents = this.productComentService.findAllComentsOfTheProduct(1);
 		Assertions.assertTrue(!productComents.isEmpty());
 	}
 
 	@Test
-	void shouldNotFindProductOwnerComents() {
+	void shouldNotFindProductComents() {
 		Collection<ProductComent> productComents = this.productComentService.findAllComentsOfTheProduct(-1);
 		Assertions.assertTrue(productComents.isEmpty());
 	}
-	
-	
 
 	@Test
 	void shouldFindUserByUsername() {
@@ -58,7 +53,7 @@ public class ProductComentServiceTests {
 		Assertions.assertTrue(user == null);
 
 	}
-	
+
 	@Test
 	void shouldInsertProductComent() {
 		ProductComent pC = new ProductComent();
@@ -85,6 +80,17 @@ public class ProductComentServiceTests {
 		Assert.assertTrue(this.productComentService.findAllComentsOfTheProduct(p.getId()).size() == 1);
 	}
 
+	@Test
+	void shouldGetRatingOfTheProduct() {
+		Double rating = this.productComentService.getAverageRatingOfProduct(1);
+		Assert.assertTrue(rating > 0.0);
+	}
+
+	@Test
+	void shouldNotGetRatingOfTheProduct() {
+		Double rating = this.productComentService.getAverageRatingOfProduct(1231231);
+		Assert.assertTrue(rating == 0.0);
+	}
 
 	@Test
 	void shouldDeleteProductComent() {
@@ -108,22 +114,21 @@ public class ProductComentServiceTests {
 		pC.setTitle("Esto es un titulo");
 		pC.setUser(u);
 		this.productComentService.saveProductComent(pC);
-		
+
 		Assert.assertTrue(pC.getId().longValue() != 0);
-		
+
 		this.productComentService.deleteProductComent(pC.getId());
 		Assert.assertTrue(this.productComentService.findAllComentsOfTheProduct(p.getId()).size() == 0);
 	}
-	
-	
+
 	@Test
 	void shouldNotDeleteProductComent() {
-		
-		//Comprobamos que salta el error a la hora de intentar borrar un comentario con una id que no existe
-	Assertions.assertThrows(EmptyResultDataAccessException.class, () -> this.productComentService.deleteProductComent(25));
-		
-		
+
+		// Comprobamos que salta el error a la hora de intentar borrar un comentario con
+		// una id que no existe
+		Assertions.assertThrows(EmptyResultDataAccessException.class,
+				() -> this.productComentService.deleteProductComent(25));
+
 	}
-	
 
 }

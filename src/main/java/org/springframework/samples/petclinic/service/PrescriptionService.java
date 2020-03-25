@@ -37,17 +37,15 @@ public class PrescriptionService {
 	return this.prescriptionRepository.findPrescriptionByOwner(ownerId);
     }
 
+//	@Transactional(readOnly = true)
+//	public Prescription findPrescriptionById(int prId) {
+//		return prescriptionRepository.findById(prId).orElse(null);
+//
+//	}
 
-	@Transactional(readOnly = true)
-	public Prescription findPrescriptionById(int prId) {
-		return prescriptionRepository.findById(prId).orElse(null);
-		
-	}
-
-
-    @Transactional
+    @Transactional(readOnly = true)
     public Prescription findPrescriptionById(final int idPresciption) {
-	return this.prescriptionRepository.findById(idPresciption).orElse(new Prescription());
+	return this.prescriptionRepository.findById(idPresciption).orElse(null);
     }
 
 }

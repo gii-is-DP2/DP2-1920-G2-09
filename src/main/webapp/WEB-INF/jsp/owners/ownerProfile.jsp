@@ -29,6 +29,11 @@
             <td><c:out value="${owner.telephone}"/></td>
         </tr>
         
+         <tr>
+            <th>Email</th>
+            <td><c:out value="${owner.user.email}"/></td>
+        </tr>
+        
         <c:if test="${not empty owner.creditCardNumber  }">
         <tr>
             <th>Credit Card Number</th>

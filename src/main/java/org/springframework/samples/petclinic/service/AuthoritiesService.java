@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.service;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -35,22 +36,26 @@ public class AuthoritiesService {
 	private AuthoritiesRepository authoritiesRepository;
 
 	@Autowired
-	public AuthoritiesService(AuthoritiesRepository authoritiesRepository) {
+	public AuthoritiesService(final AuthoritiesRepository authoritiesRepository) {
 		this.authoritiesRepository = authoritiesRepository;
 	}
 
 	@Transactional
-	public void saveAuthorities(Authorities authorities) throws DataAccessException {
-		authoritiesRepository.save(authorities);
+	public void saveAuthorities(final Authorities authorities) throws DataAccessException {
+		this.authoritiesRepository.save(authorities);
 	}
-	
+
 	@Transactional
-	public void saveAuthorities(String username, String role) throws DataAccessException {
+	public void saveAuthorities(final String username, final String role) throws DataAccessException {
 		Authorities authority = new Authorities();
 		authority.setUsername(username);
 		authority.setAuthority(role);
-		authoritiesRepository.save(authority);
+		this.authoritiesRepository.save(authority);
 	}
 
+	@Transactional
+	public List<Authorities> getAllAuthorities() {
+		return (List<Authorities>) this.authoritiesRepository.findAll();
+	}
 
 }

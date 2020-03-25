@@ -16,7 +16,6 @@ public class WalkComentService {
 
 	WalkComentRepository walkComentRepository;
 
-
 	@Autowired
 	public WalkComentService(final WalkComentRepository walkComentRepository) {
 		this.walkComentRepository = walkComentRepository;
@@ -44,7 +43,12 @@ public class WalkComentService {
 
 	@Transactional
 	public Double getAverageRatingOfWalk(final int walkId) {
-		return this.walkComentRepository.getAverageRatingOfWalk(walkId);
+		if (this.walkComentRepository.getAverageRatingOfWalk(walkId) == null) {
+			return 0.0;
+		} else {
+			return this.walkComentRepository.getAverageRatingOfWalk(walkId);
+		}
+
 	}
 
 }
