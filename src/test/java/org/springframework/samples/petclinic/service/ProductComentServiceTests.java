@@ -1,4 +1,4 @@
-﻿package org.springframework.samples.petclinic.service;
+package org.springframework.samples.petclinic.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
