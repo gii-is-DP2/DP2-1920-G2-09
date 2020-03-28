@@ -68,6 +68,7 @@ public class ProductComentServiceTests {
 		u.setEnabled(true);
 		u.setPassword("contraseña");
 		u.setUsername("u");
+		u.setEmail("email@bien.com");
 		pC.setDescription("Descripcion de prueba");
 		pC.setHighlight(false);
 		pC.setPostDate(LocalDate.now().minusDays(2));
@@ -106,6 +107,7 @@ public class ProductComentServiceTests {
 		u.setEnabled(true);
 		u.setPassword("contraseña");
 		u.setUsername("u");
+		u.setEmail("email@bien.com");
 		pC.setDescription("Descripcion de prueba");
 		pC.setHighlight(false);
 		pC.setPostDate(LocalDate.now().minusDays(2));

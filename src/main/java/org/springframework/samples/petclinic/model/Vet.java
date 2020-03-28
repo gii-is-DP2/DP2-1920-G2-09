@@ -29,6 +29,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.xml.bind.annotation.XmlElement;
 
 import org.springframework.beans.support.MutableSortDefinition;
@@ -46,47 +47,48 @@ import org.springframework.beans.support.PropertyComparator;
 @Table(name = "vets")
 public class Vet extends Person {
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"), inverseJoinColumns = @JoinColumn(name = "specialty_id"))
-    private Set<Specialty> specialties;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "vet_specialties", joinColumns = @JoinColumn(name = "vet_id"), inverseJoinColumns = @JoinColumn(name = "specialty_id"))
+	private Set<Specialty> specialties;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "username", referencedColumnName = "username")
-    private User user;
+	@Valid
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "username", referencedColumnName = "username")
+	private User user;
 
-    public User getUser() {
-	return this.user;
-    }
-
-    public void setUser(final User user) {
-	this.user = user;
-    }
-
-    public Set<Specialty> getSpecialtiesInternal() {
-	if (this.specialties == null) {
-	    this.specialties = new HashSet<>();
+	public User getUser() {
+		return this.user;
 	}
-	return this.specialties;
-    }
 
-    @XmlElement
-    public List<Specialty> getSpecialties() {
-	List<Specialty> sortedSpecs = new ArrayList<>(this.getSpecialtiesInternal());
-	PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
-	return Collections.unmodifiableList(sortedSpecs);
-    }
+	public void setUser(final User user) {
+		this.user = user;
+	}
 
-    public int getNrOfSpecialties() {
-	return this.getSpecialtiesInternal().size();
-    }
+	public Set<Specialty> getSpecialtiesInternal() {
+		if (this.specialties == null) {
+			this.specialties = new HashSet<>();
+		}
+		return this.specialties;
+	}
 
-    public void addSpecialty(final Specialty specialty) {
-	this.getSpecialtiesInternal().add(specialty);
-    }
+	@XmlElement
+	public List<Specialty> getSpecialties() {
+		List<Specialty> sortedSpecs = new ArrayList<>(this.getSpecialtiesInternal());
+		PropertyComparator.sort(sortedSpecs, new MutableSortDefinition("name", true, true));
+		return Collections.unmodifiableList(sortedSpecs);
+	}
 
-    public void setSpecialtiesInternal(final Set<Specialty> specialties2) {
-	this.specialties = specialties2;
+	public int getNrOfSpecialties() {
+		return this.getSpecialtiesInternal().size();
+	}
 
-    }
+	public void addSpecialty(final Specialty specialty) {
+		this.getSpecialtiesInternal().add(specialty);
+	}
+
+	public void setSpecialtiesInternal(final Set<Specialty> specialties2) {
+		this.specialties = specialties2;
+
+	}
 
 }

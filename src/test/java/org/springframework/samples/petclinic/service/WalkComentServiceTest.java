@@ -58,6 +58,7 @@ public class WalkComentServiceTest {
 		u.setEnabled(true);
 		u.setPassword("contraseña");
 		u.setUsername("u");
+		u.setEmail("email@bien.com");
 		wC.setDescription("Descripcion de prueba");
 		wC.setPostDate(LocalDate.now().minusDays(2));
 		wC.setWalk(w);

@@ -124,8 +124,8 @@ public class ProductComentControllerTests {
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.get("/products/" + ProductComentControllerTests.TEST_PRODUCT_ID
 						+ "/delete-product-coment/" + ProductComentControllerTests.TEST_PRODUCT_COMENT_ID))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.view().name("products/productDetails"));
+				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+				.andExpect(MockMvcResultMatchers.view().name("redirect:/products/{productId}"));
 	}
 
 }
