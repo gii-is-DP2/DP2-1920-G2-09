@@ -98,6 +98,7 @@ public class PrescriptionController {
 	public String processNewPrescriptionForm(final ModelMap model, @Valid final Prescription prescription,
 			final BindingResult result) throws MailjetException, MailjetSocketTimeoutException {
 		if (result.hasErrors()) {
+			model.put("previa", this.prescriptionService.findPrescriptionsByPetId(prescription.getPet().getId()));
 			model.addAttribute("prescription", prescription);
 			return "/prescriptions/createOrUpdatePrescriptionForm";
 		} else {

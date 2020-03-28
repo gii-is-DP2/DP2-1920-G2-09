@@ -101,6 +101,7 @@ class OwnerServiceTests {
 		user.setUsername("Sam");
 		user.setPassword("supersecretpassword");
 		user.setEnabled(true);
+		user.setEmail("email@bien.com");
 		owner.setUser(user);
 
 		this.ownerService.saveOwner(owner);

@@ -67,62 +67,63 @@ import org.springframework.stereotype.Service;
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class VetServiceTests {
 
-    @Autowired
-    protected VetService vetService;
+	@Autowired
+	protected VetService vetService;
 
-    @Test
-    void shouldFindAllVets() {
-	Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
-	Assertions.assertTrue(!vets.isEmpty());
+	@Test
+	void shouldFindAllVets() {
+		Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
+		Assertions.assertTrue(!vets.isEmpty());
 
-	Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-	Assertions.assertTrue(vet.getLastName().equals("Douglas"));
-	Assertions.assertTrue(vet.getNrOfSpecialties() == 2);
-	Assertions.assertTrue(vet.getSpecialties().get(0).getName().equals("dentistry"));
-	Assertions.assertTrue(vet.getSpecialties().get(1).getName().equals("surgery"));
-    }
+		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
+		Assertions.assertTrue(vet.getLastName().equals("Douglas"));
+		Assertions.assertTrue(vet.getNrOfSpecialties() == 2);
+		Assertions.assertTrue(vet.getSpecialties().get(0).getName().equals("dentistry"));
+		Assertions.assertTrue(vet.getSpecialties().get(1).getName().equals("surgery"));
+	}
 
-    @Test
-    void shouldFindVetById() {
-	Vet vet = this.vetService.findVetById(1);
-	Assertions.assertTrue(vet != null);
-    }
+	@Test
+	void shouldFindVetById() {
+		Vet vet = this.vetService.findVetById(1);
+		Assertions.assertTrue(vet != null);
+	}
 
-    @Test
-    void shouldFindSpecialtiesById() {
-	Integer[] ids = { 1, 2 };
-	Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
-	Assertions.assertTrue(!specialties.isEmpty());
-    }
+	@Test
+	void shouldFindSpecialtiesById() {
+		Integer[] ids = { 1, 2 };
+		Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
+		Assertions.assertTrue(!specialties.isEmpty());
+	}
 
-    @Test
-    void shouldFindAllSpecialties() {
-	Collection<Specialty> specialties = (Collection<Specialty>) this.vetService.findAllSpecialties();
-	Assertions.assertTrue(!specialties.isEmpty());
-    }
+	@Test
+	void shouldFindAllSpecialties() {
+		Collection<Specialty> specialties = (Collection<Specialty>) this.vetService.findAllSpecialties();
+		Assertions.assertTrue(!specialties.isEmpty());
+	}
 
-    @Test
-    void shouldSaveVet() throws DataAccessException, DuplicatedUsernameException {
-	Vet vet = new Vet();
-	vet.setFirstName("Juan");
-	vet.setLastName("Montes");
+	@Test
+	void shouldSaveVet() throws DataAccessException, DuplicatedUsernameException {
+		Vet vet = new Vet();
+		vet.setFirstName("Juan");
+		vet.setLastName("Montes");
 
-	User user = new User();
-	user.setUsername("vet25");
-	user.setPassword("123456");
-	user.setEnabled(true);
-	vet.setUser(user);
+		User user = new User();
+		user.setUsername("vet25");
+		user.setPassword("123456");
+		user.setEnabled(true);
+		user.setEmail("email@bien.com");
+		vet.setUser(user);
 
-	this.vetService.saveVet(vet);
-	Assert.assertTrue(vet.getId() != 0);
-    }
+		this.vetService.saveVet(vet);
+		Assert.assertTrue(vet.getId() != 0);
+	}
 
-    @Test
-    void shouldNotSaveVet() {
-	Vet vet = new Vet();
-	User user = new User();
-	vet.setUser(user);
-	Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
-    }
+	@Test
+	void shouldNotSaveVet() {
+		Vet vet = new Vet();
+		User user = new User();
+		vet.setUser(user);
+		Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
+	}
 
 }

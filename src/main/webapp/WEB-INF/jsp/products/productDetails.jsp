@@ -124,7 +124,7 @@
 											class="text-muted"><c:out value="${coment.postDate}" /></small>
 											<sec:authorize access="hasAnyAuthority('admin')">
 												<spring:url
-													value="{productId}/delete-product-coment/{productComentId}"
+													value="/products/{productId}/delete-product-coment/{productComentId}"
 													var="productComentDeleteUrl">
 													<spring:param name="productId" value="${product.id}" />
 													<spring:param name="productComentId" value="${coment.id}" />
