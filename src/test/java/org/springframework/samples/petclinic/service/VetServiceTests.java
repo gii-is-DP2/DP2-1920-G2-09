@@ -21,6 +21,8 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -126,4 +128,51 @@ class VetServiceTests {
 		Assertions.assertThrows(JpaSystemException.class, () -> this.vetService.saveVet(vet));
 	}
 
+	// PRUEBAS PARAMETRIZADAS
+	@ParameterizedTest
+	@CsvSource({ "2,Leary,radiology", "3,Douglas,dentistry", "5,Stevens,radiology" })
+	void shouldFindAllVetsParametrized(final Integer vetId, final String name, final String specialty) {
+		Collection<Vet> vets = (Collection<Vet>) this.vetService.findVets();
+		Assertions.assertTrue(!vets.isEmpty());
+
+		Vet vet = EntityUtils.getById(vets, Vet.class, vetId);
+		Assertions.assertTrue(vet.getLastName().equals(name));
+		Assertions.assertTrue(vet.getSpecialties().get(0).getName().equals(specialty));
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1,3,6" })
+	void shouldFindVetByIdParametrized(final Integer vetId) {
+		Vet vet = this.vetService.findVetById(vetId);
+		Assertions.assertTrue(vet != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1,3,2" })
+	void shouldFindSpecialtiesByIdParametrized(final Integer specialtyID) {
+		Integer[] ids = { specialtyID };
+		Set<Specialty> specialties = this.vetService.findSpecialtiesById(ids);
+		Assertions.assertTrue(!specialties.isEmpty());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "NUEVOVET, APELLIDONUEVOVEt, usernamenuevo1, password1, email@gmail1.com",
+			"nueVOvet, apellidoNUEVOvet, usernamenuevo2, password2, email@gmail2.com",
+			"nuevovet, apellidonuevovet, usernamenuevo3, password3, email@gmail3.com" })
+	void shouldSaveVetParamtrized(final String name, final String lastName, final String username,
+			final String password, final String email) throws DataAccessException, DuplicatedUsernameException {
+		Vet vet = new Vet();
+		vet.setFirstName(name);
+		vet.setLastName(lastName);
+
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setEnabled(true);
+		user.setEmail("email@bien.com");
+		vet.setUser(user);
+
+		this.vetService.saveVet(vet);
+		Assert.assertTrue(vet.getId() != 0);
+	}
 }
