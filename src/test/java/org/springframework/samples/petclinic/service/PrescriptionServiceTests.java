@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -146,4 +148,58 @@ public class PrescriptionServiceTests {
 		Assertions.assertTrue(p == null);
 	}
 
+	// PRUEBAS PARAMETRIZADAS
+	@ParameterizedTest
+	@CsvSource({ "1,13" })
+	void shouldFindPrescriptionsByPetIdParametrized() {
+		Collection<Prescription> lista = this.prescriptionService.findPrescriptionsByPetId(1);
+		Assertions.assertTrue(!lista.isEmpty());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "111,2222,33333" })
+	void shouldNoFindPrescriptionsByPetIdParametrized() {
+		Collection<Prescription> lista = this.prescriptionService.findPrescriptionsByPetId(1547268);
+		Assertions.assertTrue(lista.isEmpty());
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1,titulo1,descripcion1,vet1", "5,titulo2,descripcion12,vet2", "13,titulo3,descripcion13,vet3" })
+	public void shouldSavePrescriptionParametrized(final int petId, final String titulo, final String descripcion,
+			final String vetUsername)
+			throws DataAccessException, DuplicatedUsernameException, DuplicatedPetNameException {
+
+		Collection<Prescription> prs = this.prescriptionService.findPrescriptionsByPetId(petId);
+		int found = prs.size();
+
+		Prescription p = new Prescription();
+
+		p.setName(titulo);
+		p.setDateInicio(LocalDate.now());
+		p.setDateFinal(LocalDate.now().plusDays(2));
+		p.setDescription(descripcion);
+		p.setPet(this.petService.findPetById(petId));
+		p.setVet(this.vetService.findVetbyUser(vetUsername));
+
+		this.prescriptionService.savePrescription(p);
+		Assertions.assertTrue(p.getId() != 0);
+
+		prs = this.prescriptionService.findPrescriptionsByPetId(petId);
+		Assertions.assertTrue(prs.size() == found + 1);
+
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1", "2", "3" })
+	void shouldFindPrescriptionByIdParametrized(final int pescriptionId) {
+		Prescription p = this.prescriptionService.findPrescriptionById(pescriptionId);
+		Assertions.assertTrue(p != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "111", "2222", "33333" })
+	void shouldNotFindPrescriptionByIdParametrized(final int pescriptionId) {
+		Prescription p = this.prescriptionService.findPrescriptionById(pescriptionId);
+		Assertions.assertTrue(p == null);
+	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -39,6 +41,21 @@ public class AuthoritiesServiceTest {
 		List<Authorities> ls = this.authoritiesService.getAllAuthorities();
 		Integer before = ls.size();
 		this.authoritiesService.saveAuthorities("userNuevo", "NuevaAuth");
+		List<Authorities> newAllAuth = this.authoritiesService.getAllAuthorities();
+		Integer after = newAllAuth.size();
+		Assert.assertTrue(after == before + 1);
+	}
+// PRUEBAS PARAMETRIZADAS
+
+	@ParameterizedTest
+	@CsvSource({ "AUTORIDAD1,         USER1", "au.th2,         us.er2", "AUth3auTH3,         UsEr3" })
+	void shouldSaveAuthoritiesParametrized(final String auth, final String user) {
+		List<Authorities> ls = this.authoritiesService.getAllAuthorities();
+		Integer before = ls.size();
+		Authorities au = new Authorities();
+		au.setAuthority(auth);
+		au.setUsername(user);
+		this.authoritiesService.saveAuthorities(au);
 		List<Authorities> newAllAuth = this.authoritiesService.getAllAuthorities();
 		Integer after = newAllAuth.size();
 		Assert.assertTrue(after == before + 1);

@@ -20,6 +20,8 @@ import java.util.Collection;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -149,5 +151,63 @@ class OwnerServiceTests {
 		Owner owner = this.ownerService.findOwnerById(1242194);
 		Assertions.assertThat(owner == null);
 	}
+	// PRUEBAS PARAMETRIZADAS
 
+	@ParameterizedTest
+	@CsvSource({ "Javier,Romero,Direccion1,Ciudad1,111222333,Username1,Password1,Email1",
+			"Alejandro,Blanco,Direccion2,Ciudad2,444555666,Username2,Password2,Email2",
+			"Carlos,Cruz,Direccion3,Ciudad3,777888999,Username3,Password3,Email3" })
+	public void shouldInsertMultipleOwnersParamtrized(final String firstName, final String lastName,
+			final String address, final String city, final String telephone, final String username,
+			final String password, final String email) throws DataAccessException, DuplicatedUsernameException {
+		Collection<Owner> owners = this.ownerService.findOwnerByLastName(lastName);
+		int found = owners.size();
+
+		Owner owner = new Owner();
+		owner.setFirstName(firstName);
+		owner.setLastName(lastName);
+		owner.setAddress(address);
+		owner.setCity(city);
+		owner.setTelephone(telephone);
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setEnabled(true);
+		user.setEmail(email);
+		owner.setUser(user);
+
+		this.ownerService.saveOwner(owner);
+		Assertions.assertThat(owner.getId().longValue()).isNotEqualTo(0);
+
+		owners = this.ownerService.findOwnerByLastName(lastName);
+		Assertions.assertThat(owners.size()).isEqualTo(found + 1);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "owner1", "prueba" })
+	void shouldFindOwnersByUsernameParametrized(final String username) {
+		Owner owner = this.ownerService.findOwnerByUsername(username);
+		Assertions.assertThat(owner != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "owner123", "prueba123", "ownerQueNoExiste" })
+	void shouldNotFindOwnersByUsernameParametrized(final String username) {
+		Owner owner = this.ownerService.findOwnerByUsername(username);
+		Assertions.assertThat(owner == null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1", "2", "3", "4", "5" })
+	void shouldFindOwnerByIdParametrized(final int id) {
+		Owner owner = this.ownerService.findOwnerById(id);
+		Assertions.assertThat(owner != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "199", "299", "399", "499", "599" })
+	void shouldNotFindOwnerByIdParametrized(final int id) {
+		Owner owner = this.ownerService.findOwnerById(id);
+		Assertions.assertThat(owner != null);
+	}
 }

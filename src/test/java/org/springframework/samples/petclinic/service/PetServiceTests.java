@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -222,4 +224,96 @@ class PetServiceTests {
 		Assert.assertTrue(visitArr[0].getPet().getId().equals(7));
 	}
 
+	// PRUEBAS PARAMETRIZADAS
+
+	@ParameterizedTest
+	@CsvSource({ "1, mascota1", "11, mascota3", "5, mascota2" })
+	public void shouldInsertPetIntoDatabaseAndGenerateIdParametrized(final int ownerId, final String petName)
+			throws DuplicatedUsernameException {
+		Owner owner6 = this.ownerService.findOwnerById(ownerId);
+		int found = owner6.getPets().size();
+
+		Pet pet = new Pet();
+		pet.setName(petName);
+		Collection<PetType> types = this.petService.findPetTypes();
+		pet.setType(EntityUtils.getById(types, PetType.class, 2));
+		pet.setBirthDate(LocalDate.now());
+		owner6.addPet(pet);
+		Assert.assertTrue(owner6.getPets().size() == found + 1);
+
+		try {
+			this.petService.savePet(pet);
+		} catch (DuplicatedPetNameException ex) {
+			Logger.getLogger(PetServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		this.ownerService.saveOwner(owner6);
+
+		owner6 = this.ownerService.findOwnerById(6);
+		Assert.assertTrue(owner6.getPets().size() == found + 1);
+		// checks that id has been generated
+		Assert.assertTrue(pet.getId() != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, mascota1,mascota1", "11, mascota2,mascota2", "5, mascota3,mascota3" })
+	public void shouldThrowExceptionUpdatingPetsWithTheSameNameParametrized(final int ownerId, final String petName,
+			final String petNameDuplicated) {
+		Owner owner6 = this.ownerService.findOwnerById(ownerId);
+		Pet pet = new Pet();
+		pet.setName(petName);
+		Collection<PetType> types = this.petService.findPetTypes();
+		pet.setType(EntityUtils.getById(types, PetType.class, 2));
+		pet.setBirthDate(LocalDate.now());
+		owner6.addPet(pet);
+
+		Pet anotherPet = new Pet();
+		anotherPet.setName(petNameDuplicated);
+		anotherPet.setType(EntityUtils.getById(types, PetType.class, 1));
+		anotherPet.setBirthDate(LocalDate.now().minusWeeks(2));
+		owner6.addPet(anotherPet);
+
+		try {
+			this.petService.savePet(pet);
+			this.petService.savePet(anotherPet);
+		} catch (DuplicatedPetNameException e) {
+			// The pets already exists!
+			e.printStackTrace();
+		}
+
+		Assertions.assertThrows(DuplicatedPetNameException.class, () -> {
+			anotherPet.setName(petName);
+			this.petService.savePet(anotherPet);
+		});
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "1, descripción1", "11, descripcion2", "5, descripcion3" })
+	public void shouldAddNewVisitForPetParametrized(final int petId, final String description) {
+		Pet pet7 = this.petService.findPetById(petId);
+		int found = pet7.getVisits().size();
+		Visit visit = new Visit();
+		pet7.addVisit(visit);
+		visit.setDescription(description);
+		this.petService.saveVisit(visit);
+		try {
+			this.petService.savePet(pet7);
+		} catch (DuplicatedPetNameException ex) {
+			Logger.getLogger(PetServiceTests.class.getName()).log(Level.SEVERE, null, ex);
+		}
+
+		pet7 = this.petService.findPetById(petId);
+		Assert.assertTrue(pet7.getVisits().size() == found + 1);
+		Assert.assertTrue(visit.getId() != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "7,8" })
+	void shouldFindVisitsByPetIdParametrized(final int petId) throws Exception {
+		Collection<Visit> visits = this.petService.findVisitsByPetId(petId);
+		Assert.assertTrue(visits.size() == 2);
+		Visit[] visitArr = visits.toArray(new Visit[visits.size()]);
+		Assert.assertTrue(visitArr[0].getPet() != null);
+		Assert.assertTrue(visitArr[0].getDate() != null);
+		Assert.assertTrue(visitArr[0].getPet().getId().equals(petId));
+	}
 }
