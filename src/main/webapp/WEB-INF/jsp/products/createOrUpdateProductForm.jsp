@@ -12,9 +12,9 @@
         <div class="form-group has-feedback">
             <petclinic:inputField label="Name" name="name"/>
             <petclinic:inputField label="Description" name="description" />
-            <petclinic:inputField label="Stock" name="stock"/>
+            <petclinic:inputNumberField label="Stock" name="stock" value="${product.stock}"/>
             <petclinic:inputField label="Image URL" name="urlImage"/>
-            <petclinic:inputField label="Unit Price" name="unitPrice"/>
+            <petclinic:inputDoubleField label="Unit Price" name="unitPrice" value="${product.unitPrice}" step = "0.1"/>
             <p style="margin-left:9%" ><b> Check if it is available</b> <c:choose><c:when test="${product.available == true }">
             <input type="checkbox"  name="available" checked="checked"/>
             </c:when>

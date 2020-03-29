@@ -1,8 +1,6 @@
 
 package org.springframework.samples.petclinic.service;
 
-
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,14 +67,44 @@ public class WalkServiceTests {
     	Assertions.assertThrows(EmptyResultDataAccessException.class, () -> this.walkService.deleteWalk(99));
     }
     
- // PRUEBAS PARAMETRIZADAS
-    
-    @ParameterizedTest
-    @CsvSource({ "1", "2", "3" })
-    void shouldFindWalksParameterized() {
+
+	// PRUEBAS PARAMETRIZADAS
+  
+   @ParameterizedTest
+   @CsvSource({ "1", "2", "3" })
+   void shouldFindWalksParameterized() {
     	Iterable<Walk> walks = this.walkService.findAllWalks();
     	Assertions.assertTrue(walks !=null);
-    }
+   }
+  
+	@ParameterizedTest
+	@CsvSource({ "1", "2", "3" })
+	void shouldFindWalkByIdParametrized(final Integer walkID) {
+		Walk walk = this.walkService.findWalkById(walkID);
+		Assertions.assertTrue(walk != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "111", "222", "333" })
+	void shouldNotFindWalkByIdParametrized(final Integer walkID) {
+		Walk walk = this.walkService.findWalkById(walkID);
+		Assertions.assertTrue(walk == null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "nuevopaseo1, descripcion3, http://www.nuevaurl3.com",
+			"NUEVOPASEO2, DESCRIPCION2, http://www.NUEVAURL3.com",
+			"nuevoPASEO3, descriPCION3, http://www.NUEvaurl2.com" })
+	void shouldSaveWalks(final String name, final String description, final String urlMap) {
+		Walk walk = new Walk();
+		walk.setName(name);
+		walk.setDescription(description);
+		walk.setMap(urlMap);
+		this.walkService.saveWalk(walk);
+		Assertions.assertTrue(walk != null);
+	}
+    
+
     
     @ParameterizedTest
 	@CsvSource({ "nuevopaseo1, descripcion3, http://www.nuevaurl3.com",
@@ -100,7 +128,4 @@ public class WalkServiceTests {
     void shouldNotDeleteWalkParameterized(final Integer walkId) {
     	Assertions.assertThrows(EmptyResultDataAccessException.class, () -> this.walkService.deleteWalk(walkId));
     }
-    
-
-
 }
