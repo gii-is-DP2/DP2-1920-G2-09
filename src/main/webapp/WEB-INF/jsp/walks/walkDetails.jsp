@@ -36,15 +36,31 @@
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Walk</a>
 	</sec:authorize>
+	<br/>
+	<br/>
+	<br/>
+	
+	 <sec:authorize access="hasAnyAuthority('admin')">
+    <spring:url value="{walkId}/delete" var="deleteUrl">
+        <spring:param name="walkId" value="${walk.id}"/>
+    </spring:url>
+    <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default">Delete Walk</a>
+	</sec:authorize>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
-    <!--  COMENTARIOS Y VALORACIONES -->
+	<h2>Comments</h2>
+
+    <!--  Añadir Comentarios -->
  	<c:if test = "${ not empty OKmessage}">
    		<div class="alert-success" role="alert">
   			<c:out value = "${OKmessage}"/>
 		</div>
 	</c:if>
 	<sec:authorize access="isAuthenticated()">
-		<form:form modelAttribute="walkComent" class="form-horizontal" id="add-walkComent-form" action ="/walks/${walk.id}/add-walk-coment/">
+		<form:form modelAttribute="walkComent" class="form-horizontal" id="add-walkComent-form" action ="/walks/${walk.id}/add-walk-coment/" >
 			<petclinic:inputField label="Title" name="title"/>
 			<petclinic:inputField label="Description" name="description"/>
 			<petclinic:selectField label="Rating" name="rating" size="6" names="${[0,1,2,3,4,5]}"></petclinic:selectField>
@@ -56,48 +72,55 @@
     <br/>
     <br/>
     <br/>
-    
-
-    <sec:authorize access="hasAnyAuthority('admin')">
-    <spring:url value="{walkId}/delete" var="deleteUrl">
-        <spring:param name="walkId" value="${walk.id}"/>
-    </spring:url>
-    <a href="${fn:escapeXml(deleteUrl)}" class="btn btn-default">Delete Walk</a>
-	</sec:authorize>
-    <br/>
 
     
-<!--  LISTA DE COMENATARIOS -->
+<!--  Show Comentarios -->
 
 
-<div class="row bootstrap snippets">
-    <div class="col-md-6 col-md-offset-2 col-sm-12">
-        <div class="comment-wrapper">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    Comment panel
-                </div>
-                <div class="panel-body">
-                    <ul class="media-list">
-                    <c:forEach items="${coments}" var = "coment">
-                        <li class="media">
-                            <div class="media-body">
-                                <span class="text-muted pull-right">
-                                    <small class="text-muted"><c:out value = "${coment.postDate}" /></small>
-                                </span>
-                                <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
-                                <strong class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
-                                <p> <c:out value = "${coment.description}" /></p>
-                            </div>
-                        </li>
-                        </c:forEach>
-                    </ul>
-                </div>
-            </div>
-        </div>
+<table class="table table-striped">
+        <c:forEach var="coment" items="${coments}">
 
-    </div>
-</div>
+            <tr>
+                <td valign="top">
+                    <dl class="dl-horizontal">
+                    	<dt>Title</dt>
+                        <dd><c:out value="${coment.title}"/></dd></dd>
+                        <dt>Description</dt>
+                        <dd><c:out value="${coment.description}"/></dd>
+                        
+                        
+                        <dt>Name</dt>
+                        <dd><c:out value="${coment.user.username}"/> </dd>
+                        <dt>Post Date</dt>
+                        <dd><petclinic:localDate date="${coment.postDate}" pattern="yyyy-MM-dd"/></dd>
+                        
+                    </dl>
+                    
+                </td>
+				<sec:authorize access="hasAnyAuthority('admin')">	
+				<td valign="top">
+					<table class="table-condensed">
+						<thead>
+							<tr>
+								<th>Delete</th>
+							</tr>
+						</thead>
+						<tr>
+							<td>
+							
+							<spring:url value="/walks/{walkId}/walkComents/{walkComentId}/delete"
+									var="deleteComentUrl">
+									<spring:param name="walkId" value="${walk.id}" />
+									<spring:param name="walkComentId" value="${coment.id}" />
+								</spring:url> <a href="${fn:escapeXml(deleteComentUrl)}">Delete Coment</a>
+								</td>
+						</tr>
+					</table>
+				</td></sec:authorize>
+			</tr>
+
+        </c:forEach>
+    </table>
     
   
 

@@ -34,36 +34,36 @@ class WalkControllerTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	private Walk laputa;
+	private Walk mockwalk;
 
 	@BeforeEach
 	void setup() {
 
-		this.laputa = new Walk();
-		this.laputa.setId(WalkControllerTests.TEST_WALK_ID);
-		this.laputa.setName("Laputa");
-		this.laputa.setDescription("This is a wonderful Island of riches and technology");
-		this.laputa.setMap("https://tinyurl.com/wygb5vu");
-		BDDMockito.given(this.walkService.findWalkById(WalkControllerTests.TEST_WALK_ID)).willReturn(this.laputa);
+		this.mockwalk = new Walk();
+		this.mockwalk.setId(WalkControllerTests.TEST_WALK_ID);
+		this.mockwalk.setName("mockwalk");
+		this.mockwalk.setDescription("This is a wonderful Island of riches and technology");
+		this.mockwalk.setMap("https://tinyurl.com/wygb5vu");
+		BDDMockito.given(this.walkService.findWalkById(WalkControllerTests.TEST_WALK_ID)).willReturn(this.mockwalk);
 
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "prueba", password = "prueba", roles = "owner")
 	@Test
-	void testFindAllProducts() throws Exception {
+	void testFindAllWalks() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/walks/all")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeExists("walk"))
 				.andExpect(MockMvcResultMatchers.model().attributeExists("walks"))
 				.andExpect(MockMvcResultMatchers.view().name("walks/listWalks"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "prueba", password = "prueba", roles = "owner")
 	@Test
 	void testShowWalk() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/walks/{walkId}", WalkControllerTests.TEST_WALK_ID))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
-						Matchers.hasProperty("name", Matchers.is("Laputa"))))
+						Matchers.hasProperty("name", Matchers.is("mockwalk"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
 						Matchers.hasProperty("description",
 								Matchers.is("This is a wonderful Island of riches and technology"))))
@@ -72,7 +72,7 @@ class WalkControllerTests {
 				.andExpect(MockMvcResultMatchers.view().name("walks/walkDetails"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testInitCreationForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/walks/new")).andExpect(MockMvcResultMatchers.status().isOk())
@@ -80,21 +80,21 @@ class WalkControllerTests {
 				.andExpect(MockMvcResultMatchers.view().name("walks/createOrUpdateWalkForm"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testProcessCreationFormSuccess() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.post("/walks/new").param("name", "NotLaputa")
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/walks/new").param("name", "Notmockwalk")
 				.with(SecurityMockMvcRequestPostProcessors.csrf())
 				.param("description", "This is not an Island of riches").param("map", "https://tinyurl.com/wygbvu"))
 				.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testProcessCreationFormHasErrors() throws Exception {
 		this.mockMvc
 				.perform(MockMvcRequestBuilders.post("/walks/new").with(SecurityMockMvcRequestPostProcessors.csrf())
-						.param("name", "NotLaputa"))
+						.param("name", "Notmockwalk"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.model().attributeHasErrors("walk"))
 				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("walk", "map"))
@@ -102,7 +102,7 @@ class WalkControllerTests {
 				.andExpect(MockMvcResultMatchers.view().name("walks/createOrUpdateWalkForm"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testInitUpdateWalkForm() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/walks/{walkId}/edit", WalkControllerTests.TEST_WALK_ID))
@@ -112,13 +112,13 @@ class WalkControllerTests {
 						Matchers.hasProperty("description",
 								Matchers.is("This is a wonderful Island of riches and technology"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
-						Matchers.hasProperty("name", Matchers.is("Laputa"))))
+						Matchers.hasProperty("name", Matchers.is("mockwalk"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
 						Matchers.hasProperty("map", Matchers.is("https://tinyurl.com/wygb5vu"))))
 				.andExpect(MockMvcResultMatchers.view().name("walks/createOrUpdateWalkForm"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testProcessUpdateWalkFormSuccess() throws Exception {
 		this.mockMvc
@@ -129,7 +129,7 @@ class WalkControllerTests {
 				.andExpect(MockMvcResultMatchers.view().name("redirect:/walks/{walkId}"));
 	}
 
-	@WithMockUser(value = "spring")
+	@WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
 	@Test
 	void testProcessUpdateWalkFormHasErrors() throws Exception {
 		this.mockMvc
@@ -142,4 +142,14 @@ class WalkControllerTests {
 				.andExpect(MockMvcResultMatchers.model().attributeHasFieldErrors("walk", "description"))
 				.andExpect(MockMvcResultMatchers.view().name("walks/createOrUpdateWalkForm"));
 	}
+	
+    @WithMockUser(username = "admin1", password = "4dm1n", roles = "admin")
+    @Test
+    void testDeleteWalkComent() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/walks/"+TEST_WALK_ID+"/delete"))
+		.andExpect(MockMvcResultMatchers.status().is2xxSuccessful()).andExpect(MockMvcResultMatchers.view().name("walks/listWalks"));
+    }
+	
+	
+	
 }

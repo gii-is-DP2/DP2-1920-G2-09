@@ -13,12 +13,12 @@ public class WalkComent extends Coment {
 
 	// USUARIO QUE HA PUBLICADO EL COMENTARIO/VALORACIÓN (PUEDE SER TANTO OWNER, VET
 	// O ADMIN)
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "username")
 	private User	user;
 
 	// PASEO AL QUE SE LE HACE EL COMENTARIO/VALORACIÓN
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "walk_id")
 	private Walk	walk;
 

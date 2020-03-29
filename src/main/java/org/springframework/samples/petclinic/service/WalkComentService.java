@@ -50,5 +50,10 @@ public class WalkComentService {
 		}
 
 	}
+	
+	@Transactional
+	public void deleteWalkComent(final int comentId){
+		this.walkComentRepository.deleteComentById(comentId);
+	}
 
 }

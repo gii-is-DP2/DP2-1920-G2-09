@@ -1,22 +1,7 @@
-/*
- * Copyright 2002-2013 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.validation.Valid;
 
@@ -62,13 +47,6 @@ public class WalkController {
 		model.addAttribute("walks", walks);
 		return "walks/listWalks";
 	}
-
-//    @GetMapping(value = "/{walkId}")
-//    public ModelAndView showWalk(@PathVariable("walkId") final int walkId) {
-//	ModelAndView mav = new ModelAndView("walks/walkDetails");
-//	mav.addObject(this.walkService.findWalkById(walkId));
-//	return mav;
-//    }
 
 	@GetMapping(value = "/{walkId}")
 	public String showWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
@@ -127,7 +105,19 @@ public class WalkController {
 
 	@GetMapping(value = "/{walkId}/delete")
 	public String initDeleteWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
-		this.walkService.deleteWalk(walkId);
+		Collection<WalkComent> walkComent = this.walkComentService.findAllComentsOfTheWalk(walkId);
+		
+		
+		if(walkComent.isEmpty()) {
+			this.walkService.deleteWalk(walkId);
+			
+		}else {
+			for(WalkComent w: walkComent) {
+				this.walkComentService.deleteWalkComent(w.getId());
+			}
+			this.walkService.deleteWalk(walkId);
+		}
+		
 		return this.findAllWalks(model);
 	}
 
