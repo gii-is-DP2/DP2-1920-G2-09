@@ -69,7 +69,7 @@ public class WalkComentServiceTest {
 		wC.setWalk(w);
 		wC.setRating(4);
 		wC.setTitle("Esto es un titulo");
-		wC.setUser(nu);
+		wC.setUser(u);
 		this.walkComentService.saveWalkComent(wC);
 		Assert.assertTrue(wC.getId().longValue() != 0);
 		Assert.assertTrue(this.walkComentService.findAllComentsOfTheWalk(w.getId()).size() == 1);
