@@ -1,4 +1,3 @@
-
 package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
@@ -21,4 +20,6 @@ public interface WalkComentRepository extends CrudRepository<WalkComent, Integer
 
 	@Query("Select wc from WalkComent wc where wc.id = ?1")
 	WalkComent findWalkComentById(int walkComentid);
+	
+	void deleteComentById(int id);
 }
