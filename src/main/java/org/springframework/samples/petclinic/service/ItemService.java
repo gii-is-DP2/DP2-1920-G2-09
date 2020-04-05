@@ -28,4 +28,19 @@ public class ItemService {
 		return this.itemRepository.findItemsInShoppingCard(shoppingCartId);
 	}
 
+	@Transactional
+	public Item checkIfItemIsIntheShoppingCart(final int shoppingCartId, final int productId) {
+		return this.itemRepository.checkIfItemIsIntheShoppingCart(shoppingCartId, productId);
+	}
+
+	@Transactional
+	public void deleteItem(final int itemId) {
+		this.itemRepository.deleteById(itemId);
+	}
+
+	@Transactional
+	public Item findItemById(final int itemId) {
+		return this.itemRepository.findById(itemId).get();
+	}
+
 }

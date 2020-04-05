@@ -61,195 +61,195 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class OwnerController {
 
-    private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
+	private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
 
-    private final OwnerService ownerService;
-    private final PrescriptionService prescriptionService;
+	private final OwnerService ownerService;
+	private final PrescriptionService prescriptionService;
 
-    @Autowired
-    public OwnerController(final OwnerService ownerService, final UserService userService,
-	    final AuthoritiesService authoritiesService, final PrescriptionService prescriptionService) {
-	this.ownerService = ownerService;
-	this.prescriptionService = prescriptionService;
-    }
-
-    @ModelAttribute("months")
-    public List<Integer> setMonths() {
-	Integer[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-	List<Integer> ls = Arrays.asList(a);
-	return ls;
-    }
-
-    @ModelAttribute("years")
-    public List<Integer> setYears() {
-	List<Integer> ls = new ArrayList<>();
-	Integer i = LocalDate.now().getYear();
-	Integer fin = LocalDate.now().getYear() + 20;
-	while (i < fin) {
-	    ls.add(i);
-	    i++;
+	@Autowired
+	public OwnerController(final OwnerService ownerService, final UserService userService,
+			final AuthoritiesService authoritiesService, final PrescriptionService prescriptionService) {
+		this.ownerService = ownerService;
+		this.prescriptionService = prescriptionService;
 	}
-	return ls;
-    }
 
-    @InitBinder
-    public void setAllowedFields(final WebDataBinder dataBinder) {
-	dataBinder.setDisallowedFields("id");
-    }
+	@ModelAttribute("months")
+	public List<Integer> setMonths() {
+		Integer[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+		List<Integer> ls = Arrays.asList(a);
+		return ls;
+	}
+
+	@ModelAttribute("years")
+	public List<Integer> setYears() {
+		List<Integer> ls = new ArrayList<>();
+		Integer i = LocalDate.now().getYear();
+		Integer fin = LocalDate.now().getYear() + 20;
+		while (i < fin) {
+			ls.add(i);
+			i++;
+		}
+		return ls;
+	}
+
+	@InitBinder
+	public void setAllowedFields(final WebDataBinder dataBinder) {
+		dataBinder.setDisallowedFields("id");
+	}
 
 //    @InitBinder("owner")
 //    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
 //	dataBinder.setValidator(new PaymentDetailsValidator());
 //    }
 
-    @GetMapping(value = "/owners/new")
-    public String initCreationForm(final Map<String, Object> model) {
-	Owner owner = new Owner();
-	model.put("owner", owner);
-	return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-    }
-
-    @PostMapping(value = "/owners/new")
-    public String processCreationForm(@Valid final Owner owner, final BindingResult result)
-	    throws DataAccessException, DuplicatedUsernameException {
-	if (result.hasErrors()) {
-	    return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-	} else {
-	    try {
-		this.ownerService.saveOwner(owner);
-	    } catch (DuplicatedUsernameException ex) {
-		result.rejectValue("user.username", "duplicate", "already exists");
+	@GetMapping(value = "/owners/new")
+	public String initCreationForm(final Map<String, Object> model) {
+		Owner owner = new Owner();
+		model.put("owner", owner);
 		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-	    }
-	    // creating owner, user and authorities
-
-	    return "redirect:/owners/" + owner.getId();
-	}
-    }
-
-    @GetMapping(value = "/owners/find")
-    public String initFindForm(final Map<String, Object> model) {
-	model.put("owner", new Owner());
-	return "owners/findOwners";
-    }
-
-    @GetMapping(value = "/owners")
-    public String processFindForm(Owner owner, final BindingResult result, final Map<String, Object> model) {
-
-	// allow parameterless GET request for /owners to return all records
-	if (owner.getLastName() == null) {
-	    owner.setLastName(""); // empty string signifies broadest possible search
 	}
 
-	// find owners by last name
-	Collection<Owner> results = this.ownerService.findOwnerByLastName(owner.getLastName());
-	if (results.isEmpty()) {
-	    // no owners found
-	    result.rejectValue("lastName", "notFound", "not found");
-	    return "owners/findOwners";
-	} else if (results.size() == 1) {
-	    // 1 owner found
-	    owner = results.iterator().next();
-	    return "redirect:/owners/" + owner.getId();
-	} else {
-	    // multiple owners found
-	    model.put("selections", results);
-	    return "owners/ownersList";
+	@PostMapping(value = "/owners/new")
+	public String processCreationForm(@Valid final Owner owner, final BindingResult result)
+			throws DataAccessException, DuplicatedUsernameException {
+		if (result.hasErrors()) {
+			return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		} else {
+			try {
+				this.ownerService.saveOwner(owner);
+			} catch (DuplicatedUsernameException ex) {
+				result.rejectValue("user.username", "duplicate", "already exists");
+				return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+			}
+			// creating owner, user and authorities
+
+			return "redirect:/owners/" + owner.getId();
+		}
 	}
-    }
 
-    @GetMapping(value = "/owners/{ownerId}/edit")
-    public String initUpdateOwnerForm(@PathVariable("ownerId") final int ownerId, final Model model) {
-	Owner owner = this.ownerService.findOwnerById(ownerId);
-	model.addAttribute(owner);
-	return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-    }
+	@GetMapping(value = "/owners/find")
+	public String initFindForm(final Map<String, Object> model) {
+		model.put("owner", new Owner());
+		return "owners/findOwners";
+	}
 
-    @PostMapping(value = "/owners/{ownerId}/edit")
-    public String processUpdateOwnerForm(@Valid final Owner owner, final BindingResult result,
-	    @PathVariable("ownerId") final int ownerId) {
-	if (result.hasErrors()) {
-	    return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-	} else {
-	    try {
-		owner.setId(ownerId);
-		this.ownerService.saveOwner(owner);
-	    } catch (DuplicatedUsernameException ex) {
-		result.rejectValue("user.username", "duplicate", "already exists");
+	@GetMapping(value = "/owners")
+	public String processFindForm(Owner owner, final BindingResult result, final Map<String, Object> model) {
+
+		// allow parameterless GET request for /owners to return all records
+		if (owner.getLastName() == null) {
+			owner.setLastName(""); // empty string signifies broadest possible search
+		}
+
+		// find owners by last name
+		Collection<Owner> results = this.ownerService.findOwnerByLastName(owner.getLastName());
+		if (results.isEmpty()) {
+			// no owners found
+			result.rejectValue("lastName", "notFound", "not found");
+			return "owners/findOwners";
+		} else if (results.size() == 1) {
+			// 1 owner found
+			owner = results.iterator().next();
+			return "redirect:/owners/" + owner.getId();
+		} else {
+			// multiple owners found
+			model.put("selections", results);
+			return "owners/ownersList";
+		}
+	}
+
+	@GetMapping(value = "/owners/{ownerId}/edit")
+	public String initUpdateOwnerForm(@PathVariable("ownerId") final int ownerId, final Model model) {
+		Owner owner = this.ownerService.findOwnerById(ownerId);
+		model.addAttribute(owner);
 		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-	    }
-
-	    return "redirect:/owners/{ownerId}";
 	}
-    }
 
-    @GetMapping(value = "/owners/payment-details")
-    public String initPaymentDetailsForm(final Model model) {
-	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	Object principal = auth.getPrincipal();
-	UserDetails us = null;
-	if (principal instanceof UserDetails) {
-	    us = (UserDetails) principal;
+	@PostMapping(value = "/owners/{ownerId}/edit")
+	public String processUpdateOwnerForm(@Valid final Owner owner, final BindingResult result,
+			@PathVariable("ownerId") final int ownerId) {
+		if (result.hasErrors()) {
+			return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+		} else {
+			try {
+				owner.setId(ownerId);
+				this.ownerService.saveOwner(owner);
+			} catch (DuplicatedUsernameException ex) {
+				result.rejectValue("user.username", "duplicate", "already exists");
+				return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+			}
+
+			return "redirect:/owners/{ownerId}";
+		}
 	}
-	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
-	model.addAttribute(owner);
-	return "/owners/paymentDetails";
-    }
 
-    @PostMapping(value = "/owners/payment-details")
-    public String processUpdateForm(final ModelMap model, @Valid final Owner own, final BindingResult result)
-	    throws DataAccessException, DuplicatedUsernameException {
-
-	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	Object principal = auth.getPrincipal();
-	UserDetails us = null;
-	if (principal instanceof UserDetails) {
-	    us = (UserDetails) principal;
+	@GetMapping(value = "/owners/payment-details")
+	public String initPaymentDetailsForm(final Model model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = auth.getPrincipal();
+		UserDetails us = null;
+		if (principal instanceof UserDetails) {
+			us = (UserDetails) principal;
+		}
+		Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
+		model.addAttribute(owner);
+		return "/owners/paymentDetails";
 	}
-	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
-	BeanUtils.copyProperties(own, owner, "id", "firstName", "lastName", "address", "city", "telephone", "pets",
-		"user");
-	PaymentDetailsValidator p = new PaymentDetailsValidator();
-	Errors errors = new BeanPropertyBindingResult(owner, "owner");
-	p.validate(owner, errors);
-	if (errors.hasErrors()) {
-	    result.addAllErrors(errors);
-	    model.put("owner", own);
-	    return "/owners/paymentDetails";
-	} else {
-	    this.ownerService.saveOwner(owner);
-	    model.addAttribute("OKmessage", "Your payment details have been saved");
 
-	    return "/owners/paymentDetails";
+	@PostMapping(value = "/owners/payment-details")
+	public String processUpdateForm(final ModelMap model, @Valid final Owner own, final BindingResult result)
+			throws DataAccessException, DuplicatedUsernameException {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = auth.getPrincipal();
+		UserDetails us = null;
+		if (principal instanceof UserDetails) {
+			us = (UserDetails) principal;
+		}
+		Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
+		BeanUtils.copyProperties(own, owner, "id", "firstName", "lastName", "address", "city", "telephone", "pets",
+				"user");
+		PaymentDetailsValidator p = new PaymentDetailsValidator();
+		Errors errors = new BeanPropertyBindingResult(owner, "owner");
+		p.validate(owner, errors);
+		if (errors.hasErrors()) {
+			result.addAllErrors(errors);
+			model.put("owner", own);
+			return "/owners/paymentDetails";
+		} else {
+			this.ownerService.saveOwner(owner);
+			model.addAttribute("OKmessage", "Your payment details have been saved");
+
+			return "/owners/paymentDetails";
+		}
 	}
-    }
 
-    @GetMapping(value = "/owners/profile")
-    public String showOwnerProfile(final ModelMap model) {
-	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-	Object principal = auth.getPrincipal();
-	UserDetails us = null;
-	if (principal instanceof UserDetails) {
-	    us = (UserDetails) principal;
+	@GetMapping(value = "/owners/profile")
+	public String showOwnerProfile(final ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = auth.getPrincipal();
+		UserDetails us = null;
+		if (principal instanceof UserDetails) {
+			us = (UserDetails) principal;
+		}
+		Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
+		Collection<Prescription> pcs = this.prescriptionService.findPrescriptionsByOwnerId(owner.getId());
+		model.addAttribute("prescriptions", pcs);
+		model.addAttribute("owner", owner);
+		return "/owners/ownerProfile";
 	}
-	Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
-	Collection<Prescription> pcs = this.prescriptionService.findPrescriptionsByOwnerId(owner.getId());
-	model.addAttribute("prescriptions", pcs);
-	model.addAttribute("owner", owner);
-	return "/owners/ownerProfile";
-    }
 
-    /**
-     * Custom handler for displaying an owner.
-     *
-     * @param ownerId the ID of the owner to display
-     * @return a ModelMap with the model attributes for the view
-     */
-    @GetMapping("/owners/{ownerId}")
-    public ModelAndView showOwner(@PathVariable("ownerId") final int ownerId) {
-	ModelAndView mav = new ModelAndView("owners/ownerDetails");
-	mav.addObject(this.ownerService.findOwnerById(ownerId));
-	return mav;
-    }
+	/**
+	 * Custom handler for displaying an owner.
+	 *
+	 * @param ownerId the ID of the owner to display
+	 * @return a ModelMap with the model attributes for the view
+	 */
+	@GetMapping("/owners/{ownerId}")
+	public ModelAndView showOwner(@PathVariable("ownerId") final int ownerId) {
+		ModelAndView mav = new ModelAndView("owners/ownerDetails");
+		mav.addObject(this.ownerService.findOwnerById(ownerId));
+		return mav;
+	}
 
 }

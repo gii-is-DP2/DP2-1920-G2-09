@@ -10,4 +10,7 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
 
 	@Query("Select i from Item i where i.shoppingCart.id = ?1")
 	List<Item> findItemsInShoppingCard(int shoppingCartId);
+
+	@Query("Select i from Item i where i.shoppingCart.id = ?1 and i.product.id  = ?2")
+	Item checkIfItemIsIntheShoppingCart(int shoppingCartId, int productId);
 }
