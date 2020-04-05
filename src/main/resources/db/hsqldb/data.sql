@@ -121,6 +121,6 @@ INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (2,'BUEN PASEO','descripción del paseo','2019-09-07',5,'owner1', 2);
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (3,'BUEN PASEO PERO PODRÍA SER MEJOR','descripción del paseo nueva','2019-09-07',5,'owner2', 3);
 
-
+INSERT INTO shopping_cart(id,owner_id) VALUES(1,11)
 
 
