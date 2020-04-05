@@ -54,15 +54,20 @@
     </spring:url>
     <a href="${fn:escapeXml(editUrl)}" class="btn btn-default">Edit Product</a>
 	</sec:authorize>
-	<sec:authorize access="hasAnyAuthority('owner')">
-		<c:if test="${product.available == true}">
-   			<spring:url value="{productId}/edit" var="buyUrl">
-        	<spring:param name="productId" value="${product.id}"/>
-    		</spring:url>
-    		<a href="${fn:escapeXml(buyUrl)}" class="btn btn-default disabled">Buy Product</a>
-    	</c:if>
-	</sec:authorize>
 	
+		<sec:authorize access="hasAnyAuthority('owner')">
+	 <form:form modelAttribute="item" class="form-horizontal" id="add-product-to-shoppingCart" action="/products/add-item/${productId}">
+		<c:if test="${product.available == true}">
+			<petclinic:inputNumberField label="Quantity" name="quantity" value="${item.quantity}"/>
+    		<button class="btn btn-default">Add to Shopping Cart</button>
+    	</c:if>
+	</form:form>
+	</sec:authorize>
+	<c:if test="${ not empty errorMessage }">
+	<div class="alert alert-danger" role="alert">
+  <c:out   value="${errorMessage}" ></c:out>
+</div>
+</c:if>
 	
 <!--  COMENTARIOS Y VALORACIONES -->
  	 <sec:authorize access="hasAnyAuthority('veterinarian','owner')">

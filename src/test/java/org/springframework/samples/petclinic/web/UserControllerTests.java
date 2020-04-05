@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.samples.petclinic.configuration.SecurityConfiguration;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.ShoppingCartService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -23,6 +24,9 @@ public class UserControllerTests {
 
 	@MockBean
 	private OwnerService ownerService;
+
+	@MockBean
+	private ShoppingCartService shoppingCartService;
 
 	@WithMockUser(value = "spring")
 	@Test

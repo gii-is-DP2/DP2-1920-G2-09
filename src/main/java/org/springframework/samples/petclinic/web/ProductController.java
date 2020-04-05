@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Category;
+import org.springframework.samples.petclinic.model.Item;
 import org.springframework.samples.petclinic.model.Product;
 import org.springframework.samples.petclinic.model.ProductComent;
 import org.springframework.samples.petclinic.service.ProductComentService;
@@ -50,6 +51,13 @@ public class ProductController {
 			res.add(c.toString());
 		}
 		return res;
+	}
+
+	@ModelAttribute("item")
+	public Item initiateItem() {
+		Item i = new Item();
+		i.setQuantity(1);
+		return i;
 	}
 
 	@GetMapping(value = "/all")

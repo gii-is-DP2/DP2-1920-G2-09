@@ -22,8 +22,10 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
+import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.service.ShoppingCartService;
 import org.springframework.samples.petclinic.service.exceptions.DuplicatedUsernameException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -44,10 +46,12 @@ public class UserController {
 	private static final String VIEWS_OWNER_CREATE_FORM = "users/createOwnerForm";
 
 	private final OwnerService ownerService;
+	private final ShoppingCartService shoppingCartService;
 
 	@Autowired
-	public UserController(final OwnerService clinicService) {
+	public UserController(final OwnerService clinicService, final ShoppingCartService shoppingCartService) {
 		this.ownerService = clinicService;
+		this.shoppingCartService = shoppingCartService;
 	}
 
 	@InitBinder
@@ -73,7 +77,10 @@ public class UserController {
 		} else {
 
 			try {
+				ShoppingCart sp = new ShoppingCart();
+				sp.setOwner(owner);
 				this.ownerService.saveOwner(owner);
+				this.shoppingCartService.saveShoppingCart(sp);
 			} catch (DuplicatedUsernameException ex) {
 				result.rejectValue("user.username", "duplicate", "already exists");
 				return UserController.VIEWS_OWNER_CREATE_FORM;
