@@ -13,11 +13,12 @@
 	<thead>
         <tr>
             <th style="width: 20%;">Product Name</th>
-            <th style="width: 30%;">Product Description</th>
+            <th style="width: 20%;">Product Description</th>
             <th style="width: 10%">Quantity</th>
             <th style="width: 15%">Unit Price</th>
              <th style="width: 15%">Total Price</th>
              <th style="width: 10%"> </th>
+              <th style="width: 5%"> Change Quantity</th>
         </tr>
         </thead>
         <tbody>
@@ -46,7 +47,17 @@
          	<spring:url value="/products/delete-item/{itemId}" var="deleteURL">
 							<spring:param name="itemId" value="${item.id}" />
 						</spring:url> <a href="${fn:escapeXml(deleteURL)}" class="btn btn-default">Remove Item</a>
+						
 						</td>
+
+						<td>
+						 <form:form action="/products/edit-item/${item.id}"  modelAttribute="item" class="form-horizontal" id="edit-item-shoppingCart">
+						
+				<petclinic:inputNumberField icons = "false" max = "${ item.quantity + item.product.stock}" min = "1" label="" name="quantity" value="${item.quantity}"/>
+				<button class="btn btn-default">Edit Item Quantity </button>
+						</form:form>
+						</td>
+					
  		 </tr>
 		
 		<c:set var = "total" value = "${total + item.unitPrice*item.quantity}"></c:set>
@@ -54,7 +65,11 @@
 		</c:forEach>
 		</tbody>
 		</table>
-		
+		<c:if test="${ not empty errorMessage }">
+	<div class="alert alert-danger" role="alert">
+  <c:out   value="${errorMessage}" ></c:out>
+</div>
+</c:if>
 		
 		
 		

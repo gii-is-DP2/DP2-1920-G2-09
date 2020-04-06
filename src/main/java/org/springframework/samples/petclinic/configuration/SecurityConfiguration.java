@@ -33,11 +33,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/shopping-cart").hasAnyAuthority("owner").antMatchers("/products/new")
-				.hasAnyAuthority("admin")
-
-				.antMatchers("/products/{productId}/edit").hasAnyAuthority("admin").antMatchers("/products/**")
-				.permitAll().antMatchers("/owners/payment-details").hasAnyAuthority("owner")
-				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
+				.hasAnyAuthority("admin").antMatchers("/products/delete-item").hasAnyAuthority("owner")
+				.antMatchers("/products/edit-item").hasAnyAuthority("owner").antMatchers("/products/{productId}/edit")
+				.hasAnyAuthority("admin").antMatchers("/products/**").permitAll().antMatchers("/owners/payment-details")
+				.hasAnyAuthority("owner").antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/", "/oups").permitAll().antMatchers("/users/new").permitAll()
 				.antMatchers("/admin/**").hasAnyAuthority("admin").antMatchers("/prescription/**").permitAll()
 				.antMatchers("/owners/profile").hasAnyAuthority("owner").antMatchers("/owners/{ownerId}/pets/new")

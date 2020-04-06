@@ -121,6 +121,21 @@ INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (2,'BUEN PASEO','descripción del paseo','2019-09-07',5,'owner1', 2);
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (3,'BUEN PASEO PERO PODRÍA SER MEJOR','descripción del paseo nueva','2019-09-07',5,'owner2', 3);
 
-INSERT INTO shopping_cart(id,owner_id) VALUES(1,11)
+INSERT INTO shopping_cart(id,owner_id) VALUES (1,11);
+INSERT INTO shopping_cart(id,owner_id) VALUES (2,10);
+INSERT INTO shopping_cart(id,owner_id) VALUES (3,9);
+INSERT INTO shopping_cart(id,owner_id) VALUES (4,8);
+INSERT INTO shopping_cart(id,owner_id) VALUES (5,7);
+INSERT INTO shopping_cart(id,owner_id) VALUES (6,6);
+INSERT INTO shopping_cart(id,owner_id) VALUES (7,5);
+INSERT INTO shopping_cart(id,owner_id) VALUES (8,4);
+INSERT INTO shopping_cart(id,owner_id) VALUES (9,3);
+INSERT INTO shopping_cart(id,owner_id) VALUES (10,2);
+INSERT INTO shopping_cart(id,owner_id) VALUES (11,1);
+
+
+INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (1, 1, 1, 5, 10.20);
+INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (2, 1, 2, 50, 102.00);
+INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (3, 1, 3, 10, 152.54);
 
 

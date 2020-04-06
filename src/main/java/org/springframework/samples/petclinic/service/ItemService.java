@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class ItemService {
 
 	private ItemRepository itemRepository;
 
+
 	@Autowired
 	public ItemService(final ItemRepository itemRepository) {
 		this.itemRepository = itemRepository;
@@ -26,6 +28,21 @@ public class ItemService {
 	@Transactional
 	public List<Item> findItemsInShoppingCart(final int shoppingCartId) {
 		return this.itemRepository.findItemsInShoppingCard(shoppingCartId);
+	}
+
+	@Transactional
+	public Item checkIfItemIsIntheShoppingCart(final int shoppingCartId, final int productId) {
+		return this.itemRepository.checkIfItemIsIntheShoppingCart(shoppingCartId, productId);
+	}
+
+	@Transactional
+	public void deleteItem(final int itemId) {
+		this.itemRepository.deleteById(itemId);
+	}
+
+	@Transactional
+	public Item findItemById(final int itemId) {
+		return this.itemRepository.findById(itemId).orElse(null);
 	}
 
 }

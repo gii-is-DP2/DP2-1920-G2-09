@@ -58,7 +58,7 @@
 		<sec:authorize access="hasAnyAuthority('owner')">
 	 <form:form modelAttribute="item" class="form-horizontal" id="add-product-to-shoppingCart" action="/products/add-item/${productId}">
 		<c:if test="${product.available == true}">
-			<petclinic:inputNumberField label="Quantity" name="quantity" value="${item.quantity}"/>
+			<petclinic:inputNumberField label="Quantity" name="quantity" value="${item.quantity}" min="1"/>
     		<button class="btn btn-default">Add to Shopping Cart</button>
     	</c:if>
 	</form:form>

@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.model;
 
 import javax.persistence.CascadeType;
@@ -15,19 +16,19 @@ public class Item extends BaseEntity {
 
 	@Valid
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	private ShoppingCart shoppingCart;
+	private ShoppingCart	shoppingCart;
 
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	private Order order;
+	private Order			order;
 
 	@Valid
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	private Product product;
+	private Product			product;
 
 	@NotNull
-	private Integer quantity;
+	private Integer			quantity;
 
 	@NotNull
-	private Double unitPrice;
+	private Double			unitPrice;
 
 }
