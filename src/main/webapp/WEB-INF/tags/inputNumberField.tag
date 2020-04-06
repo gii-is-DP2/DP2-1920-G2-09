@@ -23,7 +23,7 @@
         <label class="col-sm-2 control-label">${label}</label>
 
         <div class="col-sm-10">
-           <input type = "number" min="${min}" max="${max}" name="${name}" value="${value}">
+           <input type = "number" min="${min}" max="${max}" name="${name}" value="${value}" required>
             <c:if test="${valid && icons == true}">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </c:if>

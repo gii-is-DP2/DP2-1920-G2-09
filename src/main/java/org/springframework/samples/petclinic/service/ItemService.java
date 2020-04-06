@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ItemService {
 
 	private ItemRepository itemRepository;
+
 
 	@Autowired
 	public ItemService(final ItemRepository itemRepository) {
@@ -40,7 +42,7 @@ public class ItemService {
 
 	@Transactional
 	public Item findItemById(final int itemId) {
-		return this.itemRepository.findById(itemId).get();
+		return this.itemRepository.findById(itemId).orElse(null);
 	}
 
 }

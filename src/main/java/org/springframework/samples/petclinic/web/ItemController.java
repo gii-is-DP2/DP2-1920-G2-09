@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/products")
 public class ItemController {
 
-	private ItemService itemService;
-	private ShoppingCartService shoppingCartService;
-	private ProductService productService;
-	private ProductComentService productComentService;
+	private ItemService				itemService;
+	private ShoppingCartService		shoppingCartService;
+	private ProductService			productService;
+	private ProductComentService	productComentService;
+
 
 	@Autowired
-	public ItemController(final ItemService itemService, final ShoppingCartService shoppingCartService,
-			final ProductService productService, final ProductComentService productComentService) {
+	public ItemController(final ItemService itemService, final ShoppingCartService shoppingCartService, final ProductService productService, final ProductComentService productComentService) {
 		this.itemService = itemService;
 		this.shoppingCartService = shoppingCartService;
 		this.productService = productService;
@@ -38,8 +39,7 @@ public class ItemController {
 	}
 
 	@PostMapping(value = "/add-item/{productId}")
-	public String addItemToShoppingCart(@PathVariable("productId") final int productId, final Item item,
-			final BindingResult result, final ModelMap model) {
+	public String addItemToShoppingCart(@PathVariable("productId") final int productId, final Item item, final BindingResult result, final ModelMap model) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = auth.getPrincipal();
@@ -91,15 +91,14 @@ public class ItemController {
 	}
 
 	@PostMapping(value = "/edit-item/{itemId}")
-	public String editItemQuantity(@PathVariable("itemId") final int itemId, final ModelMap model, final Item item,
-			final BindingResult result) {
+	public String editItemQuantity(@PathVariable("itemId") final int itemId, final ModelMap model, final Item item, final BindingResult result) {
 		Integer updatedQuantity = item.getQuantity();
 		Item itemToUpdate = this.itemService.findItemById(itemId);
 		Product productToUpdate = itemToUpdate.getProduct();
 
 		if (updatedQuantity > productToUpdate.getStock() + itemToUpdate.getQuantity()) {
 			model.addAttribute("errorMessage", "The quantity selected is greather than the stock");
-			return "redirect:/shopping-cart";
+			return new ShoppingCartController(this.shoppingCartService, this.itemService).showShoppingCartOfOwner(model);
 		} else {
 
 			productToUpdate.setStock(productToUpdate.getStock() + itemToUpdate.getQuantity() - updatedQuantity);
