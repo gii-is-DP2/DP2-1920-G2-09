@@ -11,37 +11,37 @@
 
     <h2>Product Information</h2>
 
- 	<div align="center"><img src=" <c:out value="${product.urlImage}" />" width="20%" height="20%"></div>
+ 	<div align="center"><img id="imgProducto" src=" <c:out value="${product.urlImage}" />" width="20%" height="20%"></div>
     <table class="table table-striped">
            
         <tr>
             <th>Name</th>
-            <td><c:out value="${product.name}"/></td>
+            <td id ="NombreProducto"><c:out value="${product.name}"/></td>
         </tr>
         <tr>
             <th>Description</th>
-            <td><c:out value="${product.description}"/></td>
+            <td id="DescripcionProducto"><c:out value="${product.description}"/></td>
         </tr>
         <tr>
             <th>Unit Price</th>
-            <td><c:out value="${product.unitPrice}"/></td>
+            <td id="PrecioProducto"><c:out value="${product.unitPrice}"/></td>
         </tr>
         <tr>
             <th>Stock</th>
-            <td><c:out value="${product.stock}"/></td>
+            <td id="stockProducto"><c:out value="${product.stock}"/></td>
         </tr>
         <tr>
             <th>Category</th>
-            <td><c:out value="${product.category}"/></td>
+            <td id="categoryProducto"><c:out value="${product.category}"/></td>
         </tr>
         
          <tr>
             <th>Rating</th>
-            <td><fmt:formatNumber minFractionDigits="2" type="number" maxFractionDigits="2" value="${rating}"/></td>
+            <td id="RatingProducto"><fmt:formatNumber minFractionDigits="2" type="number" maxFractionDigits="2" value="${rating}"/></td>
         </tr>
         <tr>
             <th>Available?</th>
-            <td><c:choose><c:when test="${product.available == true }">
+            <td id ="avaliableProducto"><c:choose><c:when test="${product.available == true }">
             Yes
             </c:when>
             <c:otherwise>Not now</c:otherwise>
@@ -71,7 +71,7 @@
 	
 <!--  COMENTARIOS Y VALORACIONES -->
  	 <sec:authorize access="hasAnyAuthority('veterinarian','owner')">
- 	 <c:if test = "${ not empty OKmessage}">
+ 	 <c:if test = "${not empty OKmessage}">
    <div class="alert-success" role="alert">
   <c:out value = "${OKmessage}"/>
 </div>
@@ -104,7 +104,7 @@
                 <div class="panel-heading">
                     Comment panel
                 </div>
-                <div class="panel-body">
+                <div id="comentarios" class="panel-body">
                     <ul class="media-list">
                     <c:forEach items="${coments}" var = "coment">
                     <c:if test="${coment.highlight == true }">
@@ -112,12 +112,14 @@
                             <div class="media-body-vet">
                             
                                 <span class="text-muted pull-right">
-                                    <small class="text-muted"><c:out value = "${coment.postDate}" /></small>
+                                    <small  id= "FechaPrioritario"class="text-muted"><c:out value = "${coment.postDate}" /></small>
                                 </span>
-                                <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
-                                <strong class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
-                                <p> <c:out value = "${coment.description}" /></p>
-                            </div>
+                                <strong id="UsernamePrioritario" class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
+                                <strong id="TituloPrioritario" class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
+											<p id="DescriptionPrioritario">
+												<c:out value="${coment.description}" />
+											</p>
+										</div>
                         </li>
                         </c:if>
                         </c:forEach>
@@ -125,7 +127,7 @@
                         <c:if test="${coment.highlight == false }">
                         <li class="media">
                             <div class="media-body">
-										<span class="text-muted pull-right"> <small
+										<span class="text-muted pull-right"> <small id="fechaComentario"
 											class="text-muted"><c:out value="${coment.postDate}" /></small>
 											<sec:authorize access="hasAnyAuthority('admin')">
 												<spring:url
@@ -136,9 +138,9 @@
 												</spring:url>
 												<a href="${fn:escapeXml(productComentDeleteUrl)}">Eliminar Comentario</a>
 											</sec:authorize>
-										</span> <strong class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
-                                <strong class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
-                                <p> <c:out value = "${coment.description}" /></p>
+										</span> <strong id="usuarioComentario" class="text-success"><c:out value = "${coment.user.username}" /></strong> <br>
+                                <strong  id="tituloComentario" class ="text-info"><c:out value = "${coment.title}" /> </strong> <br>
+                                <p id="descriptionComentario"> <c:out value = "${coment.description}" /></p>
                             </div>
                         </li>
                         </c:if>

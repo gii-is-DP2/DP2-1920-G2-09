@@ -19,10 +19,10 @@
         <tbody>
         <c:forEach items="${vets.vetList}" var="vet">
             <tr>
-                <td>
+                <td id="NameVet">
                     <c:out value="${vet.firstName} ${vet.lastName}"/>
                 </td>
-                <td>
+                <td id="specialtyVet">
                     <c:forEach var="specialty" items="${vet.specialties}">
                         <c:out value="${specialty.name} "/>
                     </c:forEach>
@@ -43,6 +43,6 @@
     
     <br/>
     <sec:authorize access="hasAnyAuthority('admin')">
-    <a class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'>Añadir veterinario</a>
+    <a id="AñadirVet" class="btn btn-default" href='<spring:url value="/vets/new" htmlEscape="true"/>'>Añadir veterinario</a>
     </sec:authorize>
 </petclinic:layout>

@@ -9,7 +9,7 @@
 <petclinic:layout pageName="products">
     
     <form:form modelAttribute="product" class="form-horizontal" id="add-product-form">
-        <div class="form-group has-feedback">
+        <div id="FormularioProducto" class="form-group has-feedback">
             <petclinic:inputField label="Name" name="name"/>
             <petclinic:inputField label="Description" name="description" />
             <petclinic:inputNumberField label="Stock" name="stock" value="${product.stock}"/>

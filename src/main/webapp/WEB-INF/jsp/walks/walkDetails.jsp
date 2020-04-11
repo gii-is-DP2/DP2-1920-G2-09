@@ -11,16 +11,16 @@
 
     <h2>Walk Information</h2>
 
- 	<div align="center"><img src=" <c:out value="${walk.map}" />" width="20%" height="20%"></div>
+ 	<div align="center"><img id ="walkMap" src=" <c:out value="${walk.map}" />" width="20%" height="20%"></div>
     <table class="table table-striped">
            
         <tr>
             <th>Name</th>
-            <td><c:out value="${walk.name}"/></td>
+            <td id="walkName"><c:out value="${walk.name}"/></td>
         </tr>
         <tr>
             <th>Description</th>
-            <td><c:out value="${walk.description}"/></td>
+            <td id="walkDescription"><c:out value="${walk.description}"/></td>
         </tr>
     
         <tr>
@@ -77,22 +77,22 @@
 <!--  Show Comentarios -->
 
 
-<table class="table table-striped">
+<table id="tablaComentarios" class="table table-striped">
         <c:forEach var="coment" items="${coments}">
 
-            <tr>
+            <tr id="comentarioFila">
                 <td valign="top">
                     <dl class="dl-horizontal">
                     	<dt>Title</dt>
-                        <dd><c:out value="${coment.title}"/></dd></dd>
+                        <dd id="tituloComentario"><c:out value="${coment.title}"/></dd>
                         <dt>Description</dt>
-                        <dd><c:out value="${coment.description}"/></dd>
+                        <dd id="descriptionComentario"><c:out value="${coment.description}"/></dd>
                         
                         
                         <dt>Name</dt>
-                        <dd><c:out value="${coment.user.username}"/> </dd>
+                        <dd id="nameComentario"><c:out value="${coment.user.username}"/> </dd>
                         <dt>Post Date</dt>
-                        <dd><petclinic:localDate date="${coment.postDate}" pattern="yyyy-MM-dd"/></dd>
+                        <dd id="fechaComentario"><petclinic:localDate date="${coment.postDate}" pattern="yyyy-MM-dd"/></dd>
                         
                     </dl>
                     
@@ -112,7 +112,7 @@
 									var="deleteComentUrl">
 									<spring:param name="walkId" value="${walk.id}" />
 									<spring:param name="walkComentId" value="${coment.id}" />
-								</spring:url> <a href="${fn:escapeXml(deleteComentUrl)}">Delete Coment</a>
+								</spring:url> <a href="${fn:escapeXml(deleteComentUrl)}">Delete Comment</a>
 								</td>
 						</tr>
 					</table>

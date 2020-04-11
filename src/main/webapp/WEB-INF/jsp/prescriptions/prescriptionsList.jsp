@@ -18,17 +18,19 @@
         </tr>
         </thead>
         <tbody>
+
         <c:forEach items="${selections}" var="p">
+       
             <tr>
                
                 <td>
-                    <c:out value="${p.dateInicio}"/>
+                    <div id="Fecha"><c:out value="${p.dateInicio}"/></div>
                 </td>
                 <td>
-                	<c:out	value="${p.name}"/>
+                	<div id="Titulo"><c:out	value="${p.name}"/></div>
                 	</td>
                 <td>
-                   	<c:out value="${p.vet.firstName} ${p.vet.lastName}"/> 
+                   	<div id="Veterinario"><c:out value="${p.vet.firstName} ${p.vet.lastName}"/> </div>
                 </td>
                
                 <td>
@@ -40,18 +42,11 @@
 						class="btn btn-default">View Details</a>
 					</td>
                 
-      
-<!--
-                <td> 
-                    <c:out value="${owner.user.username}"/> 
-                </td>
-                <td> 
-                   <c:out value="${owner.user.password}"/> 
-                </td> 
--->
                 
             </tr>
+             
         </c:forEach>
+       
         </tbody>
     </table>
 </petclinic:layout>

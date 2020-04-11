@@ -10,22 +10,25 @@
 	
 
 <petclinic:layout pageName="Walks">
-
+<div id="walksImg" >
 <c:forEach items="${walks}" var="walk">
 <div class="gallery">
    <spring:url value="/walks/{walkId}" var="walkUrl">
    <spring:param name="walkId" value="${walk.id}"/>
     </spring:url>
     <a href="${fn:escapeXml(walkUrl)}">
-    <img src=" <c:out value="${walk.map}" />" width="20%" height="20%">
+    <img id ="walkMap"  src=" <c:out value="${walk.map}" />" width="20%" height="20%">
   </a>
   <div class = "texto-walk">
-    <c:out value="${walk.name}"/><br>
-     Description: <c:out value="${walk.description}"/><br>
+    <div id="walkName"><c:out value="${walk.name}"/></div>
+    
+    
+     <br>Description: <div id="walkDescription"><c:out value="${walk.description}"/></div> 
     </div>
 </div>
-</c:forEach>
 
+</c:forEach>
+</div>
 
   
 </petclinic:layout>
