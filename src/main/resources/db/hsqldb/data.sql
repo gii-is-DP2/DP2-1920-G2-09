@@ -2,7 +2,7 @@
 INSERT INTO users(username,password,email,enabled) VALUES ('admin1','4dm1n','admin@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('admin1','admin');
 -- One owner user, named owner1 with passwor 0wn3r
-INSERT INTO users(username,password,email,enabled) VALUES ('owner1','0wn3r','owner@gmail.com',TRUE);
+INSERT INTO users(username,password,email,enabled) VALUES ('owner1','0wn3r','alejandrobp99@gmail.com',TRUE);
 INSERT INTO authorities VALUES ('owner1','owner');
 
 INSERT INTO users(username,password,email,enabled) VALUES ('owner2','0wn3r','owner@gmail.com',TRUE);
@@ -69,7 +69,7 @@ INSERT INTO types VALUES (4, 'snake');
 INSERT INTO types VALUES (5, 'bird');
 INSERT INTO types VALUES (6, 'hamster');
 
-INSERT INTO owners VALUES (1, 'George', 'Franklin', '110 W. Liberty St.', 'Madison',null,null,null,null, '6085551023', 'owner1');
+INSERT INTO owners VALUES (1, 'Alejandro', 'Blanco', '110 W. Liberty St.', 'Madison',null,null,null,null, '6085551023', 'owner1');
 INSERT INTO owners VALUES (2, 'Betty', 'Davis', '638 Cardinal Ave.', 'Sun Prairie',null,null,null,null, '6085551749', 'owner2');
 INSERT INTO owners VALUES (3, 'Eduardo', 'Rodriquez', '2693 Commerce St.', 'McFarland',null,null,null,null, '6085558763', 'owner3');
 INSERT INTO owners VALUES (4, 'Harold', 'Davis', '563 Friendly St.', 'Windsor',null,null,null,null, '6085553198', 'owner4');
@@ -82,7 +82,7 @@ INSERT INTO owners VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Wa
 INSERT INTO owners VALUES (11, 'Francisco', 'Arroyo', 'Reina Mercedes', 'Sevilla',null,null,null,null, '692345123', 'prueba');
 
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
-INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
+-- INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (3, 'Rosy', '2011-04-17', 2, 3);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (4, 'Jewel', '2010-03-07', 2, 3);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (5, 'Iggy', '2010-11-30', 3, 4);
@@ -103,7 +103,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 --- LOS NUEVOS A PARTIR DE AQUI ---
 INSERT INTO product VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
 INSERT INTO product VALUES (2,'Gel de gato',true,2,'Es un gel de gato',150,102.00,'https://tinyurl.com/vp4wlrz');
-INSERT INTO product VALUES (3,'Gel de caballo',true,3,'Es un gel de gato',140,152.54,'https://tinyurl.com/vp4wlrz');
+INSERT INTO product VALUES (3,'Gel de caballo',false,3,'Es un gel de caballo',0,152.54,'https://tinyurl.com/vp4wlrz');
 
 INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (1, 'Tratamiento', 'Tomar paracetamol 2 semanas', 1, 1, '2020-10-15', '2020-10-20');
 INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (2,'Titulo de la nueva prescripción','Descripción de la nueva descripción',13,1,'2013-01-01','2013-01-01');
@@ -119,7 +119,7 @@ INSERT INTO walks VALUES (3,'Tercer Paseo', 'Esto es un paseo3','https://tinyurl
 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1,'Leo','descripción','2010-09-07',2,'prueba', 1);
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (2,'BUEN PASEO','descripción del paseo','2019-09-07',5,'owner1', 2);
-INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (3,'BUEN PASEO PERO PODRÍA SER MEJOR','descripción del paseo nueva','2019-09-07',5,'owner2', 3);
+INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (3,'BUEN PASEO PERO PODRÍA SER MEJOR','descripción del paseo nueva','2019-09-07',5,'owner2', 2);
 
 
 

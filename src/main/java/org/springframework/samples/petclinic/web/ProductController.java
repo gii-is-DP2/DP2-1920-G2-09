@@ -65,6 +65,13 @@ public class ProductController {
 	public String findProductsFiltered(final ModelMap model, final Product product) {
 		model.put("product", product);
 		Iterable<Product> products = this.productService.findFilteredProducts(product.getName());
+		List<Product> l = new ArrayList<>();
+		for(Product p:products) {
+			l.add(p);
+		}
+		if(l.isEmpty()) {
+			model.addAttribute("noItemsMessage", "There aren't products for this search");
+		}
 		model.addAttribute("products", products);
 		return "products/listProducts";
 	}

@@ -31,33 +31,33 @@
 				<petclinic:menuItem active="${name eq 'owners'}" url="/owners/find"
 					title="find owners">
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-					<span>Find owners</span>
+					<span id="OwnersId">Find owners</span>
 				</petclinic:menuItem>
 					</sec:authorize>	
 				<petclinic:menuItem active="${name eq 'vets'}" url="/vets"
 					title="veterinarians">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-					<span>Veterinarians</span>
+					<span id="veterinarios">Veterinarians</span>
 				</petclinic:menuItem>
 				
 				<petclinic:menuItem active="${name eq 'products'}" url="/products/all"
-					title="products">
+					title="products" >
 					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-					<span>Products</span>
+					<span id="ProductId">Products</span>
 				</petclinic:menuItem>
 				
 				
 				<petclinic:menuItem active="${name eq 'walks'}" url="/walks/all"
 					title="walks">
 					<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-					<span>Walks</span>
+					<span id="WalkId">Walks</span>
 				</petclinic:menuItem>
 				
 				<sec:authorize access="hasAnyAuthority('admin')">
 				<petclinic:menuItem active="${name eq 'admin'}" url="/admin"
 					title="Admin">
 					<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
-					<span>Admin</span>
+					<span id="AdminId">Admin</span>
 				</petclinic:menuItem>
 				</sec:authorize>
 
@@ -72,7 +72,7 @@
 					<li><a href="<c:url value="/users/new" />">Register</a></li>
 				</sec:authorize>
 				<sec:authorize access="isAuthenticated()">
-					<li class="dropdown"><a href="#" class="dropdown-toggle"
+					<li class="dropdown"><a id="username" href="#" class="dropdown-toggle"
 						data-toggle="dropdown"> <span class="glyphicon glyphicon-user"></span> 
 							<strong><sec:authentication property="name" /></strong> <span
 							class="glyphicon glyphicon-chevron-down"></span>

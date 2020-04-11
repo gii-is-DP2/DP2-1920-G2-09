@@ -14,24 +14,24 @@
     <table class="table table-striped">
         <tr>
             <th>Name</th>
-            <td><b><c:out value="${owner.firstName} ${owner.lastName}"/></b></td>
+            <td id="nombreUser"><b><c:out value="${owner.firstName} ${owner.lastName}"/></b></td>
         </tr>
         <tr>
             <th>Address</th>
-            <td><c:out value="${owner.address}"/></td>
+            <td id="direccionUser"><c:out value="${owner.address}"/></td>
         </tr>
         <tr>
             <th>City</th>
-            <td><c:out value="${owner.city}"/></td>
+            <td id="ciudadUser"><c:out value="${owner.city}"/></td>
         </tr>
         <tr>
             <th>Telephone</th>
-            <td><c:out value="${owner.telephone}"/></td>
+            <td id="telefonoUser"><c:out value="${owner.telephone}"/></td>
         </tr>
         
          <tr>
             <th>Email</th>
-            <td><c:out value="${owner.user.email}"/></td>
+            <td id="emailUser"><c:out value="${owner.user.email}"/></td>
         </tr>
         
         <c:if test="${not empty owner.creditCardNumber  }">

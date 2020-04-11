@@ -29,16 +29,18 @@
         </div>
 
     </form:form>
-
-<c:forEach items="${products}" var="product">
-	<div class="gallery">
+    <div id="productList">
+<c:if test="${not empty noItemsMessage }">
+		<div  id ="Mensaje no hay producto" class="alert alert-warning" role="alert">   <c:out value="${noItemsMessage }"></c:out> </div>		</c:if>
+<c:forEach  items="${products}" var="product">
+	<div id= "infoProducto" class="gallery">
    		<spring:url value="/products/{productId}" var="productUrl">
    			<spring:param name="productId" value="${product.id}"/>
     	</spring:url>
     	<a href="${fn:escapeXml(productUrl)}">
     	<img src=" <c:out value="${product.urlImage}" />" width="20%" height="20%">
   		</a>
-  		<div class = "texto-producto">
+  		<div  class = "texto-producto">
     		<c:out value="${product.name}"/><br>
      		Price: <c:out value="${product.unitPrice}"/> euros <br>
     		Stock: <c:out value="${product.stock}"/> 
@@ -50,8 +52,9 @@
     		</c:if>
     	</div>
 	</div>
+	
 </c:forEach>
-
+</div>
 
   
 </petclinic:layout>

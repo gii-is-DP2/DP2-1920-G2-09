@@ -45,7 +45,7 @@
     <br/>
     <h2>Pets and Visits</h2>
 
-    <table class="table table-striped">
+    <table id="PetTable" class="table table-striped">
         <c:forEach var="pet" items="${owner.pets}">
 
             <tr>
