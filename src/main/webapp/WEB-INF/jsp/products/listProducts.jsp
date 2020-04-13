@@ -11,11 +11,32 @@
 
 <petclinic:layout pageName="Products">
 
+	  
+    	
+    	
+    	<div class="form-group" >
+    	
+            <div class="control-group" id="lastName" style= "padding-left: 30px">
+                <label class="col-sm-2 control-label">Product Category:</label>
+           
+            
+           
+                 <c:forEach  items="${products}" var="product" >   
+                		<a href="/products/filterByCategory?category= <c:out value="${product.category}"/> ">
+                    	<c:out value="${product.category}"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                 </c:forEach> 
+            </div>
+          
+        </div>
+        
+        <br>
+        <br>
+    	
    <form:form  modelAttribute="product" action="/products/filter" method="get" class="form-horizontal"
                id="search-product-form">
         <div class="form-group">
             <div class="control-group" id="lastName">
-                <label class="col-sm-2 control-label">Product Name</label>
+                <label class="col-sm-2 control-label">Product Name:</label>
                 <div class="col-sm-10">
                     <form:input class="form-control" path="name" size="30" maxlength="80"/>
                     <span class="help-inline"><form:errors path="*"/></span>
@@ -29,6 +50,11 @@
         </div>
 
     </form:form>
+    
+    
+                     
+
+    
     <div id="productList">
 <c:if test="${not empty noItemsMessage }">
 		<div  id ="Mensaje no hay producto" class="alert alert-warning" role="alert">   <c:out value="${noItemsMessage }"></c:out> </div>		</c:if>
@@ -54,8 +80,19 @@
 	</div>
 	
 </c:forEach>
+
 </div>
 
-  
+
+<div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+            <a href="/products/all">
+                <button type="button" class="btn btn-default"> 
+                
+                    Volver</button>
+            </a>
+           	 </div>
+        </div>
+
 </petclinic:layout>
 
