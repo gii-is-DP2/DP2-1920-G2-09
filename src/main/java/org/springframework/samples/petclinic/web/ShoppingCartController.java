@@ -8,6 +8,7 @@ import org.springframework.samples.petclinic.model.Order;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.service.ItemService;
+import org.springframework.samples.petclinic.service.OrderService;
 import org.springframework.samples.petclinic.service.ShoppingCartService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ public class ShoppingCartController {
 
 	private ShoppingCartService shoppingCartService;
 	private ItemService itemService;
+	private OrderService orderService;
 
 	public ShoppingCartController(final ShoppingCartService shoppingCartService, final ItemService itemService) {
 		super();
@@ -53,7 +55,7 @@ public class ShoppingCartController {
 		return "/owners/ownerShoppingCart";
 
 	}
-	
+
 	@PostMapping("/buy")
 	public String buyShoppingCart(final ModelMap model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -62,11 +64,13 @@ public class ShoppingCartController {
 		if (principal instanceof UserDetails) {
 			us = (UserDetails) principal;
 		}
-		ShoppingCart sC = shoppingCartService.getShoppingCartOfUser(us.getUsername());
+		ShoppingCart sC = this.shoppingCartService.getShoppingCartOfUser(us.getUsername());
 		Owner owner = sC.getOwner();
-		if (owner.getCreditCardNumber() == null || owner.getCvv() == null || owner.getExpirationMonth() == null || owner.getExpirationYear() == null) {
+		if (owner.getCreditCardNumber() == null || owner.getCvv() == null || owner.getExpirationMonth() == null
+				|| owner.getExpirationYear() == null) {
 			model.put("shoppingCartError", "You have to introduce a valid credit card before purcharsing something");
-			return new ShoppingCartController(shoppingCartService, itemService).showShoppingCartOfOwner(model);
+			return new ShoppingCartController(this.shoppingCartService, this.itemService)
+					.showShoppingCartOfOwner(model);
 		} else {
 			List<Item> items = this.itemService.findItemsInShoppingCart(sC.getId());
 			Order o = new Order();

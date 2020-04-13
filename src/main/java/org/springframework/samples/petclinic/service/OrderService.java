@@ -1,6 +1,8 @@
 
 package org.springframework.samples.petclinic.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Order;
 import org.springframework.samples.petclinic.repository.OrderRepository;
@@ -21,9 +23,9 @@ public class OrderService {
 	public void saveOrder(final Order order) {
 		this.orderRepository.save(order);
 	}
-	
+
 	@Transactional
-	public Order findOrderById (final int orderId) {
-		return this.orderRepository.findById(orderId).get();
+	public List<Order> findAllOrders() {
+		return (List<Order>) this.orderRepository.findAll();
 	}
 }

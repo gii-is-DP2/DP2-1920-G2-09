@@ -72,8 +72,8 @@ public class ProductComentControllerTests {
 						.post("/products/{productId}/add-product-coment", ProductComentControllerTests.TEST_PRODUCT_ID)
 						.with(SecurityMockMvcRequestPostProcessors.csrf()).param("description", "descripcion 2")
 						.param("rating", "3").param("title", "titulo 2"))
-				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-				.andExpect(MockMvcResultMatchers.view().name("redirect:/products/{productId}"));
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("products/productDetails"));
 	}
 
 	@WithMockUser(username = "prueba", password = "pwd", roles = "owner")
