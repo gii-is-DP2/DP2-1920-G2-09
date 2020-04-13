@@ -30,8 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/products")
 public class ProductController {
 
-	private final ProductService productService;
-	private final ProductComentService productComentService;
+	private final ProductService		productService;
+	private final ProductComentService	productComentService;
+
 
 	@Autowired
 	public ProductController(final ProductService productService, final ProductComentService productComentService) {
@@ -74,10 +75,25 @@ public class ProductController {
 		model.put("product", product);
 		Iterable<Product> products = this.productService.findFilteredProducts(product.getName());
 		List<Product> l = new ArrayList<>();
-		for(Product p:products) {
+		for (Product p : products) {
 			l.add(p);
 		}
-		if(l.isEmpty()) {
+		if (l.isEmpty()) {
+			model.addAttribute("noItemsMessage", "There aren't products for this search");
+		}
+		model.addAttribute("products", products);
+		return "products/listProducts";
+	}
+
+	@GetMapping(value = "/filterByCategory")
+	public String findProductsFilteredByCategory(final ModelMap model, final Product product) {
+		model.put("product", product);
+		Iterable<Product> products = this.productService.findFilteredProductsByCategory(product.getCategory());
+		List<Product> l = new ArrayList<>();
+		for (Product p : products) {
+			l.add(p);
+		}
+		if (l.isEmpty()) {
 			model.addAttribute("noItemsMessage", "There aren't products for this search");
 		}
 		model.addAttribute("products", products);
@@ -134,8 +150,7 @@ public class ProductController {
 	}
 
 	@PostMapping(value = "/{productId}/edit")
-	public String processUpdateProductForm(@Valid final Product product, final BindingResult result, final Model model,
-			@PathVariable("productId") final int productId) {
+	public String processUpdateProductForm(@Valid final Product product, final BindingResult result, final Model model, @PathVariable("productId") final int productId) {
 		if (result.hasErrors()) {
 			model.addAttribute("product", product);
 			return "products/createOrUpdateProductForm";
