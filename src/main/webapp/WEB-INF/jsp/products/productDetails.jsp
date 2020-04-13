@@ -90,7 +90,7 @@
     <br/>
     
     
-<!--  LISTA DE COMENATARIOS -->
+<!--  LISTA DE COMENTARIOS -->
 
 <c:if test = "${ not empty OKDeletemessage}">
    <div class="alert-success" role="alert">

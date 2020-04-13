@@ -83,7 +83,7 @@ public class ProductComentController {
 			model.addAttribute("OKmessage", "Your comment have been submited correctly");
 			// new ProductController(this.productService,
 			// this.productComentService).showProduct(productId, model)
-			return "redirect:/products/{productId}";
+			return new ProductController(productService, productComentService).showProduct(productId, model);
 		}
 
 	}

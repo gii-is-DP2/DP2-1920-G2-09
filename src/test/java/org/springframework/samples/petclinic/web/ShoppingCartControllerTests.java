@@ -20,9 +20,11 @@ import org.springframework.samples.petclinic.model.Product;
 import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.service.ItemService;
+import org.springframework.samples.petclinic.service.OrderService;
 import org.springframework.samples.petclinic.service.ShoppingCartService;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -40,19 +42,27 @@ public class ShoppingCartControllerTests {
 
 	@MockBean
 	private ItemService			itemService;
+	
+	@MockBean
+	private OrderService		orderService;
 
 	private ShoppingCart		sp;
 
-
+	private Owner owner;
+	
 	@BeforeEach
 	void setup() {
 		this.sp = new ShoppingCart();
-		Owner owner = new Owner();
+		this.owner = new Owner();
 		owner.setFirstName("Sam");
 		owner.setLastName("Schultz");
 		owner.setAddress("4, Evans Street");
 		owner.setCity("Wollongong");
 		owner.setTelephone("4444444444");
+		owner.setCreditCardNumber("1111222233334444");
+		owner.setCvv("510");
+		owner.setExpirationMonth(02);
+		owner.setExpirationYear(2022);
 		User user = new User();
 		user.setUsername("Sam");
 		user.setPassword("supersecretpassword");
@@ -79,7 +89,7 @@ public class ShoppingCartControllerTests {
 		this.sp.setOwner(owner);
 		this.sp.setId(1);
 		BDDMockito.given(this.shoppingCartService.getShoppingCartOfUser("Sam")).willReturn(this.sp);
-		BDDMockito.given(this.itemService.findItemsInShoppingCart(1)).willReturn(listItems);
+		BDDMockito.given(this.itemService.findItemsInShoppingCart(TEST_SHOPPING_CART_ID)).willReturn(listItems);
 	}
 
 	@WithMockUser(username = "Sam", password = "supersecretpassword", roles = "owner")
@@ -87,6 +97,25 @@ public class ShoppingCartControllerTests {
 	void testShowShoppingCartOfOwner() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/shopping-cart")).andExpect(MockMvcResultMatchers.model().attributeExists("items")).andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(MockMvcResultMatchers.view().name("/owners/ownerShoppingCart"));
+	}
+	
+	@WithMockUser(username = "Sam", password = "supersecretpassword", roles = "owner")
+	@Test
+	void testBuyShoppingCartOfOwnerSuccess() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/shopping-cart/buy").with(SecurityMockMvcRequestPostProcessors.csrf())).andExpect(MockMvcResultMatchers.model()
+				.attributeExists("shoppingCartSuccess"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("/owners/ownerShoppingCart"));
+	}
+	
+	@WithMockUser(username = "Sam", password = "supersecretpassword", roles = "owner")
+	@Test
+	void testBuyShoppingCartOfOwnerFaiture() throws Exception {
+		this.owner.setCreditCardNumber(null);
+		this.mockMvc.perform(MockMvcRequestBuilders.post("/shopping-cart/buy").with(SecurityMockMvcRequestPostProcessors.csrf())).andExpect(MockMvcResultMatchers.model()
+				.attributeExists("shoppingCartError"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.view().name("/owners/ownerShoppingCart"));
 	}
 
 }
