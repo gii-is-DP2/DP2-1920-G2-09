@@ -1,0 +1,29 @@
+
+package org.springframework.samples.petclinic.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.model.Order;
+import org.springframework.samples.petclinic.repository.OrderRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class OrderService {
+
+	private OrderRepository orderRepository;
+
+	@Autowired
+	public OrderService(final OrderRepository orderRepository) {
+		this.orderRepository = orderRepository;
+	}
+
+	@Transactional
+	public void saveOrder(final Order order) {
+		this.orderRepository.save(order);
+	}
+	
+	@Transactional
+	public Order findOrderById (final int orderId) {
+		return this.orderRepository.findById(orderId).get();
+	}
+}

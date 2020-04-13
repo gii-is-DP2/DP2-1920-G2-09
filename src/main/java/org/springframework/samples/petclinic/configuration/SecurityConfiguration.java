@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/shopping-cart").hasAnyAuthority("owner").antMatchers("/products/new")
+		http.authorizeRequests().antMatchers("/shopping-cart/**").hasAnyAuthority("owner").antMatchers("/products/new")
 				.hasAnyAuthority("admin").antMatchers("/products/delete-item").hasAnyAuthority("owner")
 				.antMatchers("/products/edit-item").hasAnyAuthority("owner").antMatchers("/products/{productId}/edit")
 				.hasAnyAuthority("admin").antMatchers("/products/**").permitAll().antMatchers("/owners/payment-details")
