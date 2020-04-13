@@ -12,7 +12,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.Walk;
 import org.springframework.samples.petclinic.model.WalkComent;
@@ -86,59 +85,59 @@ public class WalkComentServiceTest {
 		Double rating = this.walkComentService.getAverageRatingOfWalk(1231231);
 		Assert.assertTrue(rating == 0.0);
 	}
-	
-    @Test
-    void shouldSaveWalkComents() {
-    	User nu = new User();
-		  nu.setEnabled(true);
-		  nu.setPassword("contraseña");
-		  nu.setUsername("u");
-      nu.setEmail("email@bien.com");
-    	Walk walk = new Walk();
-    	WalkComent walkComent = new WalkComent();
-    	walk.setName("Paseo");
-    	walk.setDescription("This is a try description");
-    	walk.setMap("https://tinyurl.com/wygb5vu");
-    	this.walkService.saveWalk(walk);
-    	walkComent.setTitle("title");
-    	walkComent.setDescription("this is a description");
-    	walkComent.setRating(5);
-    	walkComent.setPostDate(LocalDate.of(2020, 02, 23));
-    	walkComent.setUser(nu);
-    	walkComent.setWalk(walk);
-    	this.walkComentService.saveWalkComent(walkComent);
-    	Assertions.assertTrue(walkComent != null);
-    }
-    
-    @Test
-    void shouldDeleteWalkComent() {
-    	User nu = new User();
-		  nu.setEnabled(true);
-		  nu.setPassword("contraseña");
-		  nu.setUsername("u");
-      nu.setEmail("email@bien.com");
-    	Walk walk = new Walk();
-    	WalkComent walkComent = new WalkComent();
-    	walk.setName("Paseo");
-    	walk.setDescription("This is a try description");
-    	walk.setMap("https://tinyurl.com/wygb5vu");
-    	this.walkService.saveWalk(walk);
-    	walkComent.setTitle("title");
-    	walkComent.setDescription("this is a description");
-    	walkComent.setRating(5);
-    	walkComent.setPostDate(LocalDate.of(2020, 02, 23));
-    	walkComent.setUser(nu);
-    	walkComent.setWalk(walk);
-    	this.walkComentService.saveWalkComent(walkComent);
-    	Assertions.assertTrue(walkComent.getId() != 0);
-    	
-    	this.walkComentService.deleteWalkComent(walkComent.getId());
-    	Assertions.assertTrue(this.walkComentService.findWalkComentsById(walkComent.getId()) == null);
-    }
-    
-  // PRUEBAS PARAMETRIZADAS
+
+	@Test
+	void shouldSaveWalkComents() {
+		User nu = new User();
+		nu.setEnabled(true);
+		nu.setPassword("contraseña");
+		nu.setUsername("u");
+		nu.setEmail("email@bien.com");
+		Walk walk = new Walk();
+		WalkComent walkComent = new WalkComent();
+		walk.setName("Paseo");
+		walk.setDescription("This is a try description");
+		walk.setMap("https://tinyurl.com/wygb5vu");
+		this.walkService.saveWalk(walk);
+		walkComent.setTitle("title");
+		walkComent.setDescription("this is a description");
+		walkComent.setRating(5);
+		walkComent.setPostDate(LocalDate.of(2020, 02, 23));
+		walkComent.setUser(nu);
+		walkComent.setWalk(walk);
+		this.walkComentService.saveWalkComent(walkComent);
+		Assertions.assertTrue(walkComent != null);
+	}
+
+	@Test
+	void shouldDeleteWalkComent() {
+		User nu = new User();
+		nu.setEnabled(true);
+		nu.setPassword("contraseña");
+		nu.setUsername("u");
+		nu.setEmail("email@bien.com");
+		Walk walk = new Walk();
+		WalkComent walkComent = new WalkComent();
+		walk.setName("Paseo");
+		walk.setDescription("This is a try description");
+		walk.setMap("https://tinyurl.com/wygb5vu");
+		this.walkService.saveWalk(walk);
+		walkComent.setTitle("title");
+		walkComent.setDescription("this is a description");
+		walkComent.setRating(5);
+		walkComent.setPostDate(LocalDate.of(2020, 02, 23));
+		walkComent.setUser(nu);
+		walkComent.setWalk(walk);
+		this.walkComentService.saveWalkComent(walkComent);
+		Assertions.assertTrue(walkComent.getId() != 0);
+
+		this.walkComentService.deleteWalkComent(walkComent.getId());
+		Assertions.assertTrue(this.walkComentService.findWalkComentsById(walkComent.getId()) == null);
+	}
+
+	// PRUEBAS PARAMETRIZADAS
 	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
+	@CsvSource({ "1", "2" })
 	void shouldFindWalkComentsParametrized(final Integer walkID) {
 		Collection<WalkComent> walkComents = this.walkComentService.findAllComentsOfTheWalk(walkID);
 		Assertions.assertTrue(!walkComents.isEmpty());
@@ -202,71 +201,71 @@ public class WalkComentServiceTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
+	@CsvSource({ "1", "2" })
 	void shouldNotGetRatingOfTheWalkParemtrized(final Integer walkId) {
 		Double rating = this.walkComentService.getAverageRatingOfWalk(walkId);
 		Assert.assertTrue(rating > 0.0);
 	}
-  
-      @ParameterizedTest
-    @CsvSource({
-		"nuevoPASEO1, descripcionDELPASEO1, http://www.nuevaURL.com, nuevaPASS1, nuevoUser1, nuevoEmail1@gmail.com,DescrIPCION DEL COMentario,1,TITULO del comenTario",
-		"nuevoPASEO2, DESCRIPCIÓNDELPASEO2, http://www.NUEVAURL2.com, nuevaPASS2, nuevoUser2, nuevoEmail2@gmail.com,DescrIPCION DEL COMentario,5,TITULO del comenTario",
-		"nuevopaseo3, descripcion3, http://www.nuevaurl3.com, nuevaPASS3, nuevoUser3, nuevoEmail3@gmail.com ,descripcionDELcomentario,3,titulo del comenTario" })
-    void shouldSaveWalkComentsParameterized(final String walkName, final String descripcion, final String urlMap,
+
+	@ParameterizedTest
+	@CsvSource({
+			"nuevoPASEO1, descripcionDELPASEO1, http://www.nuevaURL.com, nuevaPASS1, nuevoUser1, nuevoEmail1@gmail.com,DescrIPCION DEL COMentario,1,TITULO del comenTario",
+			"nuevoPASEO2, DESCRIPCIÓNDELPASEO2, http://www.NUEVAURL2.com, nuevaPASS2, nuevoUser2, nuevoEmail2@gmail.com,DescrIPCION DEL COMentario,5,TITULO del comenTario",
+			"nuevopaseo3, descripcion3, http://www.nuevaurl3.com, nuevaPASS3, nuevoUser3, nuevoEmail3@gmail.com ,descripcionDELcomentario,3,titulo del comenTario" })
+	void shouldSaveWalkComentsParameterized(final String walkName, final String descripcion, final String urlMap,
 			final String password, final String username, final String email, final String comentDescription,
 			final Integer rating, final String comentTitle) {
-    	User nu = new User();
-		  nu.setEnabled(true);
-		  nu.setPassword(password);
-		  nu.setUsername(username);
-      nu.setEmail(email);
-    	Walk walk = new Walk();
-    	WalkComent walkComent = new WalkComent();
-    	walk.setName(walkName);
-    	walk.setDescription(descripcion);
-    	walk.setMap(urlMap);
-    	this.walkService.saveWalk(walk);
-    	walkComent.setTitle(comentTitle);
-    	walkComent.setDescription(comentDescription);
-    	walkComent.setRating(rating);
-    	walkComent.setPostDate(LocalDate.now().minusDays(2));
-    	walkComent.setUser(nu);
-    	walkComent.setWalk(walk);
-    	this.walkComentService.saveWalkComent(walkComent);
-    	Assertions.assertTrue(walkComent != null);
-    }
-    
-    @ParameterizedTest
-    @CsvSource({
-		"nuevoPASEO1, descripcionDELPASEO1, http://www.nuevaURL.com, nuevaPASS1, nuevoUser1, nuevoEmail1@gmail.com,DescrIPCION DEL COMentario,1,TITULO del comenTario",
-		"nuevoPASEO2, DESCRIPCIÓNDELPASEO2, http://www.NUEVAURL2.com, nuevaPASS2, nuevoUser2, nuevoEmail2@gmail.com,DescrIPCION DEL COMentario,5,TITULO del comenTario",
-		"nuevopaseo3, descripcion3, http://www.nuevaurl3.com, nuevaPASS3, nuevoUser3, nuevoEmail3@gmail.com ,descripcionDELcomentario,3,titulo del comenTario" })
-    void shouldDeleteWalkComentParamererized(final String walkName, final String descripcion, final String urlMap,
+		User nu = new User();
+		nu.setEnabled(true);
+		nu.setPassword(password);
+		nu.setUsername(username);
+		nu.setEmail(email);
+		Walk walk = new Walk();
+		WalkComent walkComent = new WalkComent();
+		walk.setName(walkName);
+		walk.setDescription(descripcion);
+		walk.setMap(urlMap);
+		this.walkService.saveWalk(walk);
+		walkComent.setTitle(comentTitle);
+		walkComent.setDescription(comentDescription);
+		walkComent.setRating(rating);
+		walkComent.setPostDate(LocalDate.now().minusDays(2));
+		walkComent.setUser(nu);
+		walkComent.setWalk(walk);
+		this.walkComentService.saveWalkComent(walkComent);
+		Assertions.assertTrue(walkComent != null);
+	}
+
+	@ParameterizedTest
+	@CsvSource({
+			"nuevoPASEO1, descripcionDELPASEO1, http://www.nuevaURL.com, nuevaPASS1, nuevoUser1, nuevoEmail1@gmail.com,DescrIPCION DEL COMentario,1,TITULO del comenTario",
+			"nuevoPASEO2, DESCRIPCIÓNDELPASEO2, http://www.NUEVAURL2.com, nuevaPASS2, nuevoUser2, nuevoEmail2@gmail.com,DescrIPCION DEL COMentario,5,TITULO del comenTario",
+			"nuevopaseo3, descripcion3, http://www.nuevaurl3.com, nuevaPASS3, nuevoUser3, nuevoEmail3@gmail.com ,descripcionDELcomentario,3,titulo del comenTario" })
+	void shouldDeleteWalkComentParamererized(final String walkName, final String descripcion, final String urlMap,
 			final String password, final String username, final String email, final String comentDescription,
 			final Integer rating, final String comentTitle) {
-    	User nu = new User();
-		  nu.setEnabled(true);
-		  nu.setPassword(password);
-		  nu.setUsername(username);
-      nu.setEmail(email);
-    	Walk walk = new Walk();
-    	WalkComent walkComent = new WalkComent();
-    	walk.setName(walkName);
-    	walk.setDescription(descripcion);
-    	walk.setMap(urlMap);
-    	this.walkService.saveWalk(walk);
-    	walkComent.setTitle(comentTitle);
-    	walkComent.setDescription(comentDescription);
-    	walkComent.setRating(rating);
-    	walkComent.setPostDate(LocalDate.now().minusDays(2));
-    	walkComent.setUser(nu);
-    	walkComent.setWalk(walk);
-    	this.walkComentService.saveWalkComent(walkComent);
-    	Assertions.assertTrue(walkComent.getId() != 0);
-    	
-    	this.walkComentService.deleteWalkComent(walkComent.getId());
-    	Assertions.assertTrue(this.walkComentService.findWalkComentsById(walkComent.getId()) == null);
-    }
+		User nu = new User();
+		nu.setEnabled(true);
+		nu.setPassword(password);
+		nu.setUsername(username);
+		nu.setEmail(email);
+		Walk walk = new Walk();
+		WalkComent walkComent = new WalkComent();
+		walk.setName(walkName);
+		walk.setDescription(descripcion);
+		walk.setMap(urlMap);
+		this.walkService.saveWalk(walk);
+		walkComent.setTitle(comentTitle);
+		walkComent.setDescription(comentDescription);
+		walkComent.setRating(rating);
+		walkComent.setPostDate(LocalDate.now().minusDays(2));
+		walkComent.setUser(nu);
+		walkComent.setWalk(walk);
+		this.walkComentService.saveWalkComent(walkComent);
+		Assertions.assertTrue(walkComent.getId() != 0);
+
+		this.walkComentService.deleteWalkComent(walkComent.getId());
+		Assertions.assertTrue(this.walkComentService.findWalkComentsById(walkComent.getId()) == null);
+	}
 
 }
