@@ -79,7 +79,7 @@ INSERT INTO owners VALUES (7, 'Jeff', 'Black', '1450 Oak Blvd.', 'Monona',null,n
 INSERT INTO owners VALUES (8, 'Maria', 'Escobito', '345 Maple St.', 'Madison',null,null,null,null, '6085557683', 'owner8');
 INSERT INTO owners VALUES (9, 'David', 'Schroeder', '2749 Blackhawk Trail', 'Madison',null,null,null,null, '6085559435', 'owner9');
 INSERT INTO owners VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Waunakee',null,null,null,null, '6085555487', 'owner10');
-INSERT INTO owners VALUES (11, 'Francisco', 'Arroyo', 'Reina Mercedes', 'Sevilla',null,null,null,null, '692345123', 'prueba');
+INSERT INTO owners VALUES (11, 'Francisco', 'Arroyo', 'Reina Mercedes', 'Sevilla','1111222233334444','123',12,2090, '692345123', 'prueba');
 
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
 -- INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
@@ -136,6 +136,6 @@ INSERT INTO shopping_cart(id,owner_id) VALUES (11,1);
 
 INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (1, 1, 1, 5, 10.20);
 INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (2, 1, 2, 50, 102.00);
-INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (3, 1, 3, 10, 152.54);
+INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (3, 11, 3, 10, 152.54);
 
 

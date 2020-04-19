@@ -184,7 +184,7 @@ public class ItemServiceTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
+	@CsvSource({ "1", "2" })
 	void shouldCheckIfItemIsIntheShoppingCartParametrized(final Integer itemId) {
 		Item i = this.itemService.checkIfItemIsIntheShoppingCart(1, itemId);
 		Assertions.assertTrue(!i.equals(null));
@@ -198,7 +198,7 @@ public class ItemServiceTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "1", "2", "3" })
+	@CsvSource({ "1", "2" })
 	void shouldDeleteItemParametrized(final Integer itemId) {
 		List<Item> l = this.itemService.findItemsInShoppingCart(1);
 		Integer foundBefore = l.size();
