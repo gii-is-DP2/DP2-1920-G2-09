@@ -119,8 +119,6 @@ public class ProductControllerE2ETest {
 				.andExpect(MockMvcResultMatchers.model().attribute("product",
 						Matchers.hasProperty("name", Matchers.is("Gel de perro"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("product",
-						Matchers.hasProperty("stock", Matchers.is(15))))
-				.andExpect(MockMvcResultMatchers.model().attribute("product",
 						Matchers.hasProperty("unitPrice", Matchers.is(10.20))))
 				.andExpect(MockMvcResultMatchers.model().attribute("product",
 						Matchers.hasProperty("urlImage", Matchers.is("https://tinyurl.com/vp4wlrz"))))
