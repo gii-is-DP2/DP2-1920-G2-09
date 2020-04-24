@@ -25,17 +25,19 @@
 				<th style="width: 5%">Change Quantity</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody id="items">
+		
 			<c:forEach items="${items}" var="item">
+				
 				<tr>
-					<td><c:out value="${item.product.name}" /></td>
-					<td><c:out value="${item.product.description}" /></td>
+					<td id="nameProductoCart"><c:out value="${item.product.name}" /></td>
+					<td id="descriptionProductoCart"><c:out value="${item.product.description}" /></td>
 
-					<td><c:out value="${item.quantity}" /></td>
+					<td id="quantityProductoCart"><c:out value="${item.quantity}" /></td>
 
-					<td><c:out value="${item.unitPrice} euros" /></td>
+					<td id="precioProductoCart"><c:out value="${item.unitPrice} euros" /></td>
 
-					<td><c:out value="${item.unitPrice*item.quantity} euros" /></td>
+					<td id="precioTotalCart"><c:out value="${item.unitPrice*item.quantity} euros" /></td>
 
 					<td><spring:url value="/products/delete-item/{itemId}"
 							var="deleteURL">
@@ -57,6 +59,7 @@
 
 				<c:set var="total" value="${total + item.unitPrice*item.quantity}"></c:set>
 				<c:set var="totalQuantity" value="${totalQuantity + item.quantity}"></c:set>
+				
 			</c:forEach>
 		</tbody>
 	</table>
