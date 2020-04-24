@@ -74,7 +74,7 @@ public class AñadirACarritoNegativoUITest {
 		stock = new Integer(driver.findElement(By.id("stockProducto")).getText());
 
 		driver.findElement(By.xpath("//input[@name='quantity']")).clear();
-		driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys("11");
+		driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys("210");
 		driver.findElement(By.xpath("//form[@id='add-product-to-shoppingCart']/button")).click();
 	}
 
