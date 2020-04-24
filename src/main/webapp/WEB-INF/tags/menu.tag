@@ -65,7 +65,7 @@
 				<petclinic:menuItem active="${name eq 'ownerShoppingCart'}" url="/shopping-cart"
 					title="Shopping Cart">
 					<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
-					<span>Shopping Cart</span>
+					<span id="CartId">Shopping Cart</span>
 				</petclinic:menuItem>
 				</sec:authorize>
 

@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.UI;
 
-import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,13 +13,18 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ComentaProductoUITest {
+public class AñadirACarritoUITest {
 
 	@LocalServerPort
 	private int port;
 
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
+	private String nombre;
+	private String descripcion;
+	private Integer stock;
+	private Double precio;
+	private String stockFinal;
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -29,18 +33,21 @@ public class ComentaProductoUITest {
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
 		driver = new FirefoxDriver();
+
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testComentaProductoUI() throws Exception {
+	public void testAñadirACarritoUI() throws Exception {
+
 		driver.get("http://localhost:" + port);
-		
-		loggingOwner();
-		
+
+		loginOwner();
+
 		completeForm();
-		
+
 		assertElements();
+
 	}
 
 	@AfterEach
@@ -51,39 +58,46 @@ public class ComentaProductoUITest {
 			fail(verificationErrorString);
 		}
 	}
-	
-	public void loggingOwner() {
+
+	public void loginOwner() throws Exception {
 		driver.findElement(By.linkText("LOGIN")).click();
+		driver.findElement(By.id("username")).click();
 		driver.findElement(By.id("username")).clear();
 		driver.findElement(By.id("username")).sendKeys("owner1");
 		driver.findElement(By.id("password")).clear();
 		driver.findElement(By.id("password")).sendKeys("0wn3r");
 		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
 		assertEquals("OWNER1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
-	}
-	
-	public void completeForm() {
 		driver.findElement(By.id("ProductId")).click();
+	}
+
+	public void completeForm() throws Exception {
 		driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
 
-		driver.findElement(By.id("title")).clear();
-		driver.findElement(By.id("title")).sendKeys("Comentario UITest");
-		driver.findElement(By.id("description")).clear();
-		driver.findElement(By.id("description")).sendKeys("Este es un comentario para el UITest");
-		driver.findElement(By.xpath("//button[@type='submit']")).click();
-	}
-	
-	public void assertElements() {
-		int comentarios = driver.findElement(By.id("comentarios")).findElements(By.className("media-body")).size();
-		assertEquals("owner1",
-				driver.findElement(By.xpath("(//strong[@id='usuarioComentario'])[" + comentarios + "]")).getText());
-		assertEquals("Comentario UITest",
-				driver.findElement(By.xpath("(//strong[@id='tituloComentario'])[" + comentarios + "]")).getText());
-		assertEquals("Este es un comentario para el UITest",
-				driver.findElement(By.xpath("(//p[@id='descriptionComentario'])[" + comentarios + "]")).getText());
-		assertEquals(LocalDate.now().toString(),
-				driver.findElement(By.xpath("(//small[@id='fechaComentario'])[" + comentarios + "]")).getText());
+		nombre = driver.findElement(By.id("NombreProducto")).getText();
+		descripcion = driver.findElement(By.id("DescripcionProducto")).getText();
+		stock = new Integer(driver.findElement(By.id("stockProducto")).getText());
+		precio = new Double(driver.findElement(By.id("PrecioProducto")).getText());
+
+		driver.findElement(By.xpath("//input[@name='quantity']")).clear();
+		driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys("5");
+		driver.findElement(By.xpath("//form[@id='add-product-to-shoppingCart']/button")).click();
+
+		stockFinal = String.valueOf(stock - 5);
 	}
 
+	public void assertElements() throws Exception {
+		assertEquals(stockFinal, driver.findElement(By.id("stockProducto")).getText());
+		driver.findElement(By.linkText("SHOPPING CART")).click();
+
+		Integer lista = driver.findElement(By.id("items")).findElements(By.tagName("tr")).size();
+		assertEquals(descripcion,
+				driver.findElement(By.xpath("(//td[@id='descriptionProductoCart'])[" + lista + "]")).getText());
+		assertEquals("5", driver.findElement(By.xpath("(//td[@id='quantityProductoCart'])[" + lista + "]")).getText());
+		assertEquals(String.valueOf(precio) + " euros",
+				driver.findElement(By.xpath("(//td[@id='precioProductoCart'])[" + lista + "]")).getText());
+		assertEquals(String.valueOf(precio * 5) + " euros",
+				driver.findElement(By.xpath("(//td[@id='precioTotalCart'])[" + lista + "]")).getText());
+		assertEquals(nombre, driver.findElement(By.xpath("(//td[@id='nameProductoCart'])[" + lista + "]")).getText());
+	}
 }
-
