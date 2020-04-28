@@ -5,6 +5,4 @@ services:
   - mysql
 before_install:
   - mysql -e 'CREATE DATABASE petclinic;'
-before_script:
-  - mysql -u root -e "GRANT ALL ON petclinic.* TO 'root'@'localhost';"
 script: mvn test -Dspring.profiles.active=mysql-travis

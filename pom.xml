@@ -321,6 +321,7 @@
 					</plugins>
 					</build>
 					</profile>
+
 					</profiles>
 
 	<!-- Apache 2 license -->
