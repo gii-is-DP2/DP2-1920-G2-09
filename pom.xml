@@ -290,6 +290,15 @@
 	
 	
 	<profiles>
+	<profile>
+<id>mysql-travis</id>
+<activation>
+<activeByDefault>false</activeByDefault>
+</activation>
+<properties>
+<spring.profiles.active>mysql-travis</spring.profiles.active>
+</properties>
+</profile>
 		<profile>
 			<id>AcceptanceTests</id>
 			<build>
