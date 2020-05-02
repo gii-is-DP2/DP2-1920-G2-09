@@ -290,6 +290,8 @@
 	
 	
 	<profiles>
+
+
 		<profile>
 			<id>AcceptanceTests</id>
 			<build>
@@ -321,6 +323,7 @@
 					</plugins>
 					</build>
 					</profile>
+
 					</profiles>
 
 	<!-- Apache 2 license -->
