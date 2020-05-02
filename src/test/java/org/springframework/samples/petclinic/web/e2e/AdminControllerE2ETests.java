@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = "classpath:application-mysql.properties")
 public class AdminControllerE2ETests {
 
 	@Autowired
