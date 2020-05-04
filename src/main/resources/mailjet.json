@@ -1,0 +1,19 @@
+{
+  "Messages": [
+    {
+      "From": {
+        "Email": "fraromgon2@gmail.com",
+        "Name": "Mailjet Pilot"
+      },
+      "To": [
+        {
+          "Email": "fraromgon2@gmail.com",
+          "Name": "passenger 1"
+        }
+      ],
+      "Subject": "Esto es una prueba de la API de MAILJET",
+      "TextPart": "La API funciona correctamente si has recibido el correo",
+      "HTMLPart": "<h3>Pasate por el Petclinic <a href=\"http://localhost:8080//\">PetClinic</a>!</h3><br />Que te vaya bien"
+    }
+  ]
+}
