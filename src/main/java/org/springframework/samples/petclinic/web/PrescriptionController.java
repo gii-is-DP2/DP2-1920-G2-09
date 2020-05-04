@@ -113,7 +113,7 @@ public class PrescriptionController {
 			prescription.setVet(vet);
 
 			this.prescriptionService.savePrescription(prescription);
-			this.emailService.sendEmailOfThePrescription(prescription);
+			this.emailService.sendEmailOfPrescriptionWithRestTemplate(prescription);
 			return "redirect:/owners/{ownerId}";
 		}
 	}
