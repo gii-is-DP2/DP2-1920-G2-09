@@ -125,7 +125,7 @@ public class ItemServiceTests {
 
 	@Test
 	void shouldNotDeleteItem() {
-		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> this.itemService.deleteItem(4));
+		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> this.itemService.deleteItem(999999));
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class ItemServiceTests {
 
 	@Test
 	void shouldNotFindItemById() {
-		Item i = this.itemService.findItemById(7);
+		Item i = this.itemService.findItemById(9999);
 		Assertions.assertTrue(i == null);
 	}
 

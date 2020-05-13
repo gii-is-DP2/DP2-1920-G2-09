@@ -39,7 +39,7 @@ public class OrderController {
 		model.addAttribute("orders", orders);
 		return "orders/ordersList";
 	}
-	
+
 	@GetMapping("/{orderId}")
 	public String showOrder(final ModelMap model, @PathVariable("orderId") final int orderId) {
 		Order order = this.orderService.findOrderById(orderId);
@@ -47,6 +47,14 @@ public class OrderController {
 		model.addAttribute("order", order);
 		model.addAttribute("items", items);
 		return "orders/ordersDetails";
+	}
+
+	@GetMapping("/delete/{orderId}")
+	public String deleteOrder(final ModelMap model, @PathVariable("orderId") final int orderId) {
+		this.orderService.deleteOrder(orderId);
+		String okMessage = "The order has been canceled";
+		model.put("okMessage", okMessage);
+		return this.showAllOrder(model);
 	}
 
 }

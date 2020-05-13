@@ -29,19 +29,27 @@ public class OrderService {
 	public List<Order> findAllOrders() {
 		return (List<Order>) this.orderRepository.findAll();
 	}
-	
+
 	@Transactional
 	public List<Order> findAllOrdersOrderedByDate() {
 		return this.orderRepository.findAllOrderedByDate();
 	}
-	
+
 	@Transactional
-	public Order findOrderById(int id) {
+	public Order findOrderById(final int id) {
 		return this.orderRepository.findById(id).get();
 	}
-	
+
 	@Transactional
-	public List<Item> findAllItemByOrder(int id) {
+	public List<Item> findAllItemByOrder(final int id) {
 		return this.orderRepository.findAllItemByOrder(id);
 	}
+
+	@Transactional
+	public void deleteOrder(final int id) {
+		this.orderRepository.deleteAllItemsOfOrder(id);
+		this.orderRepository.deleteById(id);
+
+	}
+
 }
