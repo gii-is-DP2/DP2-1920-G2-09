@@ -53,29 +53,37 @@ public class OrderServiceTests {
 		Integer after = this.orderService.findAllOrders().size();
 		Assertions.assertTrue(before + 1 == after);
 	}
-	
+
 	@Test
 	void shouldFindOrders() {
-		Collection<Order> orders = (Collection<Order>) this.orderService.findAllOrders();
+		Collection<Order> orders = this.orderService.findAllOrders();
 		Assertions.assertTrue(!orders.isEmpty());
 	}
-	
+
 	@Test
 	void shouldFindOrdersOrderedByDate() {
-		List<Order> orders = (List<Order>) this.orderService.findAllOrdersOrderedByDate();
+		List<Order> orders = this.orderService.findAllOrdersOrderedByDate();
 		Assertions.assertTrue(orders.get(0).getOrderDate().isAfter(orders.get(orders.size() - 1).getOrderDate()));
 	}
-	
+
 	@Test
 	void shouldFindOrderById() {
 		Order order = this.orderService.findOrderById(1);
 		Assertions.assertTrue(order != null);
 	}
-	
+
 	@Test
 	void shouldFindItemsByOrder() {
 		List<Item> items = this.orderService.findAllItemByOrder(1);
 		Assertions.assertTrue(!items.isEmpty());
+	}
+
+	@Test
+	void shouldDeleteOrder() {
+		int before = this.orderService.findAllOrders().size();
+		this.orderService.deleteOrder(2);
+		int after = this.orderService.findAllOrders().size();
+		Assertions.assertTrue(before == after + 1);
 	}
 
 }

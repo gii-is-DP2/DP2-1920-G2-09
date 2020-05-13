@@ -8,12 +8,18 @@
 
 <petclinic:layout pageName="orders">
 
+<c:if test="${ not empty okMessage }">
+	<div class="alert-success" role="alert">
+  <c:out   value="${okMessage}" ></c:out>
+</div> 
+</c:if>
 	<table id="ordersTable" class="table table-striped">
 		<thead>
 			<tr>
 				<th>User</th>
 				<th>Order Date</th>
 				<th>Total Price</th>
+				<th></th>
 				<th></th>
 			</tr>
 		</thead>
@@ -28,6 +34,13 @@
 						<spring:param name="orderId" value="${order.id}" /></spring:url> 
 						<a href="${fn:escapeXml(viewURL)}" class="btn btn-default"> View Details </a>
 					</td>
+					
+					<td id="remove">
+						<spring:url value="/orders/delete/{orderId}" var="deleteURL">
+						<spring:param name="orderId" value="${order.id}" /></spring:url> 
+						<a href="${fn:escapeXml(deleteURL)}" class="btn btn-default"> Cancel Order </a>
+					</td>
+					
 				</tr>
 			</c:forEach>
 		</tbody>
