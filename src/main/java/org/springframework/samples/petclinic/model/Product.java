@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.URL;
-
 import lombok.Data;
 
 @Entity
@@ -16,7 +14,6 @@ public class Product extends NamedEntity {
 	@NotEmpty
 	private String description;
 	@NotEmpty
-	@URL
 	private String urlImage;
 	@NotNull
 	private int stock;

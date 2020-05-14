@@ -101,9 +101,9 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
 --- LOS NUEVOS A PARTIR DE AQUI ---
-INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'https://tinyurl.com/vp4wlrz');
-INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (2,'Gel de gato',true,2,'Es un gel de gato',150,102.00,'https://tinyurl.com/vp4wlrz');
-INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (3,'Gel de caballo',false,3,'Es un gel de caballo',0,152.54,'https://tinyurl.com/vp4wlrz');
+INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (1,'Gel de perro',true,1,'Es un gel de perro',10,10.20,'/resources/images/dog.png');
+INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (2,'Gel de gato',true,2,'Es un gel de gato',150,102.00,'/resources/images/dog.png');
+INSERT INTO product(id,name,available,category,description,stock,unit_price,url_image) VALUES (3,'Gel de caballo',false,3,'Es un gel de caballo',0,152.54,'/resources/images/dog.png');
 
 INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (1, 'Tratamiento', 'Tomar paracetamol 2 semanas', 1, 1, '2020-10-15', '2020-10-20');
 INSERT INTO prescriptions(id,name,description,pet_id,vet_id,date_inicio,date_final) VALUES (2,'Titulo de la nueva prescripción','Descripción de la nueva descripción',13,1,'2013-01-01','2013-01-01');
@@ -113,9 +113,9 @@ INSERT INTO product_coment(id,description,post_date,title,highlight,rating,produ
 INSERT INTO product_coment(id,description,post_date,title,highlight,rating,product_id,username) VALUES (2,'Descripción de prueba 2','2013-01-02','Titulo de prueba2',true,3,1,'vet1');
 --- WALKS ---
 
-INSERT INTO walks(id,name,description,map) VALUES (1,'Primer Paseo', 'Esto es un paseo1','https://tinyurl.com/wygb5vu');
-INSERT INTO walks(id,name,description,map) VALUES (2,'Segundo Paseo', 'Esto es un paseo2','https://tinyurl.com/wygb5vu');
-INSERT INTO walks(id,name,description,map) VALUES (3,'Tercer Paseo', 'Esto es un paseo3','https://tinyurl.com/wygb5vu');
+INSERT INTO walks(id,name,description,map) VALUES (1,'Primer Paseo', 'Esto es un paseo1','/resources/images/dog.png');
+INSERT INTO walks(id,name,description,map) VALUES (2,'Segundo Paseo', 'Esto es un paseo2','/resources/images/dog.png');
+INSERT INTO walks(id,name,description,map) VALUES (3,'Tercer Paseo', 'Esto es un paseo3','/resources/images/dog.png');
 
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (1,'Leo','descripción','2010-09-07',2,'prueba', 1);
 INSERT INTO walk_coment(id,title,description,post_date,rating,username,walk_id) VALUES (2,'BUEN PASEO','descripción del paseo','2019-09-07',5,'owner1', 2);
