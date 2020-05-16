@@ -68,12 +68,15 @@ class HU25UpdateProduct extends Simulation {
 		.pause(18)
 	}
 	
-	object UpdateProductOk{
-		val updateProductOk = exec(http("SHOW PRODUCT")
+	object ShowProduct{
+		val showProduct = exec(http("SHOW PRODUCT")
 			.get("/products/2")
 			.headers(headers_0))
 		.pause(7)
-		.exec(http("SHOW FORM")
+	}
+	
+	object UpdateProductOk{
+		val updateProductOk = exec(http("SHOW FORM")
 			.get("/products/2/edit")
 			.headers(headers_0)
 			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
@@ -110,16 +113,13 @@ class HU25UpdateProduct extends Simulation {
 			.formParam("category", "HYGIENE")
 			.formParam("_csrf", "${stoken}"))
 		.pause(4)
-		.exec(http("request_6")//¿que hace esto?
-			.get(uri1 + "?osname=win&channel=stable&milestone=81")
-			.headers(headers_6))
-		.pause(19)
+		
 	}
 	
 	
 	
-	val scn_owner_1 = scenario("HU25UpdateProductOk").exec(Home.home,Login.login,ListProducts.listProducts,UpdateProductOk.updateProductOk)
-	val scn_owner_2 = scenario("HU25UpdateProductFailed").exec(Home.home,Login.login,ListProducts.listProducts,UpdateProductFailed.updateProductFailed)	
+	val scn_owner_1 = scenario("HU25UpdateProductOk").exec(Home.home,Login.login,ListProducts.listProducts,ShowProduct.showProduct,UpdateProductOk.updateProductOk)
+	val scn_owner_2 = scenario("HU25UpdateProductFailed").exec(Home.home,Login.login,ListProducts.listProducts,ShowProduct.showProduct,UpdateProductFailed.updateProductFailed)	
 		
 
 	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
