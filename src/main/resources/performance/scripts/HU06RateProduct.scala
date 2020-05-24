@@ -93,9 +93,13 @@ class HU06RateProduct extends Simulation {
 		.pause(81)
 	}
 	
-	val scn_owner_1 = scenario("HU05RateProduct1").exec(Home.home,Login.login,ListProducts.listProducts,RateProduct1.rateProduct1)
-	val scn_owner_2 = scenario("HU05RateProduct2").exec(Home.home,Login.login,ListProducts.listProducts,RateProduct2.rateProduct2)	
+	val scn_owner_1 = scenario("HU06RateProduct1").exec(Home.home,Login.login,ListProducts.listProducts,RateProduct1.rateProduct1)
+	val scn_owner_2 = scenario("HU06RateProduct2").exec(Home.home,Login.login,ListProducts.listProducts,RateProduct2.rateProduct2)	
 		
 
-	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn_owner_1.inject(rampUsers(1000) during (100 seconds)),scn_owner_2.inject(rampUsers(1000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
 }

@@ -67,9 +67,13 @@ class HU15ShowWalks extends Simulation {
 			.headers(headers_0))
 		.pause(14)
 	}
-
+	// a partir de 9.000 usuarios el consumo de CPU llega al 100%
 	val scn_owner_1 = scenario("HU15ListWalks").exec(Home.home,Login.login,WalksList.walksList)
 	val scn_owner_2 = scenario("HU15ListAndShowWalk").exec(Home.home,Login.login,WalksList.walksList,ShowWalk.showWalk)
 	
-	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn_owner_1.inject(rampUsers(5000) during (100 seconds)),scn_owner_2.inject(rampUsers(5000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
 }

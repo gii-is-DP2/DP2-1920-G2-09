@@ -74,6 +74,11 @@ class HU01ListProducts extends Simulation {
 	}
 	val scn_owner_1 = scenario("HU01ListProducts_owner_1").exec(Home.home,Login.login,ListProducts.listProducts,FilterProductsGel.filterProducts)
 	val scn_owner_2 = scenario("HU01ListProducts_owner_2").exec(Home.home,Login.login,ListProducts.listProducts,FilterProductsPerro.filterProducts)
-		
-	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
+	
+	// a partir de 10.000 usuarios el consumo de CPU llega al 100%
+	setUp(scn_owner_1.inject(rampUsers(5000) during (100 seconds)),scn_owner_2.inject(rampUsers(5000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
 }

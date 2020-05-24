@@ -76,9 +76,14 @@ class HU08RemoveComment extends Simulation {
 	}
 	
 
-	val scn_owner_1 = scenario("HU06PostCommentWithouRate").exec(Home.home,Login.login,ListProducts.listProducts,ShowProduct1.showProduct1,RemoveComment.removeComment)
+	val scn_owner_1 = scenario("HU08RemoveComment1").exec(Home.home,Login.login,ListProducts.listProducts,ShowProduct1.showProduct1,RemoveComment.removeComment)
+	val scn_owner_2 = scenario("HU08RemoveComment2").exec(Home.home,Login.login,ListProducts.listProducts,ShowProduct1.showProduct1,RemoveComment.removeComment)
 	
 		
 
-	setUp(scn_owner_1.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn_owner_1.inject(rampUsers(500) during (100 seconds)),scn_owner_2.inject(rampUsers(500) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
 }

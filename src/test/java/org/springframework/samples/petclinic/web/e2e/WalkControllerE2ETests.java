@@ -44,7 +44,7 @@ public class WalkControllerE2ETests {
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
 						Matchers.hasProperty("description", Matchers.is("Esto es un paseo2"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
-						Matchers.hasProperty("map", Matchers.is("https://tinyurl.com/wygb5vu"))))
+						Matchers.hasProperty("map", Matchers.is("/resources/images/dog.png"))))
 				.andExpect(MockMvcResultMatchers.view().name("walks/walkDetails"));
 	}
 
@@ -89,7 +89,7 @@ public class WalkControllerE2ETests {
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
 						Matchers.hasProperty("name", Matchers.is("Segundo Paseo"))))
 				.andExpect(MockMvcResultMatchers.model().attribute("walk",
-						Matchers.hasProperty("map", Matchers.is("https://tinyurl.com/wygb5vu"))))
+						Matchers.hasProperty("map", Matchers.is("/resources/images/dog.png"))))
 				.andExpect(MockMvcResultMatchers.view().name("walks/createOrUpdateWalkForm"));
 	}
 

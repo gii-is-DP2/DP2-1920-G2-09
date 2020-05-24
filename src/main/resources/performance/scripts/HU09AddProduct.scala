@@ -64,7 +64,7 @@ class HU09AddProduct extends Simulation {
 			.get("/products/new")
 			.headers(headers_0)
 			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
-		.pause(102)
+		.pause(9)
 		.exec(http("PRODUCT ADDED OK")
 			.post("/products/new")
 			.headers(headers_3)
@@ -76,7 +76,7 @@ class HU09AddProduct extends Simulation {
 			.formParam("available", "on")
 			.formParam("category", "ACCESORY")
 			.formParam("_csrf", "${stoken}"))
-		.pause(45)
+		.pause(8)
 	}
 	
 	object AddProductFailed{
@@ -94,12 +94,17 @@ class HU09AddProduct extends Simulation {
 			.formParam("urlImage", "")
 			.formParam("unitPrice", "0.0")
 			.formParam("_csrf", "${stoken}"))
-		.pause(25)
+		.pause(11)
 	}
 	
 	val scn_owner_1 = scenario("HU09AddProductOK").exec(Home.home,Login.login,AdminView.adminView,AddProductOK.addProductOK)
 	val scn_owner_2 = scenario("HU09AddProductFailed").exec(Home.home,Login.login,AdminView.adminView,AddProductFailed.addProductFailed)
 		
 
-	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn_owner_1.inject(rampUsers(1000) during (100 seconds)),scn_owner_2.inject(rampUsers(1000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
+     
 }

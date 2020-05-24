@@ -6,7 +6,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class HU22AddVet extends Simulation {
+class HU20BuyAllStock extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
@@ -29,13 +29,13 @@ class HU22AddVet extends Simulation {
 		"Proxy-Connection" -> "keep-alive",
 		"Upgrade-Insecure-Requests" -> "1")
 
+	
 	object Home {
 		val home = exec(http("HOME")
 			.get("/")
 			.headers(headers_0))
 		.pause(14)
 	}
-
 	object Login {
 		val login = exec(http("LOGIN")
 			.get("/login")
@@ -48,66 +48,50 @@ class HU22AddVet extends Simulation {
 		.exec(http("LOGGED")
 			.post("/login")
 			.headers(headers_3)
-			.formParam("username", "admin1")
-			.formParam("password", "4dm1n")
+			.formParam("username", "prueba")
+			.formParam("password", "prueba")
 			.formParam("_csrf", "${stoken}"))
 		.pause(12)
 	}
 	
-	object VetView{
-		val vetView = exec(http("VET VIEW")
-			.get("/vets")
+	object ListProducts {
+		val listProducts = exec(http("LIST PRODUCTS")
+			.get("/products/all")
 			.headers(headers_0))
-		.pause(20)
+		.pause(24)
 	}
 	
-	object AddVetOk{
-		val addVetOk = exec(http("SHOW VET")
-			.get("/vets/new")
+	object BuyAllStockProduct1 {
+		val buyAllStockProduct1 = exec(http("SHOW PRODUCT 1")
+			.get("/products/1")
 			.headers(headers_0)
 			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
-		.pause(44)
-		.exec(http("ADD VET OK")
-			.post("/vets/new")
+		.pause(12)
+		.exec(http("BUY ALL STOCK 1")
+			.post("/products/add-item/1")
 			.headers(headers_3)
-			.formParam("firstName", "Roberto")
-			.formParam("lastName", "Gonzalez")
-			.formParam("specialties", "2")
-			.formParam("_specialties", "1")
-			.formParam("user.username", "robertog")
-			.formParam("user.password", "123456")
-			.formParam("user.email", "robertog@gmail.com")
+			.formParam("quantity", "10")
 			.formParam("_csrf", "${stoken}"))
-		.pause(26)
+		.pause(9)
 	}
 	
-	object AddVetFailed {
-		val addVetFailed = exec(http("SHOW VET")
-			.get("/vets/new")
+	object BuyAllStockProduct2 {
+		val buyAllStockProduct2 = exec(http("SHOW PRODUCT 2")
+			.get("/products/2")
 			.headers(headers_0)
 			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
-		.pause(3)
-		.exec(http("ADD VET FAILED")
-			.post("/vets/new")
+		.pause(9)
+		.exec(http("BUY ALL STOCK 2")
+			.post("/products/add-item/2")
 			.headers(headers_3)
-			.formParam("firstName", "")
-			.formParam("lastName", "")
-			.formParam("_specialties", "1")
-			.formParam("user.username", "")
-			.formParam("user.password", "")
-			.formParam("user.email", "")
+			.formParam("quantity", "150")
 			.formParam("_csrf", "${stoken}"))
-		.pause(23)
+		.pause(8)
 	}
-		// LOGIN
-		// VET VIEW
-		// ADD VET OK
-		// ADD VET FAILED
-
-	val scn_owner_1 = scenario("HU22AddVetOK").exec(Home.home,Login.login,VetView.vetView,AddVetOk.addVetOk)
-	val scn_owner_2 = scenario("HU22AddVetFailed").exec(Home.home,Login.login,VetView.vetView,AddVetFailed.addVetFailed)
-		
-
+	
+	val scn_owner_1 = scenario("HU20BuyAllStock1").exec(Home.home,Login.login,ListProducts.listProducts,BuyAllStockProduct1.buyAllStockProduct1)
+	val scn_owner_2 = scenario("HU20BuyAllStock2").exec(Home.home,Login.login,ListProducts.listProducts,BuyAllStockProduct2.buyAllStockProduct2)
+	
 	setUp(scn_owner_1.inject(rampUsers(500) during (100 seconds)),scn_owner_2.inject(rampUsers(500) during (100 seconds))).protocols(httpProtocol).assertions(
         global.responseTime.max.lt(5000),    
         global.responseTime.mean.lt(1000),

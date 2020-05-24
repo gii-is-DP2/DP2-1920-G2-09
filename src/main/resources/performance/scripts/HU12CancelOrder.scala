@@ -92,5 +92,9 @@ class HU12CancelOrder extends Simulation {
 	val scn_owner_2 = scenario("HU12CancelOrderFromDetails").exec(Home.home,Login.login,AdminView.adminView,CancelOrderFromDetails.cancelOrderFromDetails)
 		
 
-	setUp(scn_owner_1.inject(atOnceUsers(1)),scn_owner_2.inject(atOnceUsers(1))).protocols(httpProtocol)
+	setUp(scn_owner_1.inject(rampUsers(1000) during (100 seconds)),scn_owner_2.inject(rampUsers(1000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),    
+        global.responseTime.mean.lt(1000),
+        global.successfulRequests.percent.gt(95)
+     )
 }
