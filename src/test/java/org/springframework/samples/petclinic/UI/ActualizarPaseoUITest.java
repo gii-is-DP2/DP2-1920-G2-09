@@ -1,11 +1,15 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ActualizarPaseoUITest {
+class ActualizarPaseoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -27,62 +31,63 @@ public class ActualizarPaseoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testActualizarPaseoUI() throws Exception {
-		driver.get("http://localhost:" + port);
+	void testActualizarPaseoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
 
-		loginAdmin();
+		this.loginAdmin();
 
-		completeForm();
+		this.completeForm();
 
-		assertElements();
+		this.assertElements();
 
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
 
 	public void loginAdmin() throws Exception {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("admin1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("4dm1n");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("ADMIN1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("admin1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("4dm1n");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("ADMIN1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 
 	}
 
 	public void completeForm() throws Exception {
-		driver.findElement(By.id("WalkId")).click();
-		driver.findElement(By.xpath("//img[@id='walkMap']")).click();
-		driver.findElement(By.xpath("//a[contains(text(),'Edit Walk')]")).click();
+		this.driver.findElement(By.id("WalkId")).click();
+		this.driver.findElement(By.xpath("//img[@id='walkMap']")).click();
+		this.driver.findElement(By.xpath("//a[contains(text(),'Edit Walk')]")).click();
 
-		driver.findElement(By.name("name")).clear();
-		driver.findElement(By.name("name")).sendKeys("Prueba UITest");
-		driver.findElement(By.name("description")).clear();
-		driver.findElement(By.name("description"))
+		this.driver.findElement(By.name("name")).clear();
+		this.driver.findElement(By.name("name")).sendKeys("Prueba UITest");
+		this.driver.findElement(By.name("description")).clear();
+		this.driver.findElement(By.name("description"))
 				.sendKeys("Esto es una prueba para los UITest, en concreto el caso positivo");
-		driver.findElement(By.name("map")).clear();
-		driver.findElement(By.name("map")).sendKeys("https://images.app.goo.gl/y6xogjo3eKaDjwjs8");
-		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		this.driver.findElement(By.name("map")).clear();
+		this.driver.findElement(By.name("map")).sendKeys("https://images.app.goo.gl/y6xogjo3eKaDjwjs8");
+		this.driver.findElement(By.xpath("//button[@type='submit']")).click();
 	}
 
 	public void assertElements() throws Exception {
-		assertEquals("https://images.app.goo.gl/y6xogjo3eKaDjwjs8",
-				driver.findElement(By.xpath("(//img[@id='walkMap'])")).getAttribute("src"));
-		assertEquals("Prueba UITest", driver.findElement((By.xpath("(//td[@id='walkName'])"))).getText());
-		assertEquals("Esto es una prueba para los UITest, en concreto el caso positivo",
-				driver.findElement(By.xpath("(//td[@id='walkDescription'])")).getText());
+		Assert.assertEquals("https://images.app.goo.gl/y6xogjo3eKaDjwjs8",
+				this.driver.findElement(By.xpath("(//img[@id='walkMap'])")).getAttribute("src"));
+		Assert.assertEquals("Prueba UITest", this.driver.findElement(By.xpath("(//td[@id='walkName'])")).getText());
+		Assert.assertEquals("Esto es una prueba para los UITest, en concreto el caso positivo",
+				this.driver.findElement(By.xpath("(//td[@id='walkDescription'])")).getText());
 	}
 }

@@ -4,15 +4,13 @@ package org.springframework.samples.petclinic.model;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.samples.petclinic.web.ProductValidator;
 import org.springframework.samples.petclinic.web.WalkValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class WalkValidatorTests {
+class WalkValidatorTests {
 
 	private Walk walk;
-
 
 	@BeforeEach
 	void setInitialWalk() {
@@ -23,7 +21,7 @@ public class WalkValidatorTests {
 		this.walk = w;
 	}
 
-	//NoErrors
+	// NoErrors
 	@Test
 	void shouldValidateWalkWithoutErrors() {
 		WalkValidator wv = new WalkValidator();
@@ -32,34 +30,37 @@ public class WalkValidatorTests {
 		Assertions.assertThat(errors.getErrorCount()).isEqualTo(0);
 	}
 
-	//Name
+	// Name
 	@Test
 	void shouldNotValidateWhenNameEmpty() {
 		this.walk.setName("");
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateNameIfLessThanLimitCharacters() {
 		this.walk.setName("3j");
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
 	}
 
 	@Test
 	void shouldNotValidateNameIfLongerThanLimitCharacters() {
 		this.walk.setName(
 				"ESTA DESCRIPCIÓN ES DEMASIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADO"
-				+ "LARGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+						+ "LARGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("The length of the name must be greater than 3 and no less than 50 characters");
 	}
 
 	// Description
@@ -69,30 +70,33 @@ public class WalkValidatorTests {
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
+		Assertions.assertThat(errors.getFieldError("description").getCode())
+				.isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateDescriptionIfLessThanLimitCharacters() {
 		this.walk.setDescription("3j");
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
+		Assertions.assertThat(errors.getFieldError("description").getCode())
+				.isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
 	}
 
 	@Test
 	void shouldNotValidateDescriptionIfLongerThanLimitCharacters() {
 		this.walk.setDescription(
 				"ESTA DESCRIPCIÓN ES DEMASIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADO"
-				+ "LARGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+						+ "LARGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 		WalkValidator wv = new WalkValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walk, "");
 		wv.validate(this.walk, errors);
-		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
+		Assertions.assertThat(errors.getFieldError("description").getCode())
+				.isEqualTo("The length of the description must be greater than 3 and no less than 300 characters");
 	}
-	
-	//Map
+
+	// Map
 	@Test
 	void shouldNotValidateWhenMapEmpty() {
 		this.walk.setMap("");
@@ -101,7 +105,7 @@ public class WalkValidatorTests {
 		wv.validate(this.walk, errors);
 		Assertions.assertThat(errors.getFieldError("map").getCode()).isEqualTo("The URL is not valid");
 	}
-	
+
 	@Test
 	void shouldNotValidateMapIfOffFormat() {
 		this.walk.setMap("offFormat");

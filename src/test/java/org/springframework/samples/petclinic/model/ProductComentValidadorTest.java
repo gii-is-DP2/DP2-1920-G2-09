@@ -10,10 +10,9 @@ import org.springframework.samples.petclinic.web.ProductComentValidador;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class ProductComentValidadorTest {
+class ProductComentValidadorTest {
 
 	private ProductComent productComent;
-
 
 	@BeforeEach
 	void setInitialProductComent() {
@@ -55,7 +54,8 @@ public class ProductComentValidadorTest {
 		ProductComentValidador pcv = new ProductComentValidador();
 		Errors errors = new BeanPropertyBindingResult(this.productComent, "");
 		pcv.validate(this.productComent, errors);
-		Assertions.assertThat(errors.getFieldError("rating").getCode()).isEqualTo("You must fill either the title and description or the rating");
+		Assertions.assertThat(errors.getFieldError("rating").getCode())
+				.isEqualTo("You must fill either the title and description or the rating");
 	}
 
 	@Test

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @DisplayName("Walks Service Tests")
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class WalkServiceTests {
+class WalkServiceTests {
 
 	@Autowired
 	protected WalkService walkService;

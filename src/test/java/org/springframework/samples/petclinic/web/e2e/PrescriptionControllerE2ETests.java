@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class PrescriptionControllerE2ETests {
+class PrescriptionControllerE2ETests {
 
 	private static final int TEST_PRESCRIPTION_ID = 1;
 

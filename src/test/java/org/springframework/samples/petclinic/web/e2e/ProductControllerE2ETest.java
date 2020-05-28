@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class ProductControllerE2ETest {
+class ProductControllerE2ETest {
 
 	private static final int TEST_PRODUCT_ID = 1;
 	private static final int TEST_PRODUCT_ID_2 = 2;

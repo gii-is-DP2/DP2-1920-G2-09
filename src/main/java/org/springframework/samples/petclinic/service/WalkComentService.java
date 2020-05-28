@@ -4,7 +4,6 @@ package org.springframework.samples.petclinic.service;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.User;
 import org.springframework.samples.petclinic.model.WalkComent;
 import org.springframework.samples.petclinic.repository.WalkComentRepository;
@@ -27,7 +26,7 @@ public class WalkComentService {
 	}
 
 	@Transactional
-	public WalkComent findWalkComentsById(final Integer walkComentId) throws DataAccessException {
+	public WalkComent findWalkComentsById(final Integer walkComentId) {
 		return this.walkComentRepository.findWalkComentById(walkComentId);
 	}
 
@@ -50,9 +49,9 @@ public class WalkComentService {
 		}
 
 	}
-	
+
 	@Transactional
-	public void deleteWalkComent(final int comentId){
+	public void deleteWalkComent(final int comentId) {
 		this.walkComentRepository.deleteComentById(comentId);
 	}
 

@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.service;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AuthoritiesServiceTest {
+class AuthoritiesServiceTest {
 
 	@Autowired
 	private AuthoritiesService authoritiesService;
@@ -35,7 +36,7 @@ public class AuthoritiesServiceTest {
 		this.authoritiesService.saveAuthorities(au);
 		List<Authorities> newAllAuth = this.authoritiesService.getAllAuthorities();
 		Integer after = newAllAuth.size();
-		Assert.assertTrue(after == before + 1);
+		Assertions.assertEquals(after, before + 1);
 	}
 
 	@Test
@@ -45,7 +46,7 @@ public class AuthoritiesServiceTest {
 		this.authoritiesService.saveAuthorities("userNuevo", "NuevaAuth");
 		List<Authorities> newAllAuth = this.authoritiesService.getAllAuthorities();
 		Integer after = newAllAuth.size();
-		Assert.assertTrue(after == before + 1);
+		Assertions.assertEquals(after, before + 1);
 	}
 // PRUEBAS PARAMETRIZADAS
 
@@ -60,7 +61,7 @@ public class AuthoritiesServiceTest {
 		this.authoritiesService.saveAuthorities(au);
 		List<Authorities> newAllAuth = this.authoritiesService.getAllAuthorities();
 		Integer after = newAllAuth.size();
-		Assert.assertTrue(after == before + 1);
+		Assertions.assertEquals(after, before + 1);
 	}
 
 }

@@ -1,11 +1,16 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MostrarProductoUITest {
+class MostrarProductoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -27,54 +32,55 @@ public class MostrarProductoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
+		this.driver = new FirefoxDriver();
 
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testMostrarProductoUI() throws Exception {
-		driver.get("http://localhost:" + port);
-		
-		loggingOwner();
-		
-		driver.findElement(By.id("ProductId")).click();
-		
-		assertElements();
+	void testMostrarProductoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
+
+		this.loggingOwner();
+
+		this.driver.findElement(By.id("ProductId")).click();
+
+		this.assertElements();
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
 
-	private boolean isElementPresent(By by) {
+	private boolean isElementPresent(final By by) {
 		try {
-			driver.findElement(by);
+			this.driver.findElement(by);
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
 		}
 	}
-	
+
 	public void loggingOwner() {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("owner1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("0wn3r");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("OWNER1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("owner1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("0wn3r");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("OWNER1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 	}
-	
+
 	public void assertElements() {
-		assertTrue(isElementPresent(By.xpath("//div[@id='infoProducto']/div")));
-		driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
-		assertTrue(isElementPresent(By.id("NombreProducto")));
+		Assert.assertTrue(this.isElementPresent(By.xpath("//div[@id='infoProducto']/div")));
+		this.driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
+		Assert.assertTrue(this.isElementPresent(By.id("NombreProducto")));
 	}
 }

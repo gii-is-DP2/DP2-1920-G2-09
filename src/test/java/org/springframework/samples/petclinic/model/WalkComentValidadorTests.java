@@ -10,10 +10,9 @@ import org.springframework.samples.petclinic.web.WalkComentValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class WalkComentValidadorTests {
+class WalkComentValidadorTests {
 
 	private WalkComent walkComent;
-
 
 	@BeforeEach
 	void setInitialWalkComent() {
@@ -52,7 +51,8 @@ public class WalkComentValidadorTests {
 		WalkComentValidator wcv = new WalkComentValidator();
 		Errors errors = new BeanPropertyBindingResult(this.walkComent, "");
 		wcv.validate(this.walkComent, errors);
-		Assertions.assertThat(errors.getFieldError("rating").getCode()).isEqualTo("You must fill either the title and description or the rating");
+		Assertions.assertThat(errors.getFieldError("rating").getCode())
+				.isEqualTo("You must fill either the title and description or the rating");
 	}
 
 	@Test
