@@ -34,16 +34,16 @@ public class ProductControllerE2ETest {
 				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
 				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
 	}
-
-	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
-	@Test
-	void testFindFilteredProducts() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/products/filter"))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.model().attributeExists("product"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
-				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
-	}
+//
+//	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
+//	@Test
+//	void testFindFilteredProducts() throws Exception {
+//		this.mockMvc.perform(MockMvcRequestBuilders.get("/products/filter"))
+//				.andExpect(MockMvcResultMatchers.status().isOk())
+//				.andExpect(MockMvcResultMatchers.model().attributeExists("product"))
+//				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
+//				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
+//	}
 
 	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
 	@Test
