@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class RegistroUsuarioUITest {
+ class RegistroUsuarioUITest {
 
 	@LocalServerPort
 	private int port;
@@ -33,7 +33,7 @@ public class RegistroUsuarioUITest {
 
 	@Disabled
 	@Test
-	public void testRegistroUsuarioUI() throws Exception {
+	 void testRegistroUsuarioUI() throws Exception {
 		driver.get("http://localhost:" + port);
 		
 		completeForm();

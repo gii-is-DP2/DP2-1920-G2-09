@@ -1,7 +1,6 @@
 package org.springframework.samples.petclinic.web;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.validation.Valid;
 
@@ -28,6 +27,9 @@ public class WalkController {
 	private final WalkService walkService;
 	private final WalkComentService walkComentService;
 
+	private String WALK_COMMENT = "walkComent";
+	private String CREATE_OR_UPDATE_PATH = "walks/createOrUpdateWalkForm";
+
 	@Autowired
 	public WalkController(final WalkService walkService, final WalkComentService walkComentService) {
 		this.walkService = walkService;
@@ -52,10 +54,10 @@ public class WalkController {
 	public String showWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
 		WalkComent wc = new WalkComent();
 		Collection<WalkComent> coments = this.walkComentService.findAllComentsOfTheWalk(walkId);
-		if (!model.containsAttribute("OKmessage") && model.containsAttribute("walkComent")) {
-			model.put("walkComent", model.get("walkComent"));
+		if (!model.containsAttribute("OKmessage") && model.containsAttribute(this.WALK_COMMENT)) {
+			model.put(this.WALK_COMMENT, model.get(this.WALK_COMMENT));
 		} else {
-			model.put("walkComent", wc);
+			model.put(this.WALK_COMMENT, wc);
 		}
 		Double rating = this.walkComentService.getAverageRatingOfWalk(walkId);
 		model.put("rating", rating);
@@ -68,14 +70,14 @@ public class WalkController {
 	public String initCreationForm(final ModelMap model) {
 		Walk walk = new Walk();
 		model.put("walk", walk);
-		return "walks/createOrUpdateWalkForm";
+		return this.CREATE_OR_UPDATE_PATH;
 	}
 
 	@PostMapping(value = "/new")
 	public String processCreationForm(@Valid final Walk walk, final BindingResult result, final ModelMap model) {
 		if (result.hasErrors()) {
 			model.put("walk", walk);
-			return "walks/createOrUpdateWalkForm";
+			return this.CREATE_OR_UPDATE_PATH;
 		} else {
 			this.walkService.saveWalk(walk);
 			return this.findAllWalks(model);
@@ -86,7 +88,7 @@ public class WalkController {
 	public String initUpdateWalkForm(@PathVariable("walkId") final int walkId, final ModelMap model) {
 		Walk walk = this.walkService.findWalkById(walkId);
 		model.put("walk", walk);
-		return "walks/createOrUpdateWalkForm";
+		return this.CREATE_OR_UPDATE_PATH;
 	}
 
 	@PostMapping(value = "/{walkId}/edit")
@@ -94,7 +96,7 @@ public class WalkController {
 			@PathVariable("walkId") final int walkId, final ModelMap model) {
 		if (result.hasErrors()) {
 			model.put("walk", walk);
-			return "walks/createOrUpdateWalkForm";
+			return this.CREATE_OR_UPDATE_PATH;
 		} else {
 			Walk walkToUpdate = this.walkService.findWalkById(walkId);
 			BeanUtils.copyProperties(walk, walkToUpdate, "id");
@@ -106,18 +108,17 @@ public class WalkController {
 	@GetMapping(value = "/{walkId}/delete")
 	public String initDeleteWalk(@PathVariable("walkId") final int walkId, final ModelMap model) {
 		Collection<WalkComent> walkComent = this.walkComentService.findAllComentsOfTheWalk(walkId);
-		
-		
-		if(walkComent.isEmpty()) {
+
+		if (walkComent.isEmpty()) {
 			this.walkService.deleteWalk(walkId);
-			
-		}else {
-			for(WalkComent w: walkComent) {
+
+		} else {
+			for (WalkComent w : walkComent) {
 				this.walkComentService.deleteWalkComent(w.getId());
 			}
 			this.walkService.deleteWalk(walkId);
 		}
-		
+
 		return this.findAllWalks(model);
 	}
 

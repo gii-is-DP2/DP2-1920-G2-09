@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Authorities;
 import org.springframework.samples.petclinic.model.Specialty;
 import org.springframework.samples.petclinic.model.Vet;
@@ -39,63 +38,62 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VetService {
 
-    private SpringDataVetRepository vetRepository;
+	private SpringDataVetRepository vetRepository;
 
-    private SpringDataSpecialtyRepository specialtyRepository;
+	private SpringDataSpecialtyRepository specialtyRepository;
 
-    private AuthoritiesRepository authoritiesRepository;
+	private AuthoritiesRepository authoritiesRepository;
 
-    @Autowired
-    public VetService(final SpringDataVetRepository vetRepository,
-	    final SpringDataSpecialtyRepository specialtyRepository,
-	    final AuthoritiesRepository authoritiesRepository) {
-	this.vetRepository = vetRepository;
-	this.specialtyRepository = specialtyRepository;
-	this.authoritiesRepository = authoritiesRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public Iterable<Vet> findVets() throws DataAccessException {
-	return this.vetRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Vet findVetById(final int id) throws DataAccessException {
-	return this.vetRepository.findById(id).get();
-    }
-
-    @Transactional(readOnly = true)
-    public Set<Specialty> findSpecialtiesById(final Integer[] ids) {
-	Set<Specialty> res = new HashSet<>();
-	for (Integer id : ids) {
-	    res.add(this.specialtyRepository.findOne(id));
+	@Autowired
+	public VetService(final SpringDataVetRepository vetRepository,
+			final SpringDataSpecialtyRepository specialtyRepository,
+			final AuthoritiesRepository authoritiesRepository) {
+		this.vetRepository = vetRepository;
+		this.specialtyRepository = specialtyRepository;
+		this.authoritiesRepository = authoritiesRepository;
 	}
-	return res;
-    }
 
-    @Transactional
-    public Iterable<Specialty> findAllSpecialties() {
-	Iterable<Specialty> iSp = this.specialtyRepository.findAll();
-	return iSp;
-    }
-
-    @Transactional
-    public void saveVet(final Vet vet) throws DataAccessException, DuplicatedUsernameException {
-	Integer countUsersWithSameUsername = this.vetRepository
-		.countOwnersWithSameUserName(vet.getUser().getUsername());
-	if (countUsersWithSameUsername > 0) {
-	    throw new DuplicatedUsernameException();
+	@Transactional(readOnly = true)
+	public Iterable<Vet> findVets() {
+		return this.vetRepository.findAll();
 	}
-	Authorities author = new Authorities();
-	author.setAuthority("veterinarian");
-	author.setUsername(vet.getUser().getUsername());
-	this.authoritiesRepository.save(author);
-	this.vetRepository.save(vet);
-    }
 
-    @Transactional(readOnly = true)
-    public Vet findVetbyUser(final String User) throws DataAccessException {
-	return this.vetRepository.findVetbyUser(User);
-    }
+	@Transactional(readOnly = true)
+	public Vet findVetById(final int id) {
+		return this.vetRepository.findById(id).get();
+	}
+
+	@Transactional(readOnly = true)
+	public Set<Specialty> findSpecialtiesById(final Integer[] ids) {
+		Set<Specialty> res = new HashSet<>();
+		for (Integer id : ids) {
+			res.add(this.specialtyRepository.findOne(id));
+		}
+		return res;
+	}
+
+	@Transactional
+	public Iterable<Specialty> findAllSpecialties() {
+		return this.specialtyRepository.findAll();
+	}
+
+	@Transactional
+	public void saveVet(final Vet vet) throws DuplicatedUsernameException {
+		Integer countUsersWithSameUsername = this.vetRepository
+				.countOwnersWithSameUserName(vet.getUser().getUsername());
+		if (countUsersWithSameUsername > 0) {
+			throw new DuplicatedUsernameException();
+		}
+		Authorities author = new Authorities();
+		author.setAuthority("veterinarian");
+		author.setUsername(vet.getUser().getUsername());
+		this.authoritiesRepository.save(author);
+		this.vetRepository.save(vet);
+	}
+
+	@Transactional(readOnly = true)
+	public Vet findVetbyUser(final String User) {
+		return this.vetRepository.findVetbyUser(User);
+	}
 
 }

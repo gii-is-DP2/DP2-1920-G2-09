@@ -9,13 +9,12 @@ import org.springframework.samples.petclinic.web.PrescriptionValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class ValidatorPrescriptionTests {
-	
+class ValidatorPrescriptionTests {
+
 	private Prescription prescription;
 	private Pet pet;
 	private Vet vet;
-	
-	
+
 	@BeforeEach
 	void setInitialPrescription() {
 		Prescription p = new Prescription();
@@ -29,72 +28,77 @@ public class ValidatorPrescriptionTests {
 		p.setVet(vet);
 		this.prescription = p;
 	}
-	
-	
+
 	@Test
 	void shouldValidatePrescriptionWithoutErrors() {
-		
+
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
 		Assertions.assertThat(errors.getErrorCount()).isEqualTo(0);
 	}
-	
+
 	@Test
 	void shouldNotValidateWhenTitleEmpty() {
 		this.prescription.setName("");
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("required and between 3 and 20 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("required and between 3 and 20 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateTitleIsLessThan3Characters() {
 		this.prescription.setName("ja");
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("required and between 3 and 20 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("required and between 3 and 20 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateTitleIsLongerThan20Characters() {
 		this.prescription.setName("hkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkñokjkkkkkkkkkkkkkkkkkkkkkkkkkk");
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("name").getCode()).isEqualTo("required and between 3 and 20 characters");
+		Assertions.assertThat(errors.getFieldError("name").getCode())
+				.isEqualTo("required and between 3 and 20 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateDescriptionIsLessThan10Characters() {
 		this.prescription.setDescription("menos10");
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("required and between 10 and 232 characters");
+		Assertions.assertThat(errors.getFieldError("description").getCode())
+				.isEqualTo("required and between 10 and 232 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateDescriptionIsMoreThan232Characters() {
-		this.prescription.setDescription("maddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+		this.prescription.setDescription(
+				"maddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("description").getCode()).isEqualTo("required and between 10 and 232 characters");
+		Assertions.assertThat(errors.getFieldError("description").getCode())
+				.isEqualTo("required and between 10 and 232 characters");
 	}
-	
+
 	@Test
 	void shouldNotValidateStartDayBeforeToday() {
 		this.prescription.setDateInicio(LocalDate.of(2010, 10, 10));
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("dateInicio").getCode()).isEqualTo("The Start Date can not be before today");
+		Assertions.assertThat(errors.getFieldError("dateInicio").getCode())
+				.isEqualTo("The Start Date can not be before today");
 	}
-	
-	
+
 	@Test
 	void shouldNotValidateEndDayBeforeStartDay() {
 		this.prescription.setDateFinal(LocalDate.of(2000, 10, 10));
@@ -102,11 +106,8 @@ public class ValidatorPrescriptionTests {
 		PrescriptionValidator pv = new PrescriptionValidator();
 		Errors errors = new BeanPropertyBindingResult(this.prescription, "");
 		pv.validate(this.prescription, errors);
-		Assertions.assertThat(errors.getFieldError("dateFinal").getCode()).isEqualTo("The End Date can not be before Start Date");
+		Assertions.assertThat(errors.getFieldError("dateFinal").getCode())
+				.isEqualTo("The End Date can not be before Start Date");
 	}
-	
-	
-	
-	
 
 }

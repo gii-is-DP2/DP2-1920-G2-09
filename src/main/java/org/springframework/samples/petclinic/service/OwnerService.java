@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.service;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.repository.OwnerRepository;
 import org.springframework.samples.petclinic.repository.springdatajpa.OwnerCrudRepository;
@@ -36,65 +35,65 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OwnerService {
 
-    private OwnerRepository ownerRepository;
-    private OwnerCrudRepository ownerCrudRepository;
+	private OwnerRepository ownerRepository;
+	private OwnerCrudRepository ownerCrudRepository;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    private AuthoritiesService authoritiesService;
+	@Autowired
+	private AuthoritiesService authoritiesService;
 
-    @Autowired
-    public OwnerService(final OwnerRepository ownerRepository, final OwnerCrudRepository ownerCrudRepository) {
-	this.ownerRepository = ownerRepository;
-	this.ownerCrudRepository = ownerCrudRepository;
-    }
-
-    @Transactional(readOnly = true)
-    public Owner findOwnerById(final int id) throws DataAccessException {
-	return this.ownerRepository.findById(id);
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<Owner> findOwnerByLastName(final String lastName) throws DataAccessException {
-	return this.ownerRepository.findByLastName(lastName);
-    }
-
-    @Transactional(rollbackFor = DuplicatedPetNameException.class)
-    public void saveOwner(final Owner owner) throws DuplicatedUsernameException {
-	Integer countUsersWithSameUsername = this.ownerCrudRepository
-		.countOwnersWithSameUserName(owner.getUser().getUsername());
-	// CASO DE CREAR
-
-	if (owner.getId() == null && countUsersWithSameUsername > 0) {
-	    throw new DuplicatedUsernameException();
-	    // CASO EDITAR
-	} else if (owner.getId() != null) {
-	    Owner old = this.ownerCrudRepository.findById(owner.getId()).get();
-	    if (!owner.getUser().getUsername().equals(old.getUser().getUsername()) && countUsersWithSameUsername > 0) {
-		throw new DuplicatedUsernameException();
-	    } else {
-		this.ownerRepository.save(owner);
-		// creating user
-		this.userService.saveUser(owner.getUser());
-		// creating authorities
-		this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
-	    }
-	} else {
-	    // creating owner
-	    this.ownerRepository.save(owner);
-	    // creating user
-	    this.userService.saveUser(owner.getUser());
-	    // creating authorities
-	    this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+	@Autowired
+	public OwnerService(final OwnerRepository ownerRepository, final OwnerCrudRepository ownerCrudRepository) {
+		this.ownerRepository = ownerRepository;
+		this.ownerCrudRepository = ownerCrudRepository;
 	}
 
-    }
+	@Transactional(readOnly = true)
+	public Owner findOwnerById(final int id) {
+		return this.ownerRepository.findById(id);
+	}
 
-    @Transactional
-    public Owner findOwnerByUsername(final String username) {
-	return this.ownerCrudRepository.findOwnerByUsername(username);
-    }
+	@Transactional(readOnly = true)
+	public Collection<Owner> findOwnerByLastName(final String lastName) {
+		return this.ownerRepository.findByLastName(lastName);
+	}
+
+	@Transactional(rollbackFor = DuplicatedPetNameException.class)
+	public void saveOwner(final Owner owner) throws DuplicatedUsernameException {
+		Integer countUsersWithSameUsername = this.ownerCrudRepository
+				.countOwnersWithSameUserName(owner.getUser().getUsername());
+		// CASO DE CREAR
+
+		if (owner.getId() == null && countUsersWithSameUsername > 0) {
+			throw new DuplicatedUsernameException();
+			// CASO EDITAR
+		} else if (owner.getId() != null) {
+			Owner old = this.ownerCrudRepository.findById(owner.getId()).get();
+			if (!owner.getUser().getUsername().equals(old.getUser().getUsername()) && countUsersWithSameUsername > 0) {
+				throw new DuplicatedUsernameException();
+			} else {
+				this.ownerRepository.save(owner);
+				// creating user
+				this.userService.saveUser(owner.getUser());
+				// creating authorities
+				this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+			}
+		} else {
+			// creating owner
+			this.ownerRepository.save(owner);
+			// creating user
+			this.userService.saveUser(owner.getUser());
+			// creating authorities
+			this.authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
+		}
+
+	}
+
+	@Transactional
+	public Owner findOwnerByUsername(final String username) {
+		return this.ownerCrudRepository.findOwnerByUsername(username);
+	}
 
 }

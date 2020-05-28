@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class ShoppingCartControllerE2ETests {
+class ShoppingCartControllerE2ETests {
 
 	private static final int TEST_SHOPPING_CART_ID = 1;
 

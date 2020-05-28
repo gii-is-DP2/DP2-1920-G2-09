@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ItemServiceTests {
+class ItemServiceTests {
 
 	@Autowired
 	protected ItemService itemService;

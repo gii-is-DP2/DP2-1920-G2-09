@@ -1,11 +1,15 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AñadirACarritoNegativoUITest {
+class AñadirACarritoNegativoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -28,59 +32,60 @@ public class AñadirACarritoNegativoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
+		this.driver = new FirefoxDriver();
 
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testAñadirACarritoNegativoUI() throws Exception {
+	void testAñadirACarritoNegativoUI() throws Exception {
 
-		driver.get("http://localhost:" + port);
+		this.driver.get("http://localhost:" + this.port);
 
-		loginOwner();
+		this.loginOwner();
 
-		completeForm();
+		this.completeForm();
 
-		assertElements();
+		this.assertElements();
 
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
 
 	public void loginOwner() throws Exception {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("owner1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("0wn3r");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("OWNER1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
-		driver.findElement(By.id("ProductId")).click();
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("owner1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("0wn3r");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("OWNER1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.id("ProductId")).click();
 	}
 
 	public void completeForm() throws Exception {
 
-		driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
+		this.driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
 
-		stock = new Integer(driver.findElement(By.id("stockProducto")).getText());
+		this.stock = new Integer(this.driver.findElement(By.id("stockProducto")).getText());
 
-		driver.findElement(By.xpath("//input[@name='quantity']")).clear();
-		driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys("210");
-		driver.findElement(By.xpath("//form[@id='add-product-to-shoppingCart']/button")).click();
+		this.driver.findElement(By.xpath("//input[@name='quantity']")).clear();
+		this.driver.findElement(By.xpath("//input[@name='quantity']")).sendKeys("210");
+		this.driver.findElement(By.xpath("//form[@id='add-product-to-shoppingCart']/button")).click();
 	}
 
 	public void assertElements() throws Exception {
-		assertEquals(String.valueOf(stock), driver.findElement(By.id("stockProducto")).getText());
-		assertEquals("The quantity selected is greather than the stock",
-				driver.findElement(By.xpath("//body/div/div/div[2]")).getText());
+		Assert.assertEquals(String.valueOf(this.stock), this.driver.findElement(By.id("stockProducto")).getText());
+		Assert.assertEquals("The quantity selected is greather than the stock",
+				this.driver.findElement(By.xpath("//body/div/div/div[2]")).getText());
 	}
 }

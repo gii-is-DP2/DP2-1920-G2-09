@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @DisplayName("Products Service Tests")
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class PrescriptionServiceTests {
+class PrescriptionServiceTests {
 
 	@Autowired
 	protected PrescriptionService prescriptionService;

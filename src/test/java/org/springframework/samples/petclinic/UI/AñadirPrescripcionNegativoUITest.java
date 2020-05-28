@@ -1,11 +1,15 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AñadirPrescripcionNegativoUITest {
+class AñadirPrescripcionNegativoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -27,48 +31,49 @@ public class AñadirPrescripcionNegativoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testAñadirPrescripcionNegativoUI() throws Exception {
-		driver.get("http://localhost:" + port);
+	void testAñadirPrescripcionNegativoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
 
-		loginVet();
+		this.loginVet();
 
-		completeForm();
+		this.completeForm();
 
-		assertElements();
+		this.assertElements();
 
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
 
 	public void loginVet() throws Exception {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("vet1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("v3t");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("VET1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("vet1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("v3t");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("VET1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 	}
 
 	public void completeForm() throws Exception {
-		driver.findElement(By.id("OwnersId")).click();
-		driver.findElement(By.id("botonBusqueda")).click();
-		driver.findElement(By.xpath("//a[contains(text(),'Betty Davis')]")).click();
+		this.driver.findElement(By.id("OwnersId")).click();
+		this.driver.findElement(By.id("botonBusqueda")).click();
+		this.driver.findElement(By.xpath("//a[contains(text(),'Betty Davis')]")).click();
 	}
 
 	public void assertElements() throws Exception {
-		assertTrue(driver.findElement(By.id("PetTable")).findElements(By.tagName("tr")).isEmpty());
+		Assert.assertTrue(this.driver.findElement(By.id("PetTable")).findElements(By.tagName("tr")).isEmpty());
 	}
 }

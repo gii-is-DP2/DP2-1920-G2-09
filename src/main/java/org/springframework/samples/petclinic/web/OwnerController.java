@@ -27,7 +27,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Prescription;
 import org.springframework.samples.petclinic.service.AuthoritiesService;
@@ -65,6 +64,8 @@ public class OwnerController {
 
 	private final OwnerService ownerService;
 	private final PrescriptionService prescriptionService;
+	private final String OWNER = "owner";
+	private final String PAYMENT_DETAILS_PATH = "/owners/paymentDetails";
 
 	@Autowired
 	public OwnerController(final OwnerService ownerService, final UserService userService,
@@ -76,8 +77,7 @@ public class OwnerController {
 	@ModelAttribute("months")
 	public List<Integer> setMonths() {
 		Integer[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-		List<Integer> ls = Arrays.asList(a);
-		return ls;
+		return Arrays.asList(a);
 	}
 
 	@ModelAttribute("years")
@@ -97,21 +97,16 @@ public class OwnerController {
 		dataBinder.setDisallowedFields("id");
 	}
 
-//    @InitBinder("owner")
-//    public void initPaymentDetailsBinder(final WebDataBinder dataBinder) {
-//	dataBinder.setValidator(new PaymentDetailsValidator());
-//    }
-
 	@GetMapping(value = "/owners/new")
 	public String initCreationForm(final Map<String, Object> model) {
 		Owner owner = new Owner();
-		model.put("owner", owner);
+		model.put(this.OWNER, owner);
 		return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 	}
 
 	@PostMapping(value = "/owners/new")
 	public String processCreationForm(@Valid final Owner owner, final BindingResult result)
-			throws DataAccessException, DuplicatedUsernameException {
+			throws DuplicatedUsernameException {
 		if (result.hasErrors()) {
 			return OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
 		} else {
@@ -129,7 +124,7 @@ public class OwnerController {
 
 	@GetMapping(value = "/owners/find")
 	public String initFindForm(final Map<String, Object> model) {
-		model.put("owner", new Owner());
+		model.put(this.OWNER, new Owner());
 		return "owners/findOwners";
 	}
 
@@ -193,12 +188,12 @@ public class OwnerController {
 		}
 		Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
 		model.addAttribute(owner);
-		return "/owners/paymentDetails";
+		return this.PAYMENT_DETAILS_PATH;
 	}
 
 	@PostMapping(value = "/owners/payment-details")
 	public String processUpdateForm(final ModelMap model, @Valid final Owner own, final BindingResult result)
-			throws DataAccessException, DuplicatedUsernameException {
+			throws DuplicatedUsernameException {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = auth.getPrincipal();
@@ -210,17 +205,17 @@ public class OwnerController {
 		BeanUtils.copyProperties(own, owner, "id", "firstName", "lastName", "address", "city", "telephone", "pets",
 				"user");
 		PaymentDetailsValidator p = new PaymentDetailsValidator();
-		Errors errors = new BeanPropertyBindingResult(owner, "owner");
+		Errors errors = new BeanPropertyBindingResult(owner, this.OWNER);
 		p.validate(owner, errors);
 		if (errors.hasErrors()) {
 			result.addAllErrors(errors);
-			model.put("owner", own);
-			return "/owners/paymentDetails";
+			model.put(this.OWNER, own);
+			return this.PAYMENT_DETAILS_PATH;
 		} else {
 			this.ownerService.saveOwner(owner);
 			model.addAttribute("OKmessage", "Your payment details have been saved");
 
-			return "/owners/paymentDetails";
+			return this.PAYMENT_DETAILS_PATH;
 		}
 	}
 
@@ -235,7 +230,7 @@ public class OwnerController {
 		Owner owner = this.ownerService.findOwnerByUsername(us.getUsername());
 		Collection<Prescription> pcs = this.prescriptionService.findPrescriptionsByOwnerId(owner.getId());
 		model.addAttribute("prescriptions", pcs);
-		model.addAttribute("owner", owner);
+		model.addAttribute(this.OWNER, owner);
 		return "/owners/ownerProfile";
 	}
 

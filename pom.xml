@@ -12,7 +12,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.4.RELEASE</version>
 	</parent>
-	<name>petclinic</name>
+	<name>petclinic-g2-09</name>
 
 	<properties>
 
@@ -32,6 +32,10 @@
 		<spring-format.version>0.0.19</spring-format.version>
 		<selenium.version>3.141.59</selenium.version>
 		<rest-assured.version>3.0.2</rest-assured.version>
+		
+		<sonar.projectKey>DP2-1920-G2-09_DP2-1920-G2-09</sonar.projectKey>
+  		<sonar.organization>dp2-1920-g2-09</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		
 
 	</properties>
@@ -285,6 +289,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				
 				<configuration>
+				<skipTests>true</skipTests>
 					<excludes>
 						<exclude>**/*UITest.java</exclude>
 						<exclude>**/*APITest.java</exclude>

@@ -1,11 +1,15 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,14 +17,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class EliminaComentarioPaseoUITest {
+class EliminaComentarioPaseoUITest {
 
 	@LocalServerPort
 	private int port;
 
 	private WebDriver driver;
 	private StringBuffer verificationErrors = new StringBuffer();
-	
+
 	private int comentarios;
 
 	@BeforeEach
@@ -29,51 +33,52 @@ public class EliminaComentarioPaseoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testEliminaComentarioPaseoUI() throws Exception {
-		driver.get("http://localhost:" + port);
-		
-		loggingAdmin();
-		
-		deleteElement();
-		
-		assertElements();
+	void testEliminaComentarioPaseoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
+
+		this.loggingAdmin();
+
+		this.deleteElement();
+
+		this.assertElements();
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
-	
-	public void loggingAdmin() {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("admin1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("4dm1n");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("ADMIN1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
-	}
-	
-	public void deleteElement() {
-		driver.findElement(By.id("WalkId")).click();
-		driver.findElement(By.xpath("(//img[@id='walkMap'])[1]")).click();
 
-		comentarios = driver.findElement(By.id("tablaComentarios")).findElements(By.id("comentarioFila")).size();
-		driver.findElement(By.xpath("//a[contains(text(),'Delete Comment')]")).click();
+	public void loggingAdmin() {
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("admin1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("4dm1n");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("ADMIN1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 	}
-	
+
+	public void deleteElement() {
+		this.driver.findElement(By.id("WalkId")).click();
+		this.driver.findElement(By.xpath("(//img[@id='walkMap'])[1]")).click();
+
+		this.comentarios = this.driver.findElement(By.id("tablaComentarios")).findElements(By.id("comentarioFila"))
+				.size();
+		this.driver.findElement(By.xpath("//a[contains(text(),'Delete Comment')]")).click();
+	}
+
 	public void assertElements() {
-		assertEquals(comentarios - 1,
-				driver.findElement(By.id("tablaComentarios")).findElements(By.id("comentarioFila")).size());
+		Assert.assertEquals(this.comentarios - 1,
+				this.driver.findElement(By.id("tablaComentarios")).findElements(By.id("comentarioFila")).size());
 	}
 }
-

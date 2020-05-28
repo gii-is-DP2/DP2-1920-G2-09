@@ -58,6 +58,8 @@ public class PrescriptionController {
 	private final VetService vetService;
 	private final EmailService emailService;
 
+	private final String PRESCRIPTION = "prescription";
+
 	@Autowired
 	public PrescriptionController(final PetService petService, final PrescriptionService prescriptionService,
 			final VetService vetService, final EmailService emailService) {
@@ -90,7 +92,7 @@ public class PrescriptionController {
 	public String initNewPrescriptionForm(@PathVariable("petId") final int petId, final Map<String, Object> model) {
 		model.put("previa", this.prescriptionService.findPrescriptionsByPetId(petId));
 		Prescription prescription = new Prescription();
-		model.put("prescription", prescription);
+		model.put(this.PRESCRIPTION, prescription);
 		return "/prescriptions/createOrUpdatePrescriptionForm";
 	}
 
@@ -99,7 +101,7 @@ public class PrescriptionController {
 			final BindingResult result) throws MailjetException, MailjetSocketTimeoutException {
 		if (result.hasErrors()) {
 			model.put("previa", this.prescriptionService.findPrescriptionsByPetId(prescription.getPet().getId()));
-			model.addAttribute("prescription", prescription);
+			model.addAttribute(this.PRESCRIPTION, prescription);
 			return "/prescriptions/createOrUpdatePrescriptionForm";
 		} else {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -127,7 +129,7 @@ public class PrescriptionController {
 	@GetMapping("/owners/{ownerId}/pets/{petId}/prescriptions/{prescriptionId}")
 	public String showPrescription(@PathVariable("prescriptionId") final int prId, final Map<String, Object> model) {
 		Prescription pres = this.prescriptionService.findPrescriptionById(prId);
-		model.put("prescription", pres);
+		model.put(this.PRESCRIPTION, pres);
 		return "prescriptions/prescriptionDetails";
 	}
 }
