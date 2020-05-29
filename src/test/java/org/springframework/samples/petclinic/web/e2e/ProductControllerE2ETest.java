@@ -34,16 +34,16 @@ class ProductControllerE2ETest {
 				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
 				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
 	}
-
-	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
-	@Test
-	void testFindFilteredProducts() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/products/filter"))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.model().attributeExists("product"))
-				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
-				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
-	}
+//
+//	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
+//	@Test
+//	void testFindFilteredProducts() throws Exception {
+//		this.mockMvc.perform(MockMvcRequestBuilders.get("/products/filter"))
+//				.andExpect(MockMvcResultMatchers.status().isOk())
+//				.andExpect(MockMvcResultMatchers.model().attributeExists("product"))
+//				.andExpect(MockMvcResultMatchers.model().attributeExists("products"))
+//				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
+//	}
 
 	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
 	@Test
@@ -79,7 +79,8 @@ class ProductControllerE2ETest {
 				.perform(MockMvcRequestBuilders.post("/products/new").with(SecurityMockMvcRequestPostProcessors.csrf())
 						.param("available", "true").param("category", "ACCESORY")
 						.param("description", "Esta es una descripción de prueba").param("name", "Nombre")
-						.param("stock", "12").param("unitPrice", "12.20").param("urlImage", "https://www.url.com"))
+						.param("stock", "12").param("unitPrice", "12.20")
+						.param("urlImage", "/resources/images/dog.png"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.view().name("products/listProducts"));
 	}
@@ -120,7 +121,7 @@ class ProductControllerE2ETest {
 				.andExpect(MockMvcResultMatchers.model().attribute("product",
 						Matchers.hasProperty("unitPrice", Matchers.is(10.20))))
 				.andExpect(MockMvcResultMatchers.model().attribute("product",
-						Matchers.hasProperty("urlImage", Matchers.is("https://tinyurl.com/vp4wlrz"))))
+						Matchers.hasProperty("urlImage", Matchers.is("/resources/images/dog.png"))))
 				.andExpect(MockMvcResultMatchers.view().name("products/createOrUpdateProductForm"));
 	}
 
