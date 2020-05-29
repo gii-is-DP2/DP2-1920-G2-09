@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.model.Item;
 import org.springframework.samples.petclinic.model.Order;
-import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
 	private OrderRepository orderRepository;
+
 
 	@Autowired
 	public OrderService(final OrderRepository orderRepository) {
@@ -35,10 +35,10 @@ public class OrderService {
 	public List<Order> findAllOrdersOrderedByDate() {
 		return this.orderRepository.findAllOrderedByDate();
 	}
-	
+
 	@Transactional
-	public List<Order> findAllOrdersByOwner(int ownerId) {
-		return this.orderRepository.findOrderByOwner(ownerId);
+	public List<Order> findAllOrdersByOwner(final String username) {
+		return this.orderRepository.findOrderByOwner(username);
 	}
 
 	@Transactional

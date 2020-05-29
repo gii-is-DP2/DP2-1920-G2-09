@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.repository;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public interface OrderRepository extends CrudRepository<Order, Integer> {
 	@Modifying
 	@Query("DELETE FROM Item i WHERE i.order.id = ?1 ")
 	void deleteAllItemsOfOrder(int orderId);
-	
-	@Query("SELECT o FROM Order o WHERE o.owner.id = ?1")
-	List<Order> findOrderByOwner(int ownerId);
+
+	@Query("SELECT o FROM Order o WHERE o.owner.user.username = ?1")
+	List<Order> findOrderByOwner(String username);
 
 }

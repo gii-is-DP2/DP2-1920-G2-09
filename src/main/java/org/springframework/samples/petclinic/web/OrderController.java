@@ -1,13 +1,10 @@
+
 package org.springframework.samples.petclinic.web;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.samples.petclinic.model.Item;
 import org.springframework.samples.petclinic.model.Order;
-import org.springframework.samples.petclinic.model.Owner;
-import org.springframework.samples.petclinic.model.Prescription;
-import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.repository.springdatajpa.OwnerCrudRepository;
 import org.springframework.samples.petclinic.service.ItemService;
 import org.springframework.samples.petclinic.service.OrderService;
@@ -16,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,11 +23,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/orders")
 public class OrderController {
 
-	private ItemService itemService;
-	private OrderService orderService;
-	private OwnerService ownerService;
+	private ItemService			itemService;
+	private OrderService		orderService;
+	private OwnerService		ownerService;
 
-    private OwnerCrudRepository ownerCrudRepository;
+	private OwnerCrudRepository	ownerCrudRepository;
+
 
 	public OrderController(final ItemService itemService, final OrderService orderService) {
 		super();
@@ -48,27 +45,16 @@ public class OrderController {
 
 	@GetMapping("/list")
 	public String showAllOrder(final ModelMap model) {
-		Iterable<Order> orders = this.orderService.findAllOrdersOrderedByDate();
-		model.addAttribute("orders", orders);
-		return "orders/ordersList";
-	}
-	
-	@GetMapping(value = "/lists")
-	public String showOrderByOwner(final ModelMap model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = auth.getPrincipal();
 		UserDetails us = null;
 		if (principal instanceof UserDetails) {
 			us = (UserDetails) principal;
 		}
-		Owner owner = ownerCrudRepository.findOwnerByUsername(us.getUsername());
-		Iterable<Order> orders = this.orderService.findAllOrdersByOwner(owner.getId());
-		model.addAttribute("orders", orders);
+		List<Order> orders = this.orderService.findAllOrdersByOwner(us.getUsername());
+		model.put("orders", orders);
 		return "orders/ordersList";
 	}
-	
-	
-	
 
 	@GetMapping("/{orderId}")
 	public String showOrder(final ModelMap model, @PathVariable("orderId") final int orderId) {
