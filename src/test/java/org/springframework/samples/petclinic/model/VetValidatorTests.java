@@ -11,7 +11,7 @@ import org.springframework.samples.petclinic.web.VetValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class VetValidatorTests {
+class VetValidatorTests {
 
 	private Vet vet;
 

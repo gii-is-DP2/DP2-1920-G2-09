@@ -1,11 +1,15 @@
 package org.springframework.samples.petclinic.UI;
 
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -13,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AñadirComentarioPrioritarioNegativoUITest {
+class AñadirComentarioPrioritarioNegativoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -28,53 +32,55 @@ public class AñadirComentarioPrioritarioNegativoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testAñadirComentarioPrioritarioNegativoUI() throws Exception {
-		driver.get("http://localhost:" + port);
+	void testAñadirComentarioPrioritarioNegativoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
 
-		loginVet();
+		this.loginVet();
 
-		completeForm();
+		this.completeForm();
 
-		assertElements();
+		this.assertElements();
 
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
 
 	public void loginVet() throws Exception {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("vet1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("v3t");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("VET1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("vet1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("v3t");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("VET1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 	}
 
 	public void completeForm() throws Exception {
-		driver.findElement(By.id("ProductId")).click();
-		driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
+		this.driver.findElement(By.id("ProductId")).click();
+		this.driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
 
-		comentarios = driver.findElement(By.id("comentarios")).findElements(By.className("media-body-vet")).size();
-		driver.findElement(By.id("title")).clear();
-		driver.findElement(By.id("title")).sendKeys("UITest");
-		driver.findElement(By.xpath("//button[@type='submit']")).click();
+		this.comentarios = this.driver.findElement(By.id("comentarios")).findElements(By.className("media-body-vet"))
+				.size();
+		this.driver.findElement(By.id("title")).clear();
+		this.driver.findElement(By.id("title")).sendKeys("UITest");
+		this.driver.findElement(By.xpath("//button[@type='submit']")).click();
 	}
 
 	public void assertElements() throws Exception {
-		assertEquals(comentarios,
-				driver.findElement(By.id("comentarios")).findElements(By.className("media-body-vet")).size());
+		Assert.assertEquals(this.comentarios,
+				this.driver.findElement(By.id("comentarios")).findElements(By.className("media-body-vet")).size());
 	}
 }

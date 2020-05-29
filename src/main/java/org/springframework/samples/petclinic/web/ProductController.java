@@ -30,9 +30,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/products")
 public class ProductController {
 
-	private final ProductService		productService;
-	private final ProductComentService	productComentService;
-
+	private final ProductService productService;
+	private final ProductComentService productComentService;
+	private final String PRODUCT = "product";
+	private final String PRODUCTS = "products";
+	private final String PRODUCT_COMMENT = "productComent";
 
 	@Autowired
 	public ProductController(final ProductService productService, final ProductComentService productComentService) {
@@ -64,15 +66,15 @@ public class ProductController {
 	@GetMapping(value = "/all")
 	public String findAllProducts(final ModelMap model) {
 		Product p = new Product();
-		model.put("product", p);
+		model.put(this.PRODUCT, p);
 		Iterable<Product> products = this.productService.findAllProducts();
-		model.addAttribute("products", products);
+		model.addAttribute(this.PRODUCTS, products);
 		return "products/listProducts";
 	}
 
 	@GetMapping(value = "/filter")
 	public String findProductsFiltered(final ModelMap model, final Product product) {
-		model.put("product", product);
+		model.put(this.PRODUCT, product);
 		Iterable<Product> products = this.productService.findFilteredProducts(product.getName());
 		List<Product> l = new ArrayList<>();
 		for (Product p : products) {
@@ -81,13 +83,13 @@ public class ProductController {
 		if (l.isEmpty()) {
 			model.addAttribute("noItemsMessage", "There aren't products for this search");
 		}
-		model.addAttribute("products", products);
+		model.addAttribute(this.PRODUCTS, products);
 		return "products/listProducts";
 	}
 
 	@GetMapping(value = "/filterByCategory")
 	public String findProductsFilteredByCategory(final ModelMap model, final Product product) {
-		model.put("product", product);
+		model.put(this.PRODUCT, product);
 		Iterable<Product> products = this.productService.findFilteredProductsByCategory(product.getCategory());
 		List<Product> l = new ArrayList<>();
 		for (Product p : products) {
@@ -96,7 +98,7 @@ public class ProductController {
 		if (l.isEmpty()) {
 			model.addAttribute("noItemsMessage", "There aren't products for this search");
 		}
-		model.addAttribute("products", products);
+		model.addAttribute(this.PRODUCTS, products);
 		return "products/listProducts";
 	}
 
@@ -104,11 +106,11 @@ public class ProductController {
 	public String showProduct(@PathVariable("productId") final int productId, final ModelMap model) {
 		ProductComent pc = new ProductComent();
 		Collection<ProductComent> coments = this.productComentService.findAllComentsOfTheProduct(productId);
-		if (!model.containsAttribute("OKmessage") && model.containsAttribute("productComent")) {
-			model.put("productComent", model.get("productComent"));
+		if (!model.containsAttribute("OKmessage") && model.containsAttribute(this.PRODUCT_COMMENT)) {
+			model.put(this.PRODUCT_COMMENT, model.get(this.PRODUCT_COMMENT));
 
 		} else {
-			model.put("productComent", pc);
+			model.put(this.PRODUCT_COMMENT, pc);
 
 		}
 		Double rating = this.productComentService.getAverageRatingOfProduct(productId);
@@ -118,7 +120,7 @@ public class ProductController {
 		if (product == null) {
 			return "exception";
 		} else {
-			model.put("product", product);
+			model.put(this.PRODUCT, product);
 			return "products/productDetails";
 		}
 
@@ -127,14 +129,14 @@ public class ProductController {
 	@GetMapping(value = "/new")
 	public String initCreationForm(final Product owner, final ModelMap model) {
 		Product product = new Product();
-		model.put("product", product);
+		model.put(this.PRODUCT, product);
 		return "products/createOrUpdateProductForm";
 	}
 
 	@PostMapping(value = "/new")
 	public String processCreationForm(@Valid final Product product, final BindingResult result, final ModelMap model) {
 		if (result.hasErrors()) {
-			model.put("product", product);
+			model.put(this.PRODUCT, product);
 			return "products/createOrUpdateProductForm";
 		} else {
 			this.productService.saveProduct(product);
@@ -145,14 +147,15 @@ public class ProductController {
 	@GetMapping(value = "/{productId}/edit")
 	public String initUpdateProductForm(@PathVariable("productId") final int productId, final Model model) {
 		Product product = this.productService.findProductById(productId);
-		model.addAttribute("product", product);
+		model.addAttribute(this.PRODUCT, product);
 		return "products/createOrUpdateProductForm";
 	}
 
 	@PostMapping(value = "/{productId}/edit")
-	public String processUpdateProductForm(@Valid final Product product, final BindingResult result, final Model model, @PathVariable("productId") final int productId) {
+	public String processUpdateProductForm(@Valid final Product product, final BindingResult result, final Model model,
+			@PathVariable("productId") final int productId) {
 		if (result.hasErrors()) {
-			model.addAttribute("product", product);
+			model.addAttribute(this.PRODUCT, product);
 			return "products/createOrUpdateProductForm";
 		} else {
 			product.setId(productId);

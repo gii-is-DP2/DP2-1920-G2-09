@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.UI;
 
-import static org.junit.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -19,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ActualizaProductoUITest {
+class ActualizaProductoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -38,26 +37,27 @@ public class ActualizaProductoUITest {
 	}
 
 	@Test
-	public void testActualizaProductoUI() throws Exception {
+	void testActualizaProductoUI() throws Exception {
 
-		driver.get("http://localhost:" + port);
+		this.driver.get("http://localhost:" + this.port);
 
-		loginAdmin();
+		this.loginAdmin();
 
-		completeForm();
+		this.completeForm();
 
-		assertElements();
+		this.assertElements();
 
 	}
 
 	public void loginAdmin() throws Exception {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("admin1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("4dm1n");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("ADMIN1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("admin1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("4dm1n");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("ADMIN1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 
 	}
 

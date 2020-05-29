@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-public class WalkComentControllerE2ETests {
+class WalkComentControllerE2ETests {
 
 	private static final int TEST_WALK_ID = 1;
 	private static final int TEST_WALKCOMENT_ID = 1;

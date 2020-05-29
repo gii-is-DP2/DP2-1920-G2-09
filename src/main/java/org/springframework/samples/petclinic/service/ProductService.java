@@ -16,7 +16,6 @@ public class ProductService {
 
 	private ProductRepository productRepository;
 
-
 	@Autowired
 	public ProductService(final ProductRepository productRepository) {
 		this.productRepository = productRepository;
@@ -25,26 +24,23 @@ public class ProductService {
 	@Transactional
 	@Cacheable("allProducts")
 	public Iterable<Product> findAllProducts() {
-		Iterable<Product> products = this.productRepository.findAll();
-		return products;
+		return this.productRepository.findAll();
 	}
 
 	@Transactional
 	@Cacheable("filteredProducts")
 	public Iterable<Product> findFilteredProducts(final String name) {
-		Iterable<Product> products = this.productRepository.findProductsFiltered(name);
-		return products;
+		return this.productRepository.findProductsFiltered(name);
 	}
 
 	@Transactional
 	@Cacheable("filteredProductsByCategory")
 	public Iterable<Product> findFilteredProductsByCategory(final Category category) {
-		Iterable<Product> products = this.productRepository.findProductsFilteredByCategory(category);
-		return products;
+		return this.productRepository.findProductsFilteredByCategory(category);
 	}
 
 	@Transactional(readOnly = true)
-	public Product findProductById(final int id) throws DataAccessException {
+	public Product findProductById(final int id) {
 		return this.productRepository.findById(id);
 	}
 

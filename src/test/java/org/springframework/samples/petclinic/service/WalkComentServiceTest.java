@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class WalkComentServiceTest {
+class WalkComentServiceTest {
 
 	@Autowired
 	protected WalkComentService walkComentService;

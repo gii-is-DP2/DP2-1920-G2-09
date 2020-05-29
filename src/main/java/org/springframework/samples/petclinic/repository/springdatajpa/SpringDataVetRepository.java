@@ -17,7 +17,6 @@ package org.springframework.samples.petclinic.repository.springdatajpa;
 
 import java.util.Collection;
 
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -32,12 +31,12 @@ import org.springframework.samples.petclinic.repository.VetRepository;
  */
 public interface SpringDataVetRepository extends CrudRepository<Vet, Integer> {
 
-    @Override
-    Collection<Vet> findAll() throws DataAccessException;
+	@Override
+	Collection<Vet> findAll();
 
-    @Query("SELECT v FROM Vet v WHERE v.user.username =:vetUser")
-    Vet findVetbyUser(@Param("vetUser") String vetUser);
+	@Query("SELECT v FROM Vet v WHERE v.user.username =:vetUser")
+	Vet findVetbyUser(@Param("vetUser") String vetUser);
 
-    @Query("Select count(user) from User user where username = ?1")
-    Integer countOwnersWithSameUserName(String username);
+	@Query("Select count(user) from User user where username = ?1")
+	Integer countOwnersWithSameUserName(String username);
 }

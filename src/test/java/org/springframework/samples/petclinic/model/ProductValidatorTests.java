@@ -8,7 +8,7 @@ import org.springframework.samples.petclinic.web.ProductValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class ProductValidatorTests {
+class ProductValidatorTests {
 
 	private Product product;
 

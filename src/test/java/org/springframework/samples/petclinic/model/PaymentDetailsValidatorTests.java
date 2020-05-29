@@ -11,10 +11,9 @@ import org.springframework.samples.petclinic.web.PaymentDetailsValidator;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
-public class PaymentDetailsValidatorTests {
+class PaymentDetailsValidatorTests {
 
 	private Owner owner;
-
 
 	@BeforeEach
 	void setInitialOwner() {
@@ -50,7 +49,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationYear").getCode()).isEqualTo("You must fill all the fields");
+		Assertions.assertThat(errors.getFieldError("expirationYear").getCode())
+				.isEqualTo("You must fill all the fields");
 	}
 
 	@Test
@@ -59,7 +59,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationYear").getCode()).isEqualTo("You must fill all the fields");
+		Assertions.assertThat(errors.getFieldError("expirationYear").getCode())
+				.isEqualTo("You must fill all the fields");
 	}
 
 	@Test
@@ -68,7 +69,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationYear").getCode()).isEqualTo("You must fill all the fields");
+		Assertions.assertThat(errors.getFieldError("expirationYear").getCode())
+				.isEqualTo("You must fill all the fields");
 	}
 
 	@Test
@@ -77,7 +79,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationYear").getCode()).isEqualTo("You must fill all the fields");
+		Assertions.assertThat(errors.getFieldError("expirationYear").getCode())
+				.isEqualTo("You must fill all the fields");
 	}
 
 	@Test
@@ -86,7 +89,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("creditCardNumber").getCode()).isEqualTo("Credit Card Number is not correct");
+		Assertions.assertThat(errors.getFieldError("creditCardNumber").getCode())
+				.isEqualTo("Credit Card Number is not correct");
 	}
 
 	@Test
@@ -113,7 +117,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationMonth").getCode()).isEqualTo("The Month must be between 1 and 12");
+		Assertions.assertThat(errors.getFieldError("expirationMonth").getCode())
+				.isEqualTo("The Month must be between 1 and 12");
 	}
 
 	@Test
@@ -132,7 +137,8 @@ public class PaymentDetailsValidatorTests {
 		PaymentDetailsValidator ov = new PaymentDetailsValidator();
 		Errors errors = new BeanPropertyBindingResult(this.owner, "");
 		ov.validate(this.owner, errors);
-		Assertions.assertThat(errors.getFieldError("expirationYear").getCode()).isEqualTo("The Credit Card you introduced has expired");
+		Assertions.assertThat(errors.getFieldError("expirationYear").getCode())
+				.isEqualTo("The Credit Card you introduced has expired");
 	}
 
 }

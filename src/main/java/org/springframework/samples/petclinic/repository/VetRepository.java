@@ -16,13 +16,14 @@
 package org.springframework.samples.petclinic.repository;
 
 import java.util.Collection;
-import org.springframework.dao.DataAccessException;
+
+import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.model.Vet;
 
 /**
- * Repository class for <code>Vet</code> domain objects All method names are compliant
- * with Spring Data naming conventions so this interface can easily be extended for Spring
- * Data See here:
+ * Repository class for <code>Vet</code> domain objects All method names are
+ * compliant with Spring Data naming conventions so this interface can easily be
+ * extended for Spring Data See here:
  * http://static.springsource.org/spring-data/jpa/docs/current/reference/html/jpa.repositories.html#jpa.query-methods.query-creation
  *
  * @author Ken Krebs
@@ -34,20 +35,19 @@ public interface VetRepository {
 
 	/**
 	 * Retrieve all <code>Vet</code>s from the data store.
+	 * 
 	 * @return a <code>Collection</code> of <code>Vet</code>s
 	 */
-	Collection<Vet> findAll() throws DataAccessException;
+	Collection<Vet> findAll();
 
 	/**
 	 * Retrieve an <code>Vet</code> from the data store by id.
 	 *
-	 * @param id
-	 *            the id to search for
+	 * @param id the id to search for
 	 * @return the <code>Vet</code> if found
-	 * @throws org.springframework.dao.DataRetrievalFailureException
-	 *             if not found
+	 * @throws org.springframework.dao.DataRetrievalFailureException if not found
 	 */
-	Vet findById(int id) throws DataAccessException;
+	Vet findById(int id);
 
 	/**
 	 * Save a <code>Vet</code> to the data store, either inserting or updating it.
@@ -55,8 +55,8 @@ public interface VetRepository {
 	 * @param vet the <code>Vet</code> to save
 	 * @see BaseEntity#isNew
 	 */
-	void save(Vet vet) throws DataAccessException;
+	void save(Vet vet);
 
-	void saveVetSpecialty(int idVet, int idSpecialties) throws DataAccessException;
-	
+	void saveVetSpecialty(int idVet, int idSpecialties);
+
 }

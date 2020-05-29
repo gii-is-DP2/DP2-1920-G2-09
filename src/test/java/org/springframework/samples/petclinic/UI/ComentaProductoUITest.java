@@ -2,11 +2,15 @@ package org.springframework.samples.petclinic.UI;
 
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
-import org.openqa.selenium.*;
+import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -14,7 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ComentaProductoUITest {
+class ComentaProductoUITest {
 
 	@LocalServerPort
 	private int port;
@@ -28,62 +32,62 @@ public class ComentaProductoUITest {
 		String pathToGeckoDriver = System.getenv("webdriver.gecko.driver");
 		System.setProperty("webdriver.gecko.driver", pathToGeckoDriver);
 
-		driver = new FirefoxDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		this.driver = new FirefoxDriver();
+		this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
 	@Test
-	public void testComentaProductoUI() throws Exception {
-		driver.get("http://localhost:" + port);
-		
-		loggingOwner();
-		
-		completeForm();
-		
-		assertElements();
+	void testComentaProductoUI() throws Exception {
+		this.driver.get("http://localhost:" + this.port);
+
+		this.loggingOwner();
+
+		this.completeForm();
+
+		this.assertElements();
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
-		driver.quit();
-		String verificationErrorString = verificationErrors.toString();
+		this.driver.quit();
+		String verificationErrorString = this.verificationErrors.toString();
 		if (!"".equals(verificationErrorString)) {
-			fail(verificationErrorString);
+			Assert.fail(verificationErrorString);
 		}
 	}
-	
-	public void loggingOwner() {
-		driver.findElement(By.linkText("LOGIN")).click();
-		driver.findElement(By.id("username")).clear();
-		driver.findElement(By.id("username")).sendKeys("owner1");
-		driver.findElement(By.id("password")).clear();
-		driver.findElement(By.id("password")).sendKeys("0wn3r");
-		driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
-		assertEquals("OWNER1", driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
-	}
-	
-	public void completeForm() {
-		driver.findElement(By.id("ProductId")).click();
-		driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
 
-		driver.findElement(By.id("title")).clear();
-		driver.findElement(By.id("title")).sendKeys("Comentario UITest");
-		driver.findElement(By.id("description")).clear();
-		driver.findElement(By.id("description")).sendKeys("Este es un comentario para el UITest");
-		driver.findElement(By.xpath("//button[@type='submit']")).click();
+	public void loggingOwner() {
+		this.driver.findElement(By.linkText("LOGIN")).click();
+		this.driver.findElement(By.id("username")).clear();
+		this.driver.findElement(By.id("username")).sendKeys("owner1");
+		this.driver.findElement(By.id("password")).clear();
+		this.driver.findElement(By.id("password")).sendKeys("0wn3r");
+		this.driver.findElement(By.id("password")).sendKeys(Keys.ENTER);
+		Assert.assertEquals("OWNER1",
+				this.driver.findElement(By.xpath("//a[@id='username']/strong")).getText().toUpperCase());
 	}
-	
+
+	public void completeForm() {
+		this.driver.findElement(By.id("ProductId")).click();
+		this.driver.findElement(By.xpath("//div[@id='infoProducto']/a/img")).click();
+
+		this.driver.findElement(By.id("title")).clear();
+		this.driver.findElement(By.id("title")).sendKeys("Comentario UITest");
+		this.driver.findElement(By.id("description")).clear();
+		this.driver.findElement(By.id("description")).sendKeys("Este es un comentario para el UITest");
+		this.driver.findElement(By.xpath("//button[@type='submit']")).click();
+	}
+
 	public void assertElements() {
-		int comentarios = driver.findElement(By.id("comentarios")).findElements(By.className("media-body")).size();
-		assertEquals("owner1",
-				driver.findElement(By.xpath("(//strong[@id='usuarioComentario'])[" + comentarios + "]")).getText());
-		assertEquals("Comentario UITest",
-				driver.findElement(By.xpath("(//strong[@id='tituloComentario'])[" + comentarios + "]")).getText());
-		assertEquals("Este es un comentario para el UITest",
-				driver.findElement(By.xpath("(//p[@id='descriptionComentario'])[" + comentarios + "]")).getText());
-		assertEquals(LocalDate.now().toString(),
-				driver.findElement(By.xpath("(//small[@id='fechaComentario'])[" + comentarios + "]")).getText());
+		int comentarios = this.driver.findElement(By.id("comentarios")).findElements(By.className("media-body")).size();
+		Assert.assertEquals("owner1", this.driver
+				.findElement(By.xpath("(//strong[@id='usuarioComentario'])[" + comentarios + "]")).getText());
+		Assert.assertEquals("Comentario UITest",
+				this.driver.findElement(By.xpath("(//strong[@id='tituloComentario'])[" + comentarios + "]")).getText());
+		Assert.assertEquals("Este es un comentario para el UITest",
+				this.driver.findElement(By.xpath("(//p[@id='descriptionComentario'])[" + comentarios + "]")).getText());
+		Assert.assertEquals(LocalDate.now().toString(),
+				this.driver.findElement(By.xpath("(//small[@id='fechaComentario'])[" + comentarios + "]")).getText());
 	}
 
 }
-

@@ -20,7 +20,6 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.ShoppingCart;
 import org.springframework.samples.petclinic.model.User;
@@ -71,7 +70,7 @@ public class UserController {
 
 	@PostMapping(value = "/users/new")
 	public String processCreationForm(@Valid final Owner owner, final BindingResult result)
-			throws DataAccessException, DuplicatedUsernameException {
+			throws DuplicatedUsernameException {
 		if (result.hasErrors()) {
 			return UserController.VIEWS_OWNER_CREATE_FORM;
 		} else {
