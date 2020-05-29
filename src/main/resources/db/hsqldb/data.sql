@@ -140,6 +140,8 @@ INSERT INTO item(id, shopping_cart_id,product_id,quantity,unit_price) VALUES (3,
 INSERT INTO orders(id, owner_id, order_date, total_price) VALUES (1, 11, '2013-01-04', 250.00);
 INSERT INTO orders(id, owner_id, order_date, total_price) VALUES (2, 11, '2015-01-04', 400.00);
 INSERT INTO orders(id, owner_id, order_date, total_price) VALUES (3, 11, '2014-01-04', 100.00);
+INSERT INTO orders(id, owner_id, order_date, total_price) VALUES (4, 1, '2014-01-04', 100.00);
+INSERT INTO orders(id, owner_id, order_date, total_price) VALUES (5, 11, '2014-01-04', 100.00);
 
 INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (4, 1, 2, 50, 4.00);
 INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (5, 1, 3, 10, 5.00);
@@ -148,4 +150,9 @@ INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (6, 2, 2, 5
 INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (7, 2, 3, 40, 5.00);
 
 INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (8, 3, 3, 20, 5.00);
+
+INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (9, 4, 3, 20, 5.00);
+
+INSERT INTO item(id, order_id,product_id,quantity,unit_price) VALUES (10, 5, 3, 20, 5.00);
+
 
