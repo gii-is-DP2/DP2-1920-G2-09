@@ -23,9 +23,9 @@ public class EmailService {
 	public EmailService() {
 	}
 
-	public static final String API_PUBLIC_KEY = "04b48d716a9b9f02bec4275d28e59612";
-	public static final String API_SECRET_KEY = "0a8b42f0a1a119f24541356e0588b3e0";
-	public static final String FROM = "fraromgon2@gmail.com";
+	public static final String API_PUBLIC_KEY = "20324ecc96fa2b9f5ca67b2834a6b687";
+	public static final String API_SECRET_KEY = "461c1bda71139a9af5743eb2f74abc15";
+	public static final String FROM = "jromerogr11@gmail.com";
 
 	@SuppressWarnings("deprecation")
 	public void sendEmailOfPrescriptionWithRestTemplate(final Prescription p) {
