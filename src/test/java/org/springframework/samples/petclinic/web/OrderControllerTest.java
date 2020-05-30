@@ -1,6 +1,9 @@
+
 package org.springframework.samples.petclinic.web;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +56,10 @@ class OrderControllerTest {
 		this.order2.setOrderDate(LocalDate.now().minusDays(3));
 		this.order2.setTotalPrice(2250.00);
 
+		List<Order> orders = new ArrayList<>();
+		orders.add(this.order);
+		orders.add(this.order2);
+
 		Owner owner = new Owner();
 		owner.setId(OrderControllerTest.TEST_OWNER_ID);
 		owner.setFirstName("George");
@@ -62,6 +69,7 @@ class OrderControllerTest {
 		owner.setTelephone("6085551023");
 		this.order.setOwner(owner);
 		BDDMockito.given(this.orderService.findOrderById(OrderControllerTest.TEST_ORDER_ID)).willReturn(this.order);
+		BDDMockito.given(this.orderService.findAllOrdersByOwner("prueba")).willReturn(orders);
 
 	}
 
@@ -94,4 +102,23 @@ class OrderControllerTest {
 				.andExpect(MockMvcResultMatchers.view().name("orders/ordersList"));
 
 	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowAllOrder() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/orders/list"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("orders"))
+				.andExpect(MockMvcResultMatchers.view().name("orders/ordersList"));
+	}
+
+	@WithMockUser(value = "spring")
+	@Test
+	void testShowAllOrderOfOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/orders/list-my-orders"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("orders"))
+				.andExpect(MockMvcResultMatchers.view().name("orders/ordersList"));
+	}
+
 }

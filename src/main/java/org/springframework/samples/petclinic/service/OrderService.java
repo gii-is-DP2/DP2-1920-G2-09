@@ -15,6 +15,7 @@ public class OrderService {
 
 	private OrderRepository orderRepository;
 
+
 	@Autowired
 	public OrderService(final OrderRepository orderRepository) {
 		this.orderRepository = orderRepository;
@@ -36,6 +37,11 @@ public class OrderService {
 	}
 
 	@Transactional
+	public List<Order> findAllOrdersByOwner(final String username) {
+		return this.orderRepository.findOrderByOwner(username);
+	}
+
+	@Transactional
 	public Order findOrderById(final int id) {
 		return this.orderRepository.findById(id).get();
 	}
@@ -51,5 +57,4 @@ public class OrderService {
 		this.orderRepository.deleteById(id);
 
 	}
-
 }

@@ -21,6 +21,7 @@ class ShoppingCartServiceTests {
 	@Autowired
 	protected ShoppingCartService shoppingCartService;
 
+
 	@Test
 	void shouldSaveShoppingCart() {
 		ShoppingCart shoppingCart = new ShoppingCart();
@@ -56,12 +57,10 @@ class ShoppingCartServiceTests {
 
 	// PRUEBAS PARAMETRIZADAS
 	@ParameterizedTest
-	@CsvSource({ "Juan,Romero,Calle Andaluz,Sevilla,901123123,username1,pwd1,email@gmail.com,1",
-			"Pedro,San Juan,Calle Pacense,Badajoz,925646123,username2,pwd2,email2@gmail.com,2",
-			"Andrea,Pérez,Calle Rio Bajo,Zaragoza,900110023,username3,pwd3,email3@gmail.com,3" })
-	void shouldSaveShoppingCartParametrized(final String name, final String lastName, final String address,
-			final String city, final String telephone, final String username, final String password, final String email,
-			final Integer shoppingCartId) {
+	@CsvSource({
+		"Juan,Romero,Calle Andaluz,Sevilla,901123123,username1,pwd1,email@gmail.com,1", "Pedro,San Juan,Calle Pacense,Badajoz,925646123,username2,pwd2,email2@gmail.com,2", "Andrea,Pérez,Calle Rio Bajo,Zaragoza,900110023,username3,pwd3,email3@gmail.com,3"
+	})
+	void shouldSaveShoppingCartParametrized(final String name, final String lastName, final String address, final String city, final String telephone, final String username, final String password, final String email, final Integer shoppingCartId) {
 		ShoppingCart shoppingCart = new ShoppingCart();
 		Owner owner = new Owner();
 		owner.setFirstName(name);
@@ -82,14 +81,18 @@ class ShoppingCartServiceTests {
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "prueba", "owner1", "owner10" })
+	@CsvSource({
+		"prueba", "owner1", "owner10"
+	})
 	void shouldGetShoppingCartOfUserParametrized(final String username) {
 		ShoppingCart sp = this.shoppingCartService.getShoppingCartOfUser(username);
 		Assertions.assertTrue(sp != null);
 	}
 
 	@ParameterizedTest
-	@CsvSource({ "esteUsuarioNoExiste", "esteOtroTampoco", "yElTerceroTampoco" })
+	@CsvSource({
+		"esteUsuarioNoExiste", "esteOtroTampoco", "yElTerceroTampoco"
+	})
 	void shouldNotGetShoppingCartOfUserParametrized(final String username) {
 		ShoppingCart sp = this.shoppingCartService.getShoppingCartOfUser(username);
 		Assertions.assertTrue(sp == null);

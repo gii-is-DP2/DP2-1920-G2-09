@@ -1,11 +1,17 @@
+
 package org.springframework.samples.petclinic.web;
 
 import java.util.List;
 
 import org.springframework.samples.petclinic.model.Item;
 import org.springframework.samples.petclinic.model.Order;
+import org.springframework.samples.petclinic.repository.springdatajpa.OwnerCrudRepository;
 import org.springframework.samples.petclinic.service.ItemService;
 import org.springframework.samples.petclinic.service.OrderService;
+import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +25,9 @@ public class OrderController {
 
 	private ItemService itemService;
 	private OrderService orderService;
+	private OwnerService ownerService;
+
+	private OwnerCrudRepository ownerCrudRepository;
 
 	public OrderController(final ItemService itemService, final OrderService orderService) {
 		super();
@@ -37,6 +46,19 @@ public class OrderController {
 	public String showAllOrder(final ModelMap model) {
 		Iterable<Order> orders = this.orderService.findAllOrdersOrderedByDate();
 		model.addAttribute("orders", orders);
+		return "orders/ordersList";
+	}
+
+	@GetMapping("/list-my-orders")
+	public String showAllOrderOfOwner(final ModelMap model) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = auth.getPrincipal();
+		UserDetails us = null;
+		if (principal instanceof UserDetails) {
+			us = (UserDetails) principal;
+		}
+		List<Order> orders = this.orderService.findAllOrdersByOwner(us.getUsername());
+		model.put("orders", orders);
 		return "orders/ordersList";
 	}
 
