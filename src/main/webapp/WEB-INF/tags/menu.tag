@@ -114,7 +114,7 @@
 											</p>
 											
 											<p class="text-left">
-												<a href="<c:url value="/orders/list"/>"
+												<a href="<c:url value="/orders/list-my-orders"/>"
 													class="btn btn-primary btn-block btn-sm">My orders</a>
 											</p>
 											

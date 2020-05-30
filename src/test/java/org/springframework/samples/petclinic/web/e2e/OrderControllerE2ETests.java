@@ -54,4 +54,13 @@ public class OrderControllerE2ETests {
 
 	}
 
+	@WithMockUser(username = "prueba", password = "prueba", authorities = { "owner" })
+	@Test
+	void testShowAllOrderOfOwner() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/orders/list-my-orders"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.model().attributeExists("orders"))
+				.andExpect(MockMvcResultMatchers.view().name("orders/ordersList"));
+	}
+
 }

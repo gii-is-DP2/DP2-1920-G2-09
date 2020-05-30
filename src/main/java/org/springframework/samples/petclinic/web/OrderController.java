@@ -23,12 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/orders")
 public class OrderController {
 
-	private ItemService			itemService;
-	private OrderService		orderService;
-	private OwnerService		ownerService;
+	private ItemService itemService;
+	private OrderService orderService;
+	private OwnerService ownerService;
 
-	private OwnerCrudRepository	ownerCrudRepository;
-
+	private OwnerCrudRepository ownerCrudRepository;
 
 	public OrderController(final ItemService itemService, final OrderService orderService) {
 		super();
@@ -45,6 +44,13 @@ public class OrderController {
 
 	@GetMapping("/list")
 	public String showAllOrder(final ModelMap model) {
+		Iterable<Order> orders = this.orderService.findAllOrdersOrderedByDate();
+		model.addAttribute("orders", orders);
+		return "orders/ordersList";
+	}
+
+	@GetMapping("/list-my-orders")
+	public String showAllOrderOfOwner(final ModelMap model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = auth.getPrincipal();
 		UserDetails us = null;
