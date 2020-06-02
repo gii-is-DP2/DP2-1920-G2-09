@@ -92,7 +92,7 @@ class HU20BuyAllStock extends Simulation {
 	val scn_owner_1 = scenario("HU20BuyAllStock1").exec(Home.home,Login.login,ListProducts.listProducts,BuyAllStockProduct1.buyAllStockProduct1)
 	val scn_owner_2 = scenario("HU20BuyAllStock2").exec(Home.home,Login.login,ListProducts.listProducts,BuyAllStockProduct2.buyAllStockProduct2)
 	
-	setUp(scn_owner_1.inject(rampUsers(500) during (100 seconds)),scn_owner_2.inject(rampUsers(500) during (100 seconds))).protocols(httpProtocol).assertions(
+	setUp(scn_owner_1.inject(rampUsers(1000) during (10 seconds)),scn_owner_2.inject(rampUsers(1000) during (10 seconds))).protocols(httpProtocol).assertions(
         global.responseTime.max.lt(5000),    
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)

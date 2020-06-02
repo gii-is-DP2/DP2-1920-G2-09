@@ -78,7 +78,7 @@ class HU19FilterProductsByCategory extends Simulation {
 	val scn_owner_1 = scenario("HU19FilterProductsUserLogged").exec(Home.home,Login.login,ProductsList.productsList,FilterProductsByFood.filterProductsByFood)
 	val scn_owner_2 = scenario("HU19FilterProductsAnonymousUser").exec(Home.home,ProductsList.productsList,FilterProductsByMedicament.filterProductsByMedicament)
 	
-	setUp(scn_owner_1.inject(rampUsers(3000) during (100 seconds)),scn_owner_2.inject(rampUsers(3000) during (100 seconds))).protocols(httpProtocol).assertions(
+	setUp(scn_owner_1.inject(rampUsers(4000) during (10 seconds)),scn_owner_2.inject(rampUsers(4000) during (10 seconds))).protocols(httpProtocol).assertions(
         global.responseTime.max.lt(5000),    
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)

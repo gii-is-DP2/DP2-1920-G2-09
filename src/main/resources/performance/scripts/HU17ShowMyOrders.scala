@@ -6,15 +6,15 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.jdbc.Predef._
 
-class HU03AddProductToSC extends Simulation {
+class HU17ShowMyOrders extends Simulation {
 
 	val httpProtocol = http
 		.baseUrl("http://www.dp2.com")
-		.inferHtmlResources(BlackList(""".*.ico""", """.*.png""", """.*.jpg""", """.*.css""", """.*.js""", """<img>"""), WhiteList())
+		.inferHtmlResources(BlackList(""".*.ico""", """.*.png""", """.*.jpg""", """.*.css""", """.*.js"""), WhiteList())
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("es-ES,es;q=0.9,en;q=0.8")
-		.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
+		.userAgentHeader("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36")
 
 	val headers_0 = Map(
 		"Proxy-Connection" -> "keep-alive",
@@ -28,7 +28,7 @@ class HU03AddProductToSC extends Simulation {
 		"Origin" -> "http://www.dp2.com",
 		"Proxy-Connection" -> "keep-alive",
 		"Upgrade-Insecure-Requests" -> "1")
-
+	
 	object Home {
 		val home = exec(http("HOME")
 			.get("/")
@@ -53,52 +53,29 @@ class HU03AddProductToSC extends Simulation {
 		.pause(12)
 	}
 	
-	object ListProducts{
-		val listProducts = exec(http("LISTPRODUCTS")
-			.get("/products/all")
+	object ListMyOrders {
+		val listMyOrders = exec(http("HU17ShowMyOrders_4")
+			.get("/orders/list-my-orders")
 			.headers(headers_0))
-		.pause(14)
+		.pause(21)
 	}
 	
-	object addItemToSpOk{
-		val addItemToSPOk = exec(http("SHOWPRODUCT")
-			.get("/products/1")
-			.headers(headers_0)
-			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
-		.pause(13)
-		.exec(http("ADD ITEM OK")
-			.post("/products/add-item/1")
-			.headers(headers_3)
-			.formParam("quantity", "3")
-			.formParam("_csrf", "${stoken}"))
-		.pause(8)
+	object ShowMyOrder {
+		val  showMyOrder = exec(http("HU17ShowMyOrders_5")
+			.get("/orders/1")
+			.headers(headers_0))
+		.pause(7)
 	}
 	
-		object addItemToSpFail{
-		val addItemToSPFail = exec(http("SHOWPRODUCT")
-			.get("/products/1")
-			.headers(headers_0)
-			.check(css("input[name=_csrf]", "value").saveAs("stoken")))
-		.pause(13)
-		.exec(http("ADD ITEM FAIL")
-			.post("/products/add-item/1")
-			.headers(headers_3)
-			.formParam("quantity", "56")
-			.formParam("_csrf", "${stoken}"))
-		.pause(6)
-	}
+	val scn_owner_1 = scenario("HU17ListMyOrders").exec(Home.home,Login.login,ListMyOrders.listMyOrders)
+	val scn_owner_2 = scenario("HU17ListAndShowMyOrders").exec(Home.home,Login.login,ListMyOrders.listMyOrders,ShowMyOrder.showMyOrder)
 	
-
-	val scn_owner_1 = scenario("HU02AddItemOK").exec(Home.home,Login.login,ListProducts.listProducts,addItemToSpOk.addItemToSPOk)
-	val scn_owner_2 = scenario("HU02ShowProduct2").exec(Home.home,Login.login,ListProducts.listProducts,addItemToSpFail.addItemToSPFail)	
-		
-
 	setUp(scn_owner_1.inject(rampUsers(3000) during (100 seconds)),scn_owner_2.inject(rampUsers(3000) during (100 seconds))).protocols(httpProtocol).assertions(
         global.responseTime.max.lt(5000),    
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)
      )
-     
-		
 
+
+	
 }

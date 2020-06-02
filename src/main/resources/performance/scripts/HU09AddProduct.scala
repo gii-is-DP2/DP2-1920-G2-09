@@ -78,7 +78,7 @@ class HU09AddProduct extends Simulation {
 			.formParam("_csrf", "${stoken}"))
 		.pause(8)
 	}
-	
+
 	object AddProductFailed{
 		val addProductFailed = exec(http("SHOW PRODUCT")
 			.get("/products/new")
@@ -96,15 +96,15 @@ class HU09AddProduct extends Simulation {
 			.formParam("_csrf", "${stoken}"))
 		.pause(11)
 	}
-	
+
 	val scn_owner_1 = scenario("HU09AddProductOK").exec(Home.home,Login.login,AdminView.adminView,AddProductOK.addProductOK)
 	val scn_owner_2 = scenario("HU09AddProductFailed").exec(Home.home,Login.login,AdminView.adminView,AddProductFailed.addProductFailed)
-		
 
-	setUp(scn_owner_1.inject(rampUsers(1000) during (100 seconds)),scn_owner_2.inject(rampUsers(1000) during (100 seconds))).protocols(httpProtocol).assertions(
-        global.responseTime.max.lt(5000),    
+
+	setUp(scn_owner_1.inject(rampUsers(2000) during (100 seconds)),scn_owner_2.inject(rampUsers(2000) during (100 seconds))).protocols(httpProtocol).assertions(
+        global.responseTime.max.lt(5000),
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)
      )
-     
+
 }

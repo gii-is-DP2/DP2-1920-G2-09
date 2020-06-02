@@ -117,7 +117,7 @@ class HU21UserRegister extends Simulation {
 	val scn_owner_1 = scenario("HU21UserRegisterAndPaymentDetails").exec(Home.home,UserRegisterOk.userRegisterOK,LoginAfterRegister.loginAfterRegister,SavePaymentDetails.savePaymentDetails)
 	val scn_owner_2 = scenario("HU21UserRegisterFail").exec(Home.home,UserRegisterFail.userRegisterFail)
 	
-	setUp(scn_owner_1.inject(rampUsers(700) during (100 seconds)),scn_owner_2.inject(rampUsers(700) during (100 seconds))).protocols(httpProtocol).assertions(
+	setUp(scn_owner_1.inject(rampUsers(3000) during (100 seconds)),scn_owner_2.inject(rampUsers(3000) during (100 seconds))).protocols(httpProtocol).assertions(
         global.responseTime.max.lt(5000),    
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)

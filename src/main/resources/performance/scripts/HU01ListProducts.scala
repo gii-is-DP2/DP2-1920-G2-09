@@ -81,4 +81,6 @@ class HU01ListProducts extends Simulation {
         global.responseTime.mean.lt(1000),
         global.successfulRequests.percent.gt(95)
      )
+	
+	
 }
