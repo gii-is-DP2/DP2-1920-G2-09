@@ -22,6 +22,12 @@ public class ProductValidator implements Validator {
 
 		}
 
+		if (p.getUrlImage() == null || p.getUrlImage() == "") {
+			errors.rejectValue("urlImage", "The url of the image cannot be empty",
+					"The url of the image cannot be empty");
+
+		}
+
 		if (p.getDescription().length() < 20 || p.getDescription().length() > 128) {
 			errors.rejectValue("description", "The length of the description must be between 20 and 128 characters",
 					"The length of the description must be between 20 and 128 characters");
