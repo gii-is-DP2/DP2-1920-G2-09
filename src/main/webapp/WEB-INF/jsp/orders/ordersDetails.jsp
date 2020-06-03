@@ -51,9 +51,10 @@
 			</c:forEach>
 		</tbody>
     </table>
-    
+    <sec:authorize access="hasAnyAuthority('admin')">
     <spring:url value="/orders/delete/{orderId}" var="deleteURL">
 						<spring:param name="orderId" value="${order.id}" /></spring:url> 
 						<a href="${fn:escapeXml(deleteURL)}" class="btn btn-default"> Cancel Order </a>
+						</sec:authorize>
   
 </petclinic:layout>
