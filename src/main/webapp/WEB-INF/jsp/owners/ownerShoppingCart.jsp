@@ -86,7 +86,7 @@
 								class="text-success"><c:out
 										value="Total Price: ${total} euros" /></strong> <br>
 							</span>
-
+							<c:if test="${ not empty items}">
 							<form:form modelAttribute="shoppingCart" class="form-horizontal"
 								id="buy-form" action="/shopping-cart/buy">
 								<div class="form-group has-feedback"></div>
@@ -95,6 +95,7 @@
 										Products</button>
 								</div>
 							</form:form>
+							</c:if>
 							<c:if test="${ not empty shoppingCartError}">
 								<div class="alert-danger" role="alert">
 									<c:out value="${shoppingCartError}" />

@@ -158,7 +158,7 @@ class ProductControllerTest {
 				.perform(
 						MockMvcRequestBuilders.post("/products/{productId}/edit", ProductControllerTest.TEST_PRODUCT_ID)
 								.with(SecurityMockMvcRequestPostProcessors.csrf()).param("available", "true")
-								.param("category", "FOOD")
+								.param("category", "FOOD").param("urlImage", "google.es")
 								.param("description", "OTRA DESCRIPCIOÓNasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 								.param("name", "OTRO NOMBRE").param("stock", "12").param("unitPrice", "12.20"))
 				.andExpect(MockMvcResultMatchers.status().is3xxRedirection())
