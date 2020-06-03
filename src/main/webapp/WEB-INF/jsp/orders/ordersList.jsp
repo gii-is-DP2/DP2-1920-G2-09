@@ -5,6 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 
 <petclinic:layout pageName="orders">
 
@@ -20,7 +22,9 @@
 				<th>Order Date</th>
 				<th>Total Price</th>
 				<th></th>
+				<sec:authorize access="hasAnyAuthority('admin')">
 				<th></th>
+				</sec:authorize>
 			</tr>
 		</thead>
 		<tbody>
@@ -34,13 +38,13 @@
 						<spring:param name="orderId" value="${order.id}" /></spring:url> 
 						<a href="${fn:escapeXml(viewURL)}" class="btn btn-default"> View Details </a>
 					</td>
-					
+					<sec:authorize access="hasAnyAuthority('admin')">
 					<td id="remove">
 						<spring:url value="/orders/delete/{orderId}" var="deleteURL">
 						<spring:param name="orderId" value="${order.id}" /></spring:url> 
 						<a href="${fn:escapeXml(deleteURL)}" class="btn btn-default"> Cancel Order </a>
 					</td>
-					
+					</sec:authorize>
 				</tr>
 			</c:forEach>
 		</tbody>
